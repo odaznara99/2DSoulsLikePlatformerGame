@@ -371,8 +371,8 @@ public class HeroKnight : MonoBehaviour {
         if (!m_grounded)
         {
             m_isWallSliding =
-                (   (m_wallSensorR1.State() && m_wallSensorR1.State() && m_facingDirection ==  1)
-                ||  (m_wallSensorL1.State() && m_wallSensorL1.State() && m_facingDirection == -1)
+                (   (m_wallSensorR1.State() && m_wallSensorR2.State() && m_facingDirection ==  1)
+                ||  (m_wallSensorL1.State() && m_wallSensorL2.State() && m_facingDirection == -1)
                 &&  !m_grounded && !isWallJumping);
         }
         else 
