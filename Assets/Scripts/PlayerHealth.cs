@@ -10,7 +10,7 @@ public class PlayerHealth : MonoBehaviour
 {
     private HeroKnight      player; //Reference to player script
     private Animator        playerAnimator; //Reference to player animator
-    private GameManager     gameManager; //Reference to GameManager script
+    public GameManager     gameManager; //Reference to GameManager script
     public  int             maxHealth = 100; // The maximum health the player can have
     public  int             currentHealth;  // The player's current health
 
@@ -61,7 +61,7 @@ public class PlayerHealth : MonoBehaviour
                 UpdateHealthUI(); // Update the UI to reflect the health change
 
                 // Check if the player's health reaches zero
-                if (currentHealth <= 0)
+                if (currentHealth == 0)
                 {
                     Die();
                 }
@@ -98,7 +98,7 @@ public class PlayerHealth : MonoBehaviour
         player.SetPlayerDead();
         playerAnimator.SetBool("noBlood", player.NoBlood());
         playerAnimator.SetTrigger("Death");
-        GetComponent<HeroKnight>().enabled = false;
+        player.enabled = false;
 
         // Optionally, you can trigger a death screen, restart the level, or respawn the player.
         

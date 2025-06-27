@@ -76,6 +76,11 @@ public class GameManager : MonoBehaviour
             RestartGame();
         
         }
+        // Handle Game Over Controls
+        if (isGameOver && (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0)))
+        {
+            RestartGame();  // Restart the game when Enter is pressed
+        }
     }
 
     // Function to restart the game
@@ -124,7 +129,9 @@ public class GameManager : MonoBehaviour
     // Function to trigger Game Over with a delay
     public void TriggerGameOverWithDelay()
     {
+        isGameOver = true;
         StartCoroutine(DelayFadeInPanel(gameOverUI, 3f));
+        Debug.Log("Game Over!");
     }
 
     // Function to quit the game
@@ -161,7 +168,7 @@ public class GameManager : MonoBehaviour
 
     void FindUIElements() {
         pauseMenuUI = GameObject.Find("ScreenCanvas").transform.Find("PauseMenuPanel").gameObject;
-        //gameOverUI  = GameObject.Find("ScreenCanvas").transform.Find("GameOverPanel").gameObject;
+        gameOverUI  = GameObject.Find("ScreenCanvas").transform.Find("GameOverPanel").gameObject.GetComponent<CanvasGroup>();
 
     }
 
