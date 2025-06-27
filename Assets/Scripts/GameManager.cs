@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
 
-    public GameObject gameOverUI;        // Reference to the Game Over UI
+    public CanvasGroup gameOverUI;        // Reference to the Game Over UI
     public GameObject pauseMenuUI;       // Reference to the Pause Menu UI
 
     void Awake()
@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
 
         // Ensure UI elements are disabled at the start
         if (gameOverUI != null)
-            gameOverUI.SetActive(false);
+            gameOverUI.gameObject.SetActive(false);
 
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(false);
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
 
         // Disable Game Over UI
         if (gameOverUI != null)
-            gameOverUI.SetActive(false);
+            gameOverUI.gameObject.SetActive(false);
     }
 
     // Function to pause the game
@@ -116,9 +116,15 @@ public class GameManager : MonoBehaviour
         {
             isGameOver = true;
             Time.timeScale = 0f;         // Stop the time
-            gameOverUI.SetActive(true);  // Show Game Over UI
+            gameOverUI.gameObject.SetActive(true);  // Show Game Over UI
             Debug.Log("Game Over!");
         }
+    }
+
+    // Function to trigger Game Over with a delay
+    public void TriggerGameOverWithDelay()
+    {
+        StartCoroutine(DelayFadeInPanel(gameOverUI, 3f));
     }
 
     // Function to quit the game
@@ -155,7 +161,24 @@ public class GameManager : MonoBehaviour
 
     void FindUIElements() {
         pauseMenuUI = GameObject.Find("ScreenCanvas").transform.Find("PauseMenuPanel").gameObject;
-        gameOverUI  = GameObject.Find("ScreenCanvas").transform.Find("GameOverPanel").gameObject;
+        //gameOverUI  = GameObject.Find("ScreenCanvas").transform.Find("GameOverPanel").gameObject;
 
+    }
+
+    IEnumerator DelayFadeInPanel(CanvasGroup canvasGroup,float fadeDuration)
+    {
+        float elapsed = 0f;
+        canvasGroup.alpha = 0f;
+        canvasGroup.gameObject.SetActive(true); // make sure it's visible
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
+            yield return null;
+        }
+
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
 }

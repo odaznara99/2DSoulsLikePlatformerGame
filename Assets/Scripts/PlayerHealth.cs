@@ -10,6 +10,7 @@ public class PlayerHealth : MonoBehaviour
 {
     private HeroKnight      player; //Reference to player script
     private Animator        playerAnimator; //Reference to player animator
+    private GameManager     gameManager; //Reference to GameManager script
     public  int             maxHealth = 100; // The maximum health the player can have
     public  int             currentHealth;  // The player's current health
 
@@ -26,6 +27,7 @@ public class PlayerHealth : MonoBehaviour
 
         player          = this.GetComponent<HeroKnight>();
         playerAnimator  = this.GetComponent<Animator>();
+        gameManager     = GameManager.instance; // Get the GameManager instance
     }
 
     // Method to handle taking damage
@@ -97,8 +99,10 @@ public class PlayerHealth : MonoBehaviour
         playerAnimator.SetBool("noBlood", player.NoBlood());
         playerAnimator.SetTrigger("Death");
         GetComponent<HeroKnight>().enabled = false;
-        
+
         // Optionally, you can trigger a death screen, restart the level, or respawn the player.
+        
+        gameManager.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
     }
 
     // Optional: Method to update the health UI
