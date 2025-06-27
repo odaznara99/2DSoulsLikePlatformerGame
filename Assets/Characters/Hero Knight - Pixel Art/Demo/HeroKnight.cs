@@ -142,7 +142,7 @@ public class HeroKnight : MonoBehaviour {
 
         // -- Handle Inputs --
         //Attack
-        if (Input.GetMouseButtonDown(0) && m_grounded)
+      /*  if (Input.GetMouseButtonDown(0) && m_grounded)
         {
             Attack();
             ReleaseBlock();
@@ -157,7 +157,7 @@ public class HeroKnight : MonoBehaviour {
         else if (Input.GetMouseButtonUp(1))
         {
             ReleaseBlock();
-        }
+        }*/
         // Roll
         else if (Input.GetKeyDown("left shift"))
         {
@@ -190,7 +190,7 @@ public class HeroKnight : MonoBehaviour {
         m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
     }
 
-    void Attack()
+    public void Attack()
     {
         // Reference to the AttackPoint if not assigned
         if (attackPoint == null)
@@ -268,7 +268,7 @@ public class HeroKnight : MonoBehaviour {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
     //Method to Block Attacks
-    void Block() {
+    public void Block() {
         if (!m_rolling && !isAttacking && m_grounded)
         {
             //StopMovement();
@@ -280,13 +280,13 @@ public class HeroKnight : MonoBehaviour {
 
     }
 
-    void ReleaseBlock() {
+    public void ReleaseBlock() {
         m_animator.SetBool("IdleBlock", false);
         isBlocking = false;
         AllowMovement();
     }
 
-    void Roll() {
+    public void Roll() {
         if (!m_rolling && !m_isWallSliding)
         {
             upperBodyCollider.enabled = false;
@@ -304,7 +304,7 @@ public class HeroKnight : MonoBehaviour {
 
     }
 
-    void Jump() {
+    public void Jump() {
         //Check if on ground or wallsliding
         if ((m_grounded||m_isWallSliding) && !m_rolling)
         {
@@ -412,7 +412,19 @@ public class HeroKnight : MonoBehaviour {
 
     }
 
-    public void HorizontalMovement() {
+    public void SetHorizontalValue(float p_inputX) {
+        if (allowMovement)
+        {
+            Debug.Log("Horizontal Input: " + p_inputX);
+            inputX = p_inputX;
+        }
+        else
+        {
+            inputX = 0;
+        }
+    }
+
+    void HorizontalMovement() {
         // -- Handle input for movement --
         if (!allowMovement)
         {
@@ -421,7 +433,9 @@ public class HeroKnight : MonoBehaviour {
         }
         else if (allowMovement)
         {
-            inputX = Input.GetAxis("Horizontal");
+            #if UNITY_EDITOR
+            //inputX = Input.GetAxis("Horizontal");
+            #endif
         }
 
         // Horizontal Movement on RigidBody using Input X
