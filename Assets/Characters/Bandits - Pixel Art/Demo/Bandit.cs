@@ -24,7 +24,7 @@ public class Bandit : MonoBehaviour {
     public int       damage = 10; // Damage dealt to the player
 
     private Transform   player; // Reference to the player position
-    private HeroKnight  playerScript; // Reference to the player main script
+    private PlayerController  playerScript; // Reference to the player main script
     private float       lastAttackTime = 0f; // Track when the enemy last attacked
     private bool        isAttacking = false; // Track if the enemy is currently attacking
     private bool        isFacingRight = false; // Track which direction the enemy is facing
@@ -39,7 +39,7 @@ public class Bandit : MonoBehaviour {
         m_body2d        = GetComponent<Rigidbody2D>();
         m_groundSensor  = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
 
-        playerScript    = GameObject.Find("HeroKnight").GetComponent<HeroKnight>();
+        playerScript    = GameObject.Find("HeroKnight").GetComponent<PlayerController>();
         player          = GameObject.Find("HeroKnight").GetComponent<Transform>();
         attackPoint     = transform.Find("AttackPoint").GetComponent<Transform>();
         lastAttackTime  = Time.time - attackCooldown;

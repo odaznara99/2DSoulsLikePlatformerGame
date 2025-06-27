@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private HeroKnight      player; //Reference to player script
+    private PlayerController      player; //Reference to player script
     private Animator        playerAnimator; //Reference to player animator
     public GameManager     gameManager; //Reference to GameManager script
     public  int             maxHealth = 100; // The maximum health the player can have
@@ -25,7 +25,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         UpdateHealthUI(); // If you have a UI to display health, update it here
 
-        player          = this.GetComponent<HeroKnight>();
+        player          = this.GetComponent<PlayerController>();
         playerAnimator  = this.GetComponent<Animator>();
         gameManager     = GameManager.instance; // Get the GameManager instance
     }

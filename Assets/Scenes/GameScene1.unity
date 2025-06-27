@@ -1133,8 +1133,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: Jump
           m_Mode: 1
           m_Arguments:
@@ -1149,8 +1149,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: Jump
           m_Mode: 1
           m_Arguments:
@@ -1325,8 +1325,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -1341,8 +1341,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -1357,8 +1357,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -1373,8 +1373,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -1635,7 +1635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 3161818909420409470}
   targetRigidbody: {fileID: 3161818909420409473}
-  targetHeroKnight: {fileID: 3161818909420409477}
+  targetHeroKnight: {fileID: 3161818909420409483}
   smoothTime: 0.3
   offset: {x: 0, y: 0.8, z: 0}
   fallLookAhead: -1
@@ -3353,8 +3353,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: Block
           m_Mode: 1
           m_Arguments:
@@ -3369,8 +3369,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: ReleaseBlock
           m_Mode: 1
           m_Arguments:
@@ -3385,8 +3385,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: ReleaseBlock
           m_Mode: 1
           m_Arguments:
@@ -3401,8 +3401,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: Block
           m_Mode: 1
           m_Arguments:
@@ -3861,8 +3861,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: StartAttackHold
           m_Mode: 1
           m_Arguments:
@@ -3877,8 +3877,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: StopAttackHold
           m_Mode: 1
           m_Arguments:
@@ -3893,8 +3893,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: StartAttackHold
           m_Mode: 1
           m_Arguments:
@@ -3909,8 +3909,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: StopAttackHold
           m_Mode: 1
           m_Arguments:
@@ -4599,8 +4599,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -4615,8 +4615,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -4631,8 +4631,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -4647,8 +4647,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: SetHorizontalValue
           m_Mode: 4
           m_Arguments:
@@ -4880,8 +4880,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: Roll
           m_Mode: 1
           m_Arguments:
@@ -4896,8 +4896,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 3161818909420409477}
-          m_TargetAssemblyTypeName: HeroKnight, Assembly-CSharp
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: Roll
           m_Mode: 1
           m_Arguments:
@@ -5178,15 +5178,15 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 1675604322559464210, guid: fe787e14c46b2b1448be03607e8d0a4b, type: 3}
   m_PrefabInstance: {fileID: 5186002468734567508}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3161818909420409477 stripped
+--- !u!114 &3161818909420409483 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6839343557542277841, guid: fe787e14c46b2b1448be03607e8d0a4b, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4651349822159403323, guid: fe787e14c46b2b1448be03607e8d0a4b, type: 3}
   m_PrefabInstance: {fileID: 5186002468734567508}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f5034bc83802944c9bca57c55e08978, type: 3}
+  m_Script: {fileID: 11500000, guid: d772845f53f4e1348a582e82738f8251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &5186002468734567508

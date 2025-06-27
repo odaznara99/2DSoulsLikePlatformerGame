@@ -4,7 +4,7 @@ public class SmoothCameraFollow : MonoBehaviour
 {
     public Transform target;
     public Rigidbody2D targetRigidbody;  // Assign the player's Rigidbody2D
-    public HeroKnight targetHeroKnight; // Reference to the HeroKnight script for additional checks
+    public PlayerController targetHeroKnight; // Reference to the PlayerController script for additional checks
     public float smoothTime = 0.3f;
     public Vector3 offset = new Vector3(0f, 1.5f, -10f);
     public float fallLookAhead = -2f;  // How much to look down when falling

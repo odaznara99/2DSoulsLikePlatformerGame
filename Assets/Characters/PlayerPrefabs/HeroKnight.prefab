@@ -120,13 +120,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5248238129706424879}
-  - component: {fileID: 6839343557542277841}
   - component: {fileID: 6522799522704624843}
   - component: {fileID: 5726749986802116007}
   - component: {fileID: 8602156681989465258}
   - component: {fileID: 1675604322559464210}
   - component: {fileID: 2173838533356644539}
   - component: {fileID: 2826013515120861116}
+  - component: {fileID: 4651349822159403323}
   m_Layer: 3
   m_Name: HeroKnight
   m_TagString: Player
@@ -155,38 +155,6 @@ Transform:
   - {fileID: 1044468314279432416}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6839343557542277841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6388905171395003092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f5034bc83802944c9bca57c55e08978, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_movementSpeed: 4
-  m_jumpForce: 7.5
-  m_wallJumpForce: 4
-  m_rollForce: 6
-  m_noBlood: 1
-  m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
-  attackPoint: {fileID: 1044468314279432416}
-  attackRange: 1.12
-  attackDamage: 35
-  attackCooldown: 0.5
-  attackInBetweenTime: 0.25
-  playerIsDead: 0
-  isBlocking: 0
-  isParry: 0
-  isAttacking: 0
-  isWallJumping: 0
-  m_isWallSliding: 0
-  m_grounded: 0
-  m_rolling: 0
-  allowMovement: 1
 --- !u!114 &6522799522704624843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,6 +352,41 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0027472973, y: 0.35842824}
   m_Size: {x: 0.50321436, y: 0.6199317}
   m_Direction: 0
+--- !u!114 &4651349822159403323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6388905171395003092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d772845f53f4e1348a582e82738f8251, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_movementSpeed: 4
+  m_originalMovementSpeed: 4
+  m_jumpForce: 7.5
+  m_wallJumpForce: 4
+  m_rollForce: 6
+  m_noBlood: 0
+  m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
+  attackPoint: {fileID: 1044468314279432416}
+  attackRange: 2
+  attackDamage: 20
+  attackCooldown: 1
+  attackInBetweenTime: 0.5
+  playerIsDead: 0
+  isBlocking: 0
+  isParry: 0
+  isAttacking: 0
+  isWallJumping: 0
+  m_isWallSliding: 0
+  m_grounded: 0
+  m_rolling: 0
+  allowMovement: 1
+  inputX: 0
+  slowFactor: 0.2
 --- !u!1 &6404545247353387196
 GameObject:
   m_ObjectHideFlags: 0
