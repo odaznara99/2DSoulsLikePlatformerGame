@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public int attackDamage = 20;
     public float attackCooldown = 1f;
     public float attackInBetweenTime = 0.5f;
+    public bool isBlockCooldown = false;
 
     [Header("Track Player's State")]
     public bool playerIsDead = false;
@@ -90,13 +91,11 @@ public class PlayerController : MonoBehaviour
         HandleAnimationStates();
         m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
 
-        if (isAttacking||isBlocking)
+        if (isBlocking)
         {
             SetSlowMovementSpeed(slowFactor);
         }
-        else {
-            SetSlowMovementSpeed(1);
-        }
+
     }
 
     void UpdateTimers()
@@ -229,7 +228,8 @@ public class PlayerController : MonoBehaviour
                 isAttacking = true;
                 // Release Block State
                 isBlocking = false;
-                //SetSlowMovementSpeed(slowFactor); // Apply slow factor when attacking
+
+                StartCoroutine(SetSlowMovementSpeed(slowFactor, attackInBetweenTime));
 
                 // Find all nearby enemies within the attack range
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
@@ -283,11 +283,9 @@ public class PlayerController : MonoBehaviour
     //Method to Block Attacks
     public void Block()
     {
-        if (!m_rolling && !isAttacking && m_grounded)
+        if (!m_rolling && !isAttacking && m_grounded && !isBlockCooldown)
         {
-            //StopMovement();
-            SetSlowMovementSpeed(slowFactor);
-            StartCoroutine(Parry());
+            //StartCoroutine(Parry());
             m_animator.SetTrigger("Block");
             isBlocking = true;
             m_animator.SetBool("IdleBlock", true);
@@ -296,14 +294,27 @@ public class PlayerController : MonoBehaviour
     }
     public void ReleaseBlock()
     {
-        m_animator.SetBool("IdleBlock", false);
-        isBlocking = false;
-        AllowMovement();
-        SetSlowMovementSpeed(m_originalMovementSpeed);
+        if (isBlocking)
+        {
+            m_animator.SetBool("IdleBlock", false);
+            isBlocking = false;
+            //AllowMovement();
+            SetSlowMovementSpeed(1);
+            //StartCoroutine(SetSlowMovementSpeed(slowFactor,0.5f));
+            StartCoroutine(BlockCooldown());
+        }
+    }
+
+    IEnumerator BlockCooldown()
+    {
+        isBlockCooldown = true;
+        yield return new WaitForSeconds(0.5f);
+        isBlockCooldown = false;
     }
     public void Roll()
     {
         ReleaseBlock();
+
         if (!m_rolling && !m_isWallSliding)
         {
             upperBodyCollider.enabled = false;
@@ -315,6 +326,7 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         ReleaseBlock();
+
         //Check if on ground or wallsliding
         if ((m_grounded || m_isWallSliding) && !m_rolling)
         {
@@ -387,6 +399,18 @@ public class PlayerController : MonoBehaviour
 
     void SetSlowMovementSpeed(float p_slowFactor) {
         m_movementSpeed = m_originalMovementSpeed * p_slowFactor; // Apply slow factor if needed
+        Debug.Log("Slowing down player movement speed by factor: " + p_slowFactor);
+    }
+
+
+    IEnumerator SetSlowMovementSpeed(float p_slowFactor,float slowDuration)
+    {
+        Debug.Log("Slowing down player movement speed by factor: " + p_slowFactor);
+        m_movementSpeed = m_originalMovementSpeed * p_slowFactor;
+        yield return new WaitForSeconds(slowDuration);
+        Debug.Log("Resetting player movement speed to original value.");
+        m_movementSpeed = m_originalMovementSpeed;
+        yield break;
     }
 
     public void AllowMovement()
