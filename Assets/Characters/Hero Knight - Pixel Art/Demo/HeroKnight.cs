@@ -198,6 +198,8 @@ public class HeroKnight : MonoBehaviour {
             attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
         }
 
+        ReleaseBlock();
+
         // Check Cooldown
         if (!isAttacking && Time.time >= lastAttackTime + attackCooldown)
         {
@@ -287,6 +289,7 @@ public class HeroKnight : MonoBehaviour {
     }
 
     public void Roll() {
+        ReleaseBlock();
         if (!m_rolling && !m_isWallSliding)
         {
             upperBodyCollider.enabled = false;
@@ -305,6 +308,7 @@ public class HeroKnight : MonoBehaviour {
     }
 
     public void Jump() {
+        ReleaseBlock();
         //Check if on ground or wallsliding
         if ((m_grounded||m_isWallSliding) && !m_rolling)
         {
@@ -469,5 +473,38 @@ public class HeroKnight : MonoBehaviour {
         {
             allowMovement = true;
         }
+    }
+
+    private Coroutine attackCoroutine;
+
+    public void StartAttackHold()
+    {
+        if (attackCoroutine == null)
+            attackCoroutine = StartCoroutine(ContinuousAttack());
+    }
+
+    public void StopAttackHold()
+    {
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+    }
+
+    IEnumerator ContinuousAttack()
+    {
+        while (true)
+        {
+            DoAttack(); // Your actual attack logic
+            yield return new WaitForSeconds(0.3f); // delay between attacks
+        }
+    }
+
+    void DoAttack()
+    {
+        Debug.Log("Attack!");
+        Attack(); // Call the attack method to perform the attack logic
+        // play animation, damage, etc.
     }
 }
