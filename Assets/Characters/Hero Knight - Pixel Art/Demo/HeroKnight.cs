@@ -145,6 +145,7 @@ public class HeroKnight : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) && m_grounded)
         {
             Attack();
+            ReleaseBlock();
         }
 
         // Block
@@ -161,11 +162,13 @@ public class HeroKnight : MonoBehaviour {
         else if (Input.GetKeyDown("left shift"))
         {
             Roll();
+            ReleaseBlock();
         }
         //Jump
         else if (Input.GetKeyDown("space"))
         {
             Jump();
+            ReleaseBlock();
         }
         //Run Animation
         else if (Mathf.Abs(inputX) > Mathf.Epsilon)
