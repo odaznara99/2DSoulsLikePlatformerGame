@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Hazard
+  - DeadZone
   layers:
   - Default
   - TransparentFX

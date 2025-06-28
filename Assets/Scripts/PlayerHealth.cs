@@ -13,6 +13,7 @@ public class PlayerHealth : MonoBehaviour
     public GameManager     gameManager; //Reference to GameManager script
     public  int             maxHealth = 100; // The maximum health the player can have
     public  int             currentHealth;  // The player's current health
+    public int hazardDamage = 25; // Damage taken from hazards
 
     [Header("Health UI")]
     public UnityEngine.UI.Image healthBar;
@@ -120,8 +121,28 @@ public class PlayerHealth : MonoBehaviour
     {
         if (collision.collider.CompareTag("Hazard")) {
 
-            TakeDamage(20);
+            TakeDamage(hazardDamage);
         
+        }
+
+        if (collision.collider.CompareTag("DeadZone"))
+        {
+
+            TakeDamage(currentHealth);
+            //Die();
+
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collision.CompareTag("DeadZone"))
+        {
+
+            TakeDamage(currentHealth);
+            //Die();
+
         }
     }
 }

@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
     // Function to trigger Game Over with a delay
     public void TriggerGameOverWithDelay()
     {
-        isGameOver = true;
+        
         StartCoroutine(DelayFadeInPanel(gameOverUI, 3f));
         Debug.Log("Game Over!");
     }
@@ -174,6 +174,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator DelayFadeInPanel(CanvasGroup canvasGroup,float fadeDuration)
     {
+        Debug.Log("Start Fading In: " + canvasGroup.name);
         float elapsed = 0f;
         canvasGroup.alpha = 0f;
         canvasGroup.gameObject.SetActive(true); // make sure it's visible
@@ -182,9 +183,12 @@ public class GameManager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             canvasGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
+            
             yield return null;
         }
 
+        if (canvasGroup.name == gameOverUI.name) isGameOver = true;
+        Debug.Log("Finish Fading In: " + canvasGroup.name);
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
     }

@@ -3840,7 +3840,19 @@ MonoBehaviour:
   - eventID: 3
     callback:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3161818909420409483}
+          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+          m_MethodName: StopAttackHold
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 0
     callback:
       m_PersistentCalls:
@@ -4462,7 +4474,7 @@ MonoBehaviour:
   segmentPrefabs:
   - {fileID: 8611169255893809227, guid: f4e754235872b5c45b68564906412d90, type: 3}
   - {fileID: 4743650585900254744, guid: 5d0219a0831c1a34e8fcc40fd6199a2d, type: 3}
-  - {fileID: 8905340267915072940, guid: ca06a483486bca8499021bfdcd533da6, type: 3}
+  - {fileID: 4743650585900254744, guid: 99a38703a33c8be45b79f5e7c6cacc5a, type: 3}
   - {fileID: 5506974605406375848, guid: b6603f0149f922b4487285c3e7a75d27, type: 3}
   - {fileID: 6561137531303206810, guid: 8c77d7190a7b48f4a9a07eb6584670ae, type: 3}
   - {fileID: 8611169255893809227, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}

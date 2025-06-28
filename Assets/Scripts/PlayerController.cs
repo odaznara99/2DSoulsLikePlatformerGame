@@ -96,8 +96,22 @@ public class PlayerController : MonoBehaviour
             SetSlowMovementSpeed(slowFactor);
         }
 
-        if (m_isWallSliding) { 
-            SetHorizontalValue(0); // Stop horizontal movement when wall sliding
+        if (m_isWallSliding && !m_grounded && !isWallJumping)
+        {
+            DontAllowMovement();
+        }
+        else if (isWallJumping) 
+        {
+            AllowMovement();
+        }
+        else if (playerIsDead)
+
+        {
+            DontAllowMovement();
+        }
+        else if (!m_isWallSliding && m_grounded && !playerIsDead)
+        {
+            AllowMovement();
         }
 
     }
@@ -189,8 +203,8 @@ public class PlayerController : MonoBehaviour
 
         m_animator.SetBool("WallSlide", m_isWallSliding);
 
-        if (m_isWallSliding) StopMovement();
-        else AllowMovement();
+        
+        
     }
 
     void HorizontalMovement()
@@ -269,6 +283,7 @@ public class PlayerController : MonoBehaviour
                     //Allow Movement Horizontally
                     //AllowMovement();
                     Debug.Log("Combo completed, entering cooldown.");
+                    StopAttackHold();
                 }
             }
 
@@ -340,10 +355,10 @@ public class PlayerController : MonoBehaviour
             //Add Sideways Velocity to Opposite Direction
             if (m_isWallSliding)
             {
-                //AllowMovement();
+                m_isWallSliding = false;
                 isWallJumping = true;
                 m_body2d.velocity = new Vector2((m_wallJumpForce * -m_facingDirection), m_body2d.velocity.y);
-                Debug.Log("Added force is:" + m_wallJumpForce * -m_facingDirection);
+                Debug.Log("Wall Jump Added force is:" + m_wallJumpForce * -m_facingDirection);
             }
 
             //Add Upward Velocity to Jump
@@ -387,19 +402,22 @@ public class PlayerController : MonoBehaviour
 
     public void SetHorizontalValue(float p_inputX)
     {
-        inputX = allowMovement ? p_inputX : 0;
+            inputX = allowMovement ? p_inputX : 0;
     }
 
     public bool NoBlood() => m_noBlood;
 
     public bool SetPlayerDead()
     {
-        StopMovement();
+        DontAllowMovement();
         playerIsDead = true;
         return playerIsDead;
     }
 
-    void StopMovement() => SetHorizontalValue(0);
+    void DontAllowMovement() {
+        allowMovement = false;
+        SetHorizontalValue(0);  
+    }
 
     void SetSlowMovementSpeed(float p_slowFactor) {
         m_movementSpeed = m_originalMovementSpeed * p_slowFactor; // Apply slow factor if needed
