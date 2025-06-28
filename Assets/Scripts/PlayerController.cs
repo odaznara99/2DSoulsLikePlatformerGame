@@ -96,6 +96,10 @@ public class PlayerController : MonoBehaviour
             SetSlowMovementSpeed(slowFactor);
         }
 
+        if (m_isWallSliding) { 
+            SetHorizontalValue(0); // Stop horizontal movement when wall sliding
+        }
+
     }
 
     void UpdateTimers()
