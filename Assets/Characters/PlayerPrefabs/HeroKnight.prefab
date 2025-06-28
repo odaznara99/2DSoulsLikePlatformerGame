@@ -170,6 +170,8 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
+  hazardDamage: 25
+  hurtSeconds: 0.2
   healthBar: {fileID: 0}
   healthText: {fileID: 0}
 --- !u!95 &5726749986802116007
@@ -374,9 +376,11 @@ MonoBehaviour:
   attackPoint: {fileID: 1044468314279432416}
   attackRange: 2
   attackDamage: 20
-  attackCooldown: 1
+  attackCooldown: 0
   attackInBetweenTime: 0.5
+  isBlockCooldown: 0
   playerIsDead: 0
+  playerisHurt: 0
   isBlocking: 0
   isParry: 0
   isAttacking: 0

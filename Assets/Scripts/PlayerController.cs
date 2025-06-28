@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float m_jumpForce = 7.5f;
     [SerializeField] float m_wallJumpForce = 4.0f;
     [SerializeField] float m_rollForce = 6.0f;
+    public float m_rollCooldownSeconds = 1f; // Cooldown for rolling
+    public float blockCooldownsSeconds = 0.5f;
     [SerializeField] bool m_noBlood = false;
 
     [Header("Player Effects")]
@@ -24,9 +26,11 @@ public class PlayerController : MonoBehaviour
     public float attackCooldown = 1f;
     public float attackInBetweenTime = 0.5f;
     public bool isBlockCooldown = false;
+    public bool isRollInCooldown = false;
 
     [Header("Track Player's State")]
     public bool playerIsDead = false;
+    public bool playerisHurt = false;
     public bool isBlocking = false;
     public bool isParry = false;
     public bool isAttacking = false;
@@ -228,73 +232,76 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
-        // Reference to the AttackPoint if not assigned
-        if (attackPoint == null)
+        if (!playerisHurt && !playerIsDead)
         {
-            attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
-        }
-
-        ReleaseBlock();
-
-        // Check Cooldown
-        if (!isAttacking && Time.time >= lastAttackTime + attackCooldown)
-        {
-            // Check In Between Time
-            if (lastComboAttackTime > attackInBetweenTime && !m_rolling)
+            // Reference to the AttackPoint if not assigned
+            if (attackPoint == null)
             {
-                // Enter Attacking State
-                isAttacking = true;
-                // Release Block State
-                isBlocking = false;
+                attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
+            }
 
-                StartCoroutine(SetSlowMovementSpeed(slowFactor, attackInBetweenTime));
+            ReleaseBlock();
 
-                // Find all nearby enemies within the attack range
-                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
-
-                foreach (Collider2D enemy in hitEnemies)
+            // Check Cooldown
+            if (!isAttacking && Time.time >= lastAttackTime + attackCooldown)
+            {
+                // Check In Between Time
+                if (lastComboAttackTime > attackInBetweenTime && !m_rolling)
                 {
-                    if (enemy.CompareTag("Enemy"))
+                    // Enter Attacking State
+                    isAttacking = true;
+                    // Release Block State
+                    isBlocking = false;
+
+                    StartCoroutine(SetSlowMovementSpeed(slowFactor, attackInBetweenTime));
+
+                    // Find all nearby enemies within the attack range
+                    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
+
+                    foreach (Collider2D enemy in hitEnemies)
                     {
-                        // Apply damage to the enemy
-                        StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
+                        if (enemy.CompareTag("Enemy"))
+                        {
+                            // Apply damage to the enemy
+                            StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
+                        }
+                    }
+
+                    //Variable for Current Attack Animation
+                    m_currentAttack++;
+
+                    // Call one of three attack animations "Attack1", "Attack2", "Attack3"
+                    m_animator.SetTrigger("Attack" + m_currentAttack);
+                    Debug.Log("Attack" + m_currentAttack);
+
+                    // Reset timer
+                    lastComboAttackTime = 0.0f;
+
+                    // If the combo is complete (after the third attack), apply the cooldown
+                    if (m_currentAttack >= 3)
+                    {
+                        // Loop back to one for next combo
+                        m_currentAttack = 0;
+
+                        // Set cooldown after the full combo
+                        lastAttackTime = Time.time;
+
+                        //Allow Movement Horizontally
+                        //AllowMovement();
+                        Debug.Log("Combo completed, entering cooldown.");
+                        //StopAttackHold();
                     }
                 }
 
-                //Variable for Current Attack Animation
-                m_currentAttack++;
-
-                // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-                m_animator.SetTrigger("Attack" + m_currentAttack);
-                Debug.Log("Attack" + m_currentAttack);
-
-                // Reset timer
-                lastComboAttackTime = 0.0f;
-
-                // If the combo is complete (after the third attack), apply the cooldown
-                if (m_currentAttack >= 3)
-                {
-                    // Loop back to one for next combo
-                    m_currentAttack = 0;
-
-                    // Set cooldown after the full combo
-                    lastAttackTime = Time.time;
-
-                    //Allow Movement Horizontally
-                    //AllowMovement();
-                    Debug.Log("Combo completed, entering cooldown.");
-                    StopAttackHold();
-                }
             }
 
-        }
-
-        // Reset combo animation if too much time has passed between attacks
-        if (lastComboAttackTime > attackInBetweenTime + 2f)
-        {
-            m_currentAttack = 0;
-            //AllowMovement();
-            Debug.Log("Combo is reset due to delay.");
+            // Reset combo animation if too much time has passed between attacks
+            if (lastComboAttackTime > attackInBetweenTime + 2f)
+            {
+                m_currentAttack = 0;
+                //AllowMovement();
+                Debug.Log("Combo is reset due to delay.");
+            }
         }
 
 
@@ -302,69 +309,93 @@ public class PlayerController : MonoBehaviour
     //Method to Block Attacks
     public void Block()
     {
-        if (!m_rolling && !isAttacking && m_grounded && !isBlockCooldown)
+        if (!playerIsDead && !playerIsDead)
         {
-            //StartCoroutine(Parry());
-            m_animator.SetTrigger("Block");
-            isBlocking = true;
-            m_animator.SetBool("IdleBlock", true);
+            if (!m_rolling && !isAttacking && m_grounded && !isBlockCooldown)
+            {
+                //StartCoroutine(Parry());
+                m_animator.SetTrigger("Block");
+                isBlocking = true;
+                m_animator.SetBool("IdleBlock", true);
+            }
         }
 
     }
     public void ReleaseBlock()
     {
-        if (isBlocking)
+        if (!playerIsDead && !playerisHurt)
         {
-            m_animator.SetBool("IdleBlock", false);
-            isBlocking = false;
-            //AllowMovement();
-            SetSlowMovementSpeed(1);
-            //StartCoroutine(SetSlowMovementSpeed(slowFactor,0.5f));
-            StartCoroutine(BlockCooldown());
+            if (isBlocking)
+            {
+                m_animator.SetBool("IdleBlock", false);
+                isBlocking = false;
+                //AllowMovement();
+                SetSlowMovementSpeed(1);
+                //StartCoroutine(SetSlowMovementSpeed(slowFactor,0.5f));
+                StartCoroutine(BlockCooldown());
+            }
         }
     }
 
     IEnumerator BlockCooldown()
     {
         isBlockCooldown = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(blockCooldownsSeconds);
         isBlockCooldown = false;
     }
     public void Roll()
     {
-        ReleaseBlock();
-
-        if (!m_rolling && !m_isWallSliding)
+        if (!playerIsDead && !playerisHurt)
         {
-            upperBodyCollider.enabled = false;
-            m_rolling = true;
-            m_animator.SetTrigger("Roll");
-            m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
+            ReleaseBlock();
+
+            if (!m_rolling && !m_isWallSliding && !isRollInCooldown)
+            {
+                upperBodyCollider.enabled = false;
+                m_rolling = true;
+                m_animator.SetTrigger("Roll");
+                m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
+                StartCoroutine(SetRollInCooldown());
+            }
         }
+    }
+
+    IEnumerator SetRollInCooldown()
+    {
+        isRollInCooldown = true;
+        yield return new WaitForSeconds(m_rollCooldownSeconds);
+        isRollInCooldown = false;
+
     }
     public void Jump()
     {
-        ReleaseBlock();
-
-        //Check if on ground or wallsliding
-        if ((m_grounded || m_isWallSliding) && !m_rolling)
+        if (!playerIsDead && !playerisHurt)
         {
-            TriggerJumpAnimation();
+            ReleaseBlock();
 
-            //Wall Jump
-            //Add Sideways Velocity to Opposite Direction
-            if (m_isWallSliding)
+            //Check if on ground or wallsliding
+            if ((m_grounded || m_isWallSliding) && !m_rolling)
             {
-                m_isWallSliding = false;
-                isWallJumping = true;
-                m_body2d.velocity = new Vector2((m_wallJumpForce * -m_facingDirection), m_body2d.velocity.y);
-                Debug.Log("Wall Jump Added force is:" + m_wallJumpForce * -m_facingDirection);
+                TriggerJumpAnimation();
+
+                //Wall Jump
+                //Add Sideways Velocity to Opposite Direction
+                if (m_isWallSliding)
+                {
+                    m_isWallSliding = false;
+                    isWallJumping = true;
+                    m_body2d.velocity = new Vector2((m_wallJumpForce * -m_facingDirection), m_body2d.velocity.y);
+                    Debug.Log("Wall Jump Added force is:" + m_wallJumpForce * -m_facingDirection);
+                }
+
+                //Add Upward Velocity to Jump
+                m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
+                m_groundSensor.Disable(0.2f);
+
+            }else if (!m_grounded)
+            {
+                Roll();
             }
-
-            //Add Upward Velocity to Jump
-            m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
-            m_groundSensor.Disable(0.2f);
-
         }
     }
     public void TriggerJumpAnimation()
@@ -402,7 +433,10 @@ public class PlayerController : MonoBehaviour
 
     public void SetHorizontalValue(float p_inputX)
     {
+        if (!playerIsDead && !playerisHurt)
+        {
             inputX = allowMovement ? p_inputX : 0;
+        }
     }
 
     public bool NoBlood() => m_noBlood;
@@ -478,5 +512,29 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
+    }
+
+    public void SetPlayerIsHurtSeconds(float seconds)
+    {
+        if (!playerisHurt)
+        {
+            StartCoroutine(SetPlayerIsHurt(seconds));
+        }
+        else
+        {
+            StopCoroutine(SetPlayerIsHurt(seconds));
+            StartCoroutine(SetPlayerIsHurt(seconds));
+        }
+    }
+
+    IEnumerator SetPlayerIsHurt(float hurtSeconds)
+    {
+        DontAllowMovement();
+        playerisHurt = true;
+        m_animator.SetTrigger("Hurt");
+        yield return new WaitForSeconds(hurtSeconds);
+        playerisHurt = false;
+        AllowMovement();
+        yield break;
     }
 }

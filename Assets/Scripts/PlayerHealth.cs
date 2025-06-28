@@ -14,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     public  int             maxHealth = 100; // The maximum health the player can have
     public  int             currentHealth;  // The player's current health
     public int hazardDamage = 25; // Damage taken from hazards
+    public float hurtSeconds = 0.2f; // Seconds the player is in HURT state
 
     [Header("Health UI")]
     public UnityEngine.UI.Image healthBar;
@@ -39,9 +40,10 @@ public class PlayerHealth : MonoBehaviour
             if (!player.isParry)
             {
                 //Direct Hit
-                if (!player.isBlocking)
+                if (!player.isBlocking && !player.playerisHurt)
                 {
-                    playerAnimator.SetTrigger("Hurt");
+                    //playerAnimator.SetTrigger("Hurt");
+                    player.SetPlayerIsHurtSeconds(hurtSeconds);
                     currentHealth -= damageAmount;
                     Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
                 }
