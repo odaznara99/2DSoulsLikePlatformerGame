@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private int playerScore = 0;         // Player's score
 
     public CanvasGroup gameOverUI;        // Reference to the Game Over UI
+    public float gameOverFadeInSeconds = 2f;
     public GameObject pauseMenuUI;       // Reference to the Pause Menu UI
 
     void Awake()
@@ -130,7 +131,7 @@ public class GameManager : MonoBehaviour
     public void TriggerGameOverWithDelay()
     {
         
-        StartCoroutine(DelayFadeInPanel(gameOverUI, 3f));
+        StartCoroutine(DelayFadeInPanel(gameOverUI, gameOverFadeInSeconds));
         Debug.Log("Game Over!");
     }
 

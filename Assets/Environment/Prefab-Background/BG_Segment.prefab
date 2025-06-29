@@ -119,6 +119,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 571219887773824084}
     m_Modifications:
+    - target: {fileID: 1681728046081217891, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8066038
+      objectReference: {fileID: 0}
+    - target: {fileID: 1681728046081217891, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8599455
+      objectReference: {fileID: 0}
+    - target: {fileID: 1681728046081217891, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3686221869175827775, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.6527557
@@ -158,6 +170,18 @@ PrefabInstance:
     - target: {fileID: 3686221869175827775, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3891775926214980793, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8066038
+      objectReference: {fileID: 0}
+    - target: {fileID: 3891775926214980793, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8599455
+      objectReference: {fileID: 0}
+    - target: {fileID: 3891775926214980793, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810859952525522731, guid: c459d305cad3ac249956cc74955e6d58, type: 3}
       propertyPath: m_Name

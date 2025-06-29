@@ -349,7 +349,7 @@ public class PlayerController : MonoBehaviour
         {
             ReleaseBlock();
 
-            if (!m_rolling && !m_isWallSliding && !isRollInCooldown)
+            if (!m_rolling && !m_isWallSliding && !isRollInCooldown && !isWallJumping)
             {
                 upperBodyCollider.enabled = false;
                 m_rolling = true;
