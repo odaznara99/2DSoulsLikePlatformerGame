@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3811897970614135944, guid: 64b91b7c09d097a4eb0328228e5b6719, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 911149bd35aa5a744bf104d300440d27, type: 2}
     - target: {fileID: 4743650585900254744, guid: 64b91b7c09d097a4eb0328228e5b6719, type: 3}
       propertyPath: m_Name
       value: SGMT_Village_4 Variant
