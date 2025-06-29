@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_jumpForce: 7.5
-  attackPoint: {fileID: 0}
+  attackPoint: {fileID: 7234151319076223614}
   moveSpeed: 2
   followRange: 10
   attackRange: 1.5
