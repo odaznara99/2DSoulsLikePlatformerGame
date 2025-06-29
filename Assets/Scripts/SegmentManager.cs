@@ -6,9 +6,12 @@ using UnityEngine;
 
 public class SegmentManager : MonoBehaviour
 {
+    public bool enableDebugLogs = true;
+    [Header("Note: Element 0 will not be spawned")]
     public GameObject[] segmentPrefabs;
     public Transform player;
-    private int maxSegments = 0;
+    public int maxSegments = 10;
+    private int noOfSegmentsSet;
 
     private List<GameObject> activeSegments = new List<GameObject>();
     private Vector3 nextSpawnPoint;
@@ -27,6 +30,12 @@ public class SegmentManager : MonoBehaviour
             maxSegments = segmentPrefabs.Length-1;
         }
 
+        //To avoid zero or null
+        if (noOfSegmentsSet == 0)
+        {
+            noOfSegmentsSet = segmentPrefabs.Length - 1;
+        }
+
         //Starting SpawnPoint
         nextSpawnPoint = new Vector3(player.position.x-6,0,0);
 
@@ -37,6 +46,12 @@ public class SegmentManager : MonoBehaviour
         SpawnSegmentsSetRandomly();
 
 
+    }
+
+    void Log(string message)
+    {
+        if (enableDebugLogs)
+            Debug.Log(message);
     }
 
     void Update()
@@ -52,6 +67,7 @@ public class SegmentManager : MonoBehaviour
     void SpawnRandomSegment()
     {
         //Spaw Random Segment
+        Log("Spawning Random Segment");
         int randomIndex = Random.Range(1, segmentPrefabs.Length);
         
         // To avoid same index
@@ -88,6 +104,7 @@ public class SegmentManager : MonoBehaviour
 
     void SpawnStartingSegment()
     {
+        Log("Spawning Starting Segment");
         //Spaw Start Segment - Element 0
         int randomIndex = Random.Range(0, 0);
         GameObject newSegment = Instantiate(segmentPrefabs[randomIndex], nextSpawnPoint, Quaternion.identity);
@@ -108,8 +125,9 @@ public class SegmentManager : MonoBehaviour
 
     void SpawnSpecificSegment(int segmentIndex)
     {
+        Log("Spawning Specific Segment");
         if (segmentIndex > segmentPrefabs.Length) {
-            Debug.Log(segmentIndex + "is out of Bounds");
+            Log(segmentIndex + "is out of Bounds");
         }
 
         GameObject newSegment = Instantiate(segmentPrefabs[segmentIndex], nextSpawnPoint, Quaternion.identity);
@@ -133,14 +151,15 @@ public class SegmentManager : MonoBehaviour
 
     void SpawnSegmentsSetRandomly()
     {
+        Log("Spawning Set of "+ noOfSegmentsSet + " Segments Randomly");
         // Create an array of indices from 1 to segmentPrefabs.Length
-        int[] segmentIndices = Enumerable.Range(1, maxSegments).ToArray();
+        int[] segmentIndices = Enumerable.Range(1, noOfSegmentsSet).ToArray();
 
         // Shuffle the array to randomize the segment order
         segmentIndices = segmentIndices.OrderBy(x => Random.value).ToArray();
 
         // Loop through the shuffled indices and spawn the corresponding segments
-        for (int i = 0; i < maxSegments; i++)
+        for (int i = 0; i < noOfSegmentsSet; i++)
         {
             int segmentIndex = segmentIndices[i]; // Get the shuffled segment index
 
@@ -151,6 +170,7 @@ public class SegmentManager : MonoBehaviour
 
     void RemoveOldSegment()
     {
+        Log("Removing Old Segments");
         if (activeSegments.Count > maxSegments)
         {
             Destroy(activeSegments[0]);
@@ -161,6 +181,7 @@ public class SegmentManager : MonoBehaviour
     bool PlayerReachedNextSegment()
     {
         // Define how close the player must be to the end point to spawn the next segment
+        Log("Player Reached Next Segment");
         return player.position.x > nextSpawnPoint.x - 10f;
     }
 }

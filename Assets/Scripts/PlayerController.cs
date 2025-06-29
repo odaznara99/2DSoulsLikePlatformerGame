@@ -309,7 +309,7 @@ public class PlayerController : MonoBehaviour
     //Method to Block Attacks
     public void Block()
     {
-        if (!playerIsDead && !playerIsDead)
+        if (!playerIsDead && !playerIsDead && !isBlocking)
         {
             if (!m_rolling && !isAttacking && m_grounded && !isBlockCooldown)
             {

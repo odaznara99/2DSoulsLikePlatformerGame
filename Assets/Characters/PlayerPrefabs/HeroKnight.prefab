@@ -215,7 +215,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 911149bd35aa5a744bf104d300440d27, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -371,6 +371,8 @@ MonoBehaviour:
   m_jumpForce: 7.5
   m_wallJumpForce: 4
   m_rollForce: 6
+  m_rollCooldownSeconds: 1
+  blockCooldownsSeconds: 0.5
   m_noBlood: 0
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
   attackPoint: {fileID: 1044468314279432416}
@@ -379,6 +381,7 @@ MonoBehaviour:
   attackCooldown: 0
   attackInBetweenTime: 0.5
   isBlockCooldown: 0
+  isRollInCooldown: 0
   playerIsDead: 0
   playerisHurt: 0
   isBlocking: 0
