@@ -1,7 +1,28 @@
-// Organized version of PlayerController.cs
+// Second Organized version of PlayerController.cs which we use enum as Player States
 using UnityEngine;
 using System.Collections;
 using Cainos.LucidEditor;
+
+// === Player States === 
+// === Description: Using enum, to manage states. This way we can sure that PLAYER only have ONE STATE at a time. 
+// ===            : so we can avoid overriding Physics and Animations. Managing each state properly and isolatedly.
+public enum PlayerState{
+    Dead,
+    Idle,
+    MovingRight,
+    MovingLeft,
+    Jumping,
+    Falling,
+    Rolling,
+    WallSliding,
+    WallJumping,
+    Attacking,
+    Shielding,
+    Hurting,
+    LedgeGrabbing,
+    Pushing,
+    Pulling
+}
 
 public class PlayerController : MonoBehaviour
 {
@@ -36,7 +57,7 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking = false;
     public bool isWallJumping = false;
     public bool m_isWallSliding = false;
-    public bool m_grounded = false;
+    
     public bool m_rolling = false;
     public bool allowMovement = true;
 
@@ -45,7 +66,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D m_body2d;
     private Sensor_HeroKnight m_groundSensor, m_wallSensorR1, m_wallSensorR2, m_wallSensorL1, m_wallSensorL2;
     private BoxCollider2D upperBodyCollider;
-
     private int m_facingDirection = 1;
     private int m_currentAttack = 0;
 
@@ -63,6 +83,17 @@ public class PlayerController : MonoBehaviour
 
     public float inputX;
     public float slowFactor = 0.5f;
+    public bool m_grounded = false;
+
+
+    // == Variables for Player States
+    private Coroutine currentStateCoroutine;
+    private PlayerState currentState;
+
+    // == Variable for Sensors / Triggers
+    public bool isGrounded = false;
+    public bool isParrying = false;
+    public float parryingTime = 0.3f; // split seconds time to parry an attack
 
     // === Unity Methods ===
     void Start()
@@ -119,6 +150,84 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+    // == Method/Function to change a player state
+    private void SwitchState(PlayerState newState){
+        // Interrupt the prior state Coroutine
+        if(currentStateCoroutine != null)
+            StopCoroutine(currentStateCoroutine);
+        
+        // Replace the currentState to our newState
+        currentState = newState;
+
+        // Now, call the new state Coroutine depending on the newState
+        switch (newState){
+            case PlayerState.Idle:
+                currentStateCoroutine = StartCoroutine(TriggerIdleState());
+                break;
+            case PlayerState.MovingLeft:
+                currentStateCoroutine = StartCoroutine(TriggerMovingState(-1));
+                break;
+            case PlayerState.MovingRight:
+                currentStateCoroutine = StartCoroutine(TriggerMovingState(1));
+                break;
+            case PlayerState.Jumping:
+                currentStateCoroutine = StartCoroutine(TriggerJumpingState());
+                break;
+            case PlayerState.Falling:
+                currentStateCoroutine = StartCoroutine(TriggerFallingState());
+                break;
+        }
+    }
+
+    // == IEnumerators , what player will do during a specific state.
+    // == Description: Using IEnumerators to be able to set WaitForSeconds, because some state is in a timer.
+    IEnumerator TriggerIdleState(){
+        rb.velocity = new Vector2 (0, rb.velocity.y);
+        // Wait until currentState was changed
+        while (currentState == PlayerState.Idle){
+            yield return null;
+        }
+    }
+    IEnumerator TriggerMovingState(int direction){
+        // Wait until currentState was changed
+        while (currentState == PlayerState.MovingLeft || currentState == PlayerState.MovingRight){
+            rb.velocity = new Vector2(direction * moveSpeed,rb.velocity.y);
+            yield return null;
+        }
+    }
+    IEnumerator TriggerJumpingState(){
+        if(isGrounded){
+            rb.velocity = new Vector2(rb.velocity.x,jumpForce);
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        // Wait until we start falling
+        while (rb.velocity > 0)
+        {
+            yield return null;
+        }
+
+        SwitchState(PlayerState.Falling);
+    }
+    IEnumerator TriggerFallingState(){
+        // Wait until grounded
+        while(!isGrounded){
+            yield return null
+        }
+        SwitchState(PlayerState.Idle);
+    }
+
+    // ==== UI Button Controls/Triggers ==== 
+    // ==== Add New Component - Event Trigger for your UI Buttons (Compatible for mobile devices)
+    // ==== Add New Event Type ==== Check Comments what Event Type for each method.
+    public void OnMoveLeft() => SwitchState(MovingLeft);    // PointerDown, PointerEnter
+    public void OnMoveRight() => SwitchState(MovingRight);  // PointerDown, PointerEnter
+    public void OnIdle() => SwitchState(Idle);              // PointerExit, PointerUp of Any Control Buttons
+    public void OnJump() => SwitchState(Jumping);           // PointerDown, PointerEnter
+    public void OnAttack() => SwitchState(Attacking);       // PointerDown, PointerEnter
+    public void OnRoll() => SwitchState(Rolling);           // PointerDown, PointerEnter
+    public void OnShield () => SwitchState (Shielding);     // PointerDown, PointerEnter
 
     void UpdateTimers()
     {
