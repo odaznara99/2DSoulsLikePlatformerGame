@@ -9,6 +9,7 @@ public class Bandit : MonoBehaviour {
     private Animator            m_animator;
     private Rigidbody2D         m_body2d;
     private Sensor_Bandit       m_groundSensor;
+    public ParticleSystem       m_bloodSplash; // Reference to the blood splash particle system
     private bool                m_grounded = false;
     private bool                m_combatIdle = false;
     private bool                m_isDead = false;
@@ -29,6 +30,7 @@ public class Bandit : MonoBehaviour {
     private bool        isAttacking = false; // Track if the enemy is currently attacking
     private bool        isFacingRight = false; // Track which direction the enemy is facing
     private bool        isHurting = false; // Track when the bandit is being Hurt
+
 
     
 
@@ -225,7 +227,8 @@ public class Bandit : MonoBehaviour {
         }
         else
         {
-            isHurting = true;           
+            isHurting = true;
+            Instantiate(m_bloodSplash, transform.position, Quaternion.identity); // Instantiate blood splash effect
             StopMovingHorizontally();
             StopCoroutine(AttackPlayer());
             Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);

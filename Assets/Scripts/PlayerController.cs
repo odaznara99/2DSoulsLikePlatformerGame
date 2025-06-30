@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float m_rollForce = 6.0f;
     public float m_rollCooldownSeconds = 1f; // Cooldown for rolling
     public float blockCooldownsSeconds = 0.5f;
-    [SerializeField] bool m_noBlood = false;
+    public bool m_noBlood = false;
 
     [Header("Player Effects")]
     [SerializeField] GameObject m_slideDust;

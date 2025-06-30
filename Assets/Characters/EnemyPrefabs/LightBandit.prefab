@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_jumpForce: 0
+  m_bloodSplash: {fileID: 3718151813254276880, guid: bbd5fde97a32b5e498ed1e42aa4530bb, type: 3}
   attackPoint: {fileID: 8207164269522517271}
   moveSpeed: 1.5
   followRange: 4
