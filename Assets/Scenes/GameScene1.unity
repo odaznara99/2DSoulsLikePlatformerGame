@@ -5768,8 +5768,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0027472973, y: 0.35842824}
-  m_Size: {x: 0.50321436, y: 0.6199317}
+  m_Offset: {x: -0.0027472973, y: 0.36722493}
+  m_Size: {x: 0.50321436, y: 0.6023383}
   m_Direction: 0
 --- !u!1 &6579376588806750015
 GameObject:
@@ -6054,6 +6054,10 @@ MonoBehaviour:
   rollDuration: 0.5
   hurtSeconds: 0.5
   enabledDebugLog: 1
+  rollingCooldown: 0.3
+  shieldingCooldown: 0.3
+  lastRollingTimestamp: 0
+  lastShieldingTimestamp: 0
 --- !u!1 &8197508189657131402
 GameObject:
   m_ObjectHideFlags: 0

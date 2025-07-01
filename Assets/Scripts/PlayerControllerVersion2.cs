@@ -1,6 +1,7 @@
 // Second Organized version of PlayerController.cs which we use enum as Player States
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 // === Player States === 
 // === Description: Using enum, to manage states. This way we can sure that PLAYER only have ONE STATE at a time. 
@@ -18,8 +19,8 @@ public enum PlayerState
     LedgeGrabbing,
     Pushing,
     Pulling,
-    ForceInterupt, 
-    Dead // Uninterruptable State, Player is dead, cannot change state anymore
+    ForceInterupt, //This is a special state, to allow any state to be interrupted by this state
+    Dead
 }
 
 // === Separate Horizontal Movement, this state can coexist
@@ -34,7 +35,6 @@ public enum XVelocityState
 
 public class PlayerControllerVersion2 : MonoBehaviour
 {
-
     [Header("Player Parameters")]
     [SerializeField] bool m_noBlood = false;
 
@@ -53,18 +53,19 @@ public class PlayerControllerVersion2 : MonoBehaviour
     [Header("Player States")]
 
     // == Variables for Player State Tracking
-    [SerializeField] private Coroutine currentStateCoroutine;
+    private Coroutine currentStateCoroutine;
     public PlayerState currentState;
     // === Variables for X Velocity === // these variables can override x velocity
     public XVelocityState currentXVelocityState;
-    [SerializeField] private Coroutine currentXVelocityStateCoroutine;
+    private Coroutine currentXVelocityStateCoroutine;
     [SerializeField] private float inputX;
 
 
     [Header("Physics Parameters")]
     // === Variables for Movement Speed === //
     public float jumpForce = 6.0f; // Force of the jump, Y velocity of player when jumping
-    public float movementSpeed = 4.0f; public float slowMovementSpeed = 1.5f; private float originalMovementSpeed = 4.0f;
+    public float movementSpeed = 4.0f; 
+    public float slowMovementSpeed = 1.5f; private float originalMovementSpeed = 4.0f;
     public float rollingSpeed = 5.0f; private float originalRollingSpeed = 5.0f;
     public float wallSlidingSpeed = -0.3f; // Y velocity of player during wall sliding. Should be negative
     public float wallJumpForceX = 5.0f; // X velocity of player when wall jumping
@@ -92,6 +93,14 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     // == Variable for Unity Editor
     public bool enabledDebugLog = true;
+
+    // === Variables for Cooldowns === //
+    [Header("Cooldown Variables")]
+    public float rollingCooldown = 3.0f; // Cooldown for rolling
+    public float shieldingCooldown = 2.0f; // Cooldown for shielding
+    // === Variables for Timeestamp === //
+    [SerializeField]private float lastRollingTimestamp = 0.0f; // Last time player rolled
+    [SerializeField]private float lastShieldingTimestamp = 0.0f; // Last time player shielded
 
     // === Unity Methods ===
     void Start()
@@ -145,14 +154,15 @@ public class PlayerControllerVersion2 : MonoBehaviour
         // === States that is automatically being triggered by a sensor detection ==== //
         if (!isGrounded && isWallDetected)
         {
-            SwitchState(PlayerState.WallSliding);
+            SwitchPlayerState(PlayerState.WallSliding);
         }
 
         // Flip Player Sprite based on the direction of movement
         FlipPlayerSprite();
         // === Handle Animation States === //
-        HandleAnimationStates();
-
+        UpdateAnimationStates();
+        // === Handle Cooldown Timers === //
+        UpdateCooldownTimers();
 
         // === Player Inputs on KeyBoard ==== //
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
@@ -212,9 +222,16 @@ public class PlayerControllerVersion2 : MonoBehaviour
     {
         movementSpeed = newMoveSpeed;
     }
+
     // == Method/Function to change a player state
-    public void SwitchState(PlayerState newState)
+    public void SwitchPlayerState(PlayerState newState)
     {
+        // Set Cooldown for Shielding when switching from Shielding state to new state
+        if (currentState == PlayerState.Shielding && newState != currentState)
+        {
+            lastShieldingTimestamp = shieldingCooldown; // Set the cooldown for shielding
+        }
+
         // Uninterruptable States
         if (currentState == PlayerState.Dead || currentState == PlayerState.Hurting && newState != PlayerState.ForceInterupt)
         {
@@ -283,7 +300,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 case PlayerState.ForceInterupt:
                     // Force Interupt, return to Neutral State
                     DisplayLog("Force Interupted, returning to Neutral State");
-                    SwitchState(PlayerState.Neutral);
+                    SwitchPlayerState(PlayerState.Neutral);
                     break;
                 default:
                     DisplayLog(newState + " is not recognized.");
@@ -294,9 +311,14 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     private void SwitchXVelocityState(XVelocityState newXVelocityState)
     {
+        if(newXVelocityState == XVelocityState.Rolling && newXVelocityState != currentXVelocityState)
+        {
+            DisplayLog("Already in Rolling State, cannot switch to Rolling again!");
+            return; // If already in Rolling state, then do nothing
+        }
 
-            // Interrupt any Coroutine Related to X Velocity State
-            if (currentXVelocityStateCoroutine != null)
+        // Interrupt any Coroutine Related to X Velocity State
+        if (currentXVelocityStateCoroutine != null)
             {
                 StopCoroutine(currentXVelocityStateCoroutine);
             }
@@ -309,7 +331,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 case XVelocityState.Normal:
                     SetFloatMovementSpeed(originalMovementSpeed);
                     //playerAnimator.SetBool("WallSlide", false);
-                    DisplayLog("Normal X Velocity State");
+                    //DisplayLog("Normal X Velocity State");
                     break;
                 case XVelocityState.Stop:
                     SetFloatInputX(0);
@@ -321,7 +343,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
                     currentXVelocityStateCoroutine = StartCoroutine(DoRolling());
                     break;
                 case XVelocityState.Overriden:
-                    DisplayLog("X Velocity is being overriden forcefully!");
+                    //DisplayLog("X Velocity is being overriden forcefully!");
                     break;
                 default:
                     DisplayLog(newXVelocityState + " is not recognized.");
@@ -342,7 +364,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         else if (!isGrounded && isWallDetected)
         {
             // If not grounded and there is a Wall, then Wall Jump instead.
-            SwitchState(PlayerState.WallJumping);
+            SwitchPlayerState(PlayerState.WallJumping);
         }
 
         // Wait until we start falling
@@ -350,7 +372,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             yield return null;
         }
-        SwitchState(PlayerState.Falling);
+        SwitchPlayerState(PlayerState.Falling);
     }
     IEnumerator DoFalling()
     {
@@ -359,21 +381,20 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             yield return null;
         }
-        SwitchState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral);
     }
     IEnumerator DoWallSliding()
     {
         // No Horizontal movement
         SwitchXVelocityState(XVelocityState.Overriden);
         rb.velocity = new Vector2(0, wallSlidingSpeed);
-        playerAnimator.SetBool("WallSlide", true);
         // Wait until not grounded or there is no wall detected
         while (!isGrounded && isWallDetected)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.3f);
         }
         //playerAnimator.SetBool("WallSlide", false);
-        SwitchState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral);
 
     }
     IEnumerator DoWallJumping()
@@ -388,9 +409,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             yield return null;
         }
-        SwitchState(PlayerState.Falling);
+        SwitchPlayerState(PlayerState.Falling);
 
-    }
+    } 
     IEnumerator DoRolling()
     {
         // XVelocityState.Rolling
@@ -398,8 +419,14 @@ public class PlayerControllerVersion2 : MonoBehaviour
             SwitchXVelocityState(XVelocityState.Overriden);
             yield break;
         }
-          
-        SwitchState(PlayerState.ForceInterupt);
+        if (lastRollingTimestamp > 0)
+        {
+            DisplayLog("Rolling is on cooldown!");
+            SwitchXVelocityState(XVelocityState.Normal);
+            yield break; // If rolling is on cooldown, then stop the coroutine
+        }
+
+        SwitchPlayerState(PlayerState.ForceInterupt);
         upperBodyCollider.enabled = false;
         playerAnimator.SetTrigger("Roll");
         rb.velocity = new Vector2(facingDirection * rollingSpeed, rb.velocity.y);
@@ -414,9 +441,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         // Go back to Normal State and Apply a Cooldown
         upperBodyCollider.enabled = true;
-        
+        lastRollingTimestamp = rollingCooldown; // Set the cooldown for rolling
         SwitchXVelocityState(XVelocityState.Normal);
-        SwitchState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral);
     }
     IEnumerator DoContinuousAttack()
     {
@@ -426,7 +453,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchXVelocityState(XVelocityState.Slow);
         DoAttacking();
         yield return new WaitForSeconds(attackIntervalTime);
-        SwitchState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral);
 
     }
     private void DoAttacking()
@@ -476,11 +503,18 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         yield return new WaitForSeconds(hurtSeconds);
 
-        SwitchState(PlayerState.ForceInterupt);
+        SwitchPlayerState(PlayerState.ForceInterupt);
     }
 
     IEnumerator DoShielding()
     {
+        if (lastShieldingTimestamp > 0)
+        {
+            DisplayLog("Shielding is on cooldown!");
+            SwitchXVelocityState(XVelocityState.Normal);
+            yield break; // If shielding is on cooldown, then stop the coroutine
+        }
+
         SwitchXVelocityState(XVelocityState.Slow);
         StartCoroutine(DoParry());
         playerAnimator.SetTrigger("Block");
@@ -503,12 +537,37 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // ==== Add New Event Type ==== Check Comments what Event Type for each method.
     public void OnMoveRight() => SetFloatInputX(1);              // PointerDown, PointerEnter
     public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
-    public void OnNeutral() => SwitchState(PlayerState.Neutral);              // PointerExit, PointerUp of Any Control Buttons
-    public void OnJump() => SwitchState(PlayerState.Jumping);           // PointerDown, PointerEnter
-    public void OnHoldAttack() => SwitchState(PlayerState.Attacking);    // PointerDown, PointerEnter
+    public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral);              // PointerExit, PointerUp of Any Control Buttons
+    public void OnJump() => SwitchPlayerState(PlayerState.Jumping);           // PointerDown, PointerEnter
+    public void OnHoldAttack() => SwitchPlayerState(PlayerState.Attacking);    // PointerDown, PointerEnter
     public void OnRoll() => SwitchXVelocityState(XVelocityState.Rolling);  // PointerDown, PointerEnter
-    public void OnHoldShield() => SwitchState(PlayerState.Shielding);     // PointerDown, PointerEnter
-    void HandleAnimationStates()
+    public void OnHoldShield() => SwitchPlayerState(PlayerState.Shielding);     // PointerDown, PointerEnter
+
+    void UpdateCooldownTimers() {
+        // Handle Rolling Cooldown
+        if (lastRollingTimestamp > 0)
+        {
+            lastRollingTimestamp -= Time.deltaTime;
+            if (lastRollingTimestamp <= 0)
+            {
+                lastRollingTimestamp = 0;
+                DisplayLog("Rolling Cooldown is over!");
+            }
+        }
+
+        // Handle Shielding Cooldown
+        if (lastShieldingTimestamp > 0)
+        {
+            lastShieldingTimestamp -= Time.deltaTime;
+            if (lastShieldingTimestamp <= 0)
+            {
+                lastShieldingTimestamp = 0;
+                DisplayLog("Shielding Cooldown is over!");
+            }
+        }
+
+    }
+    void UpdateAnimationStates()
     {
         playerAnimator.SetBool("Grounded", isGrounded);
         playerAnimator.SetFloat("AirSpeedY", rb.velocity.y);
@@ -556,7 +615,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     public bool SetPlayerDead()
     {
-        SwitchState(PlayerState.Dead);
+        SwitchPlayerState(PlayerState.Dead);
         return true;
     }
 

@@ -43,7 +43,7 @@ public class PlayerHealth : MonoBehaviour
                 if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
                 {
                     //playerAnimator.SetTrigger("Hurt");
-                    player.SwitchState(PlayerState.Hurting); // Switch to the Hurting state
+                    player.SwitchPlayerState(PlayerState.Hurting); // Switch to the Hurting state
                     currentHealth -= damageAmount;
                     Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
                 }
