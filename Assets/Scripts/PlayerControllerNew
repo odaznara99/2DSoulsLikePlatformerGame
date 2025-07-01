@@ -11,7 +11,6 @@ public enum PlayerState{
     Idle,
     Jumping,
     Falling,
-    Rolling,
     WallSliding,
     WallJumping,
     Attacking,
@@ -23,22 +22,19 @@ public enum PlayerState{
 }
 
 // === Separate Horizontal Movement, this state can coexist
-public enum HorizontalMovementState{
-    MovingRight,
-    MovingLeft
+public enum XVelocityState
+{
+    Normal,
+    Stop,
+    Slow,
+    Rolling,
+    Overriden
 }
 
 public class PlayerController : MonoBehaviour
 {
     // === Header: Parameters ===
     [Header("Player Parameters")]
-    [SerializeField] float m_movementSpeed = 4.0f;
-    [SerializeField] float m_originalMovementSpeed = 4.0f;
-    [SerializeField] float m_jumpForce = 7.5f;
-    [SerializeField] float m_wallJumpForce = 4.0f;
-    [SerializeField] float m_rollForce = 6.0f;
-    public float m_rollCooldownSeconds = 1f; // Cooldown for rolling
-    public float blockCooldownsSeconds = 0.5f;
     [SerializeField] bool m_noBlood = false;
 
     [Header("Player Effects")]
@@ -46,69 +42,46 @@ public class PlayerController : MonoBehaviour
 
     [Header("Attack Parameters")]
     public Transform attackPoint;
-    public float attackRange = 2f;
+    public float attackRadius = 2f;
     public int attackDamage = 20;
-    public float attackCooldown = 1f;
-    public float attackInBetweenTime = 0.5f;
-    public bool isBlockCooldown = false;
-    public bool isRollInCooldown = false;
+    public float attackIntervalTime = 0.5f;
 
     [Header("Track Player's State")]
-    public bool playerIsDead = false;
     public bool playerisHurt = false;
-    public bool isBlocking = false;
-    public bool isParry = false;
-    public bool isAttacking = false;
-    public bool isWallJumping = false;
-    public bool m_isWallSliding = false;
-    
-    public bool m_rolling = false;
-    public bool allowMovement = true;
 
-    // === Private Fields ===
-    private Animator m_animator;
+    // === Private Variables === //
+    private Animator playerAnimator;
     private Rigidbody2D rb;
     private Sensor_HeroKnight m_groundSensor, m_wallSensorR1, m_wallSensorR2, m_wallSensorL1, m_wallSensorL2;
     private BoxCollider2D upperBodyCollider;
-    private int m_facingDirection = 1;
-    private int m_currentAttack = 0;
-
+    private int facingDirection = 1;
+    private int currentAttackAnimation = 0;
     private float m_delayToIdle = 0.0f;
-    private float m_rollDuration = 8.0f / 14.0f;
-    private float m_rollCurrentTime;
-    private float m_attackCurrentTime;
-    private float m_attackDuration = 0.4f;
-    private float lastComboAttackTime = 0.0f;
-    private float lastAttackTime;
-    private float m_wallJumpCurrentTime;
-    private float m_wallJumpDuration = 0.8f;
 
-    private Coroutine attackCoroutine;
-
-    
-    public float slowFactor = 0.5f;
-    public bool m_grounded = false;
-
-    // == Variables for X Velocity === // these variables can override x velocity
-    [SerializeField] float inputX;
-
-    // === Variables for Y Velocity === // these variables can override y velocity
+    // === Variables for Movement Speed === //
+    public float movementSpeed = 4.0f; public float slowMovementSpeed = 1.5f;  private float originalMovementSpeed = 4.0f;
+    public float rollingSpeed = 5.0f;  private float originalRollingSpeed = 5.0f;
     public float wallSlidingSpeed = -0.3f; // Y velocity of player during wall sliding. Should be negative
 
-
+    // === Variables for X Velocity === // these variables can override x velocity
+    [SerializeField] float inputX;
+    [SerializeField] XVelocityState currentXVelocityState;
+    [SerializeField] Coroutine currentXVelocityStateCoroutine;
+ 
     // == Variables for Player State Tracking
     [SerializeField]private Coroutine   currentStateCoroutine;
     [SerializeField]private PlayerState currentState;
 
     // == Variable for Sensors / Conditions / SubStates
     public bool isGrounded = false; // Sensor to detect if player is on a Ground (Tag)
-    public bool isParrying = false; // Set to true for split seconds, when player is shielding
+    public bool isParry = false; // Set to true for split seconds, when player is shielding
     public bool isWallDetected = false; // Sensor to detect if there is a wall in front of the player
     public bool isUpperWallDetected = false; // Sensor to detect if there is a wall on player's head.
     
     // == Variables for Timing
-    public float parryingTime = 0.3f; // Split seconds time to parry an attack
-    public float rollDuration = 0.5f; // Duration of rolling state.
+    public float parryingTime = 0.3f; // Duration to parry an attack
+    public float rollDuration = 0.5f; // Duration in Rolling state.
+    public float hurtSeconds = 0.3f; // Duration in Hurting State
 
     // == Variable for Unity Editor
     public bool enabledDebugLog = true;
@@ -116,9 +89,9 @@ public class PlayerController : MonoBehaviour
     // === Unity Methods ===
     void Start()
     {
-        m_animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
-        upperBodyCollider = GetComponent<BoxCollider2D>();
+        playerAnimator      = GetComponent<Animator>();
+        rb                  = GetComponent<Rigidbody2D>();
+        upperBodyCollider   = GetComponent<BoxCollider2D>();
 
         m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
         m_wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor_HeroKnight>();
@@ -127,33 +100,38 @@ public class PlayerController : MonoBehaviour
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
         attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
 
-        lastAttackTime = Time.time - attackCooldown;
-
+        // Ignore collisions between Player and Enemies
         Physics2D.IgnoreLayerCollision(3, 6);
         Physics2D.IgnoreLayerCollision(3, 3);
+
+        originalMovementSpeed = movementSpeed;
+        originalRollingSpeed = rollingSpeed;
     }
 
     void Update()
     {
-        UpdateTimers();
-        CheckGroundedState();
         FlipPlayerSprite();
-        WallSliding();
-
         HandleAnimationStates();
-        m_animator.SetFloat("AirSpeedY", rb.velocity.y);
 
-        // === Horizontal Movement === // SetInputX
-        if (enableHorizontalMovement)
+        // === Horizontal Movements === // 
+        // === Same logic, but variables was being modified by:
+        // === SetFloatInputX/SetFloatMovementSpeed
+        if (currentXVelocityState == XVelocityState.Normal ||
+            currentXVelocityState == XVelocityState.Slow ||
+            currentXVelocityState == XVelocityState.Stop)
+        {
             rb.velocity = new Vector2(inputX * movementSpeed, rb.velocity.y);
+        }
 
         // === Wall Detection ==== //
-        isWallDetected = ((m_wallSensorR1.State() && m_wallSensorR2.State() && m_facingDirection == 1) 
-        || (m_wallSensorL1.State() && m_wallSensorL2.State() && m_facingDirection == -1));
+            isWallDetected = (
+                (m_wallSensorR1.State() && m_wallSensorR2.State() && facingDirection == 1) 
+            ||  (m_wallSensorL1.State() && m_wallSensorL2.State() && facingDirection == -1)
+        );
 
         // === Ground Detection === //
         isGrounded = m_groundSensor.State();
-        m_animator.SetBool("Grounded", isGrounded);
+        playerAnimator.SetBool("Grounded", isGrounded);
 
         // === Upper Wall Detection === //
         isUpperWallDetected = m_wallSensorR1.State()||m_wallSensorR2.State();
@@ -166,27 +144,42 @@ public class PlayerController : MonoBehaviour
 
     private void DisplayLog (string messageLog){
         if (enabledDebugLog){
-            Debug.Log(messageLog)
+            Debug.Log(messageLog);
         }
     }
 
-    public void SetInputX(float p_inputX)
+    public void SetFloatInputX(float newInputX)
     {
-        if (currentState != PlayerState.Dead && currentState != PlayerState.Hurting ){
-            inputX = p_inputX;
+        if (currentState != PlayerState.Dead && currentState != PlayerState.Hurting)
+        {
+            inputX = newInputX;
+        }
     }
 
+    public void SetFloatMovementSpeed(float newMoveSpeed)
+    {
+        movementSpeed = newMoveSpeed; 
+    }
     // == Method/Function to change a player state
-    private void SwitchState(PlayerState newState){
+    private void SwitchState(PlayerState newState)
+    {
         // Uninterruptable States
-        if(currentState == PlayerState.Dead || currentState == PlayerState.Hurting)
+        if (currentState == PlayerState.Dead || currentState == PlayerState.Hurting)
         {
             DisplayLog("Player is currently " + currentState + " cannot change this state!");
-        } 
+        }
+        else if (currentXVelocityState == XVelocityState.Rolling)
+        {
+            DisplayLog("You cannot interupt Rolling State of the player!");
+        }
+        else if (currentStateCoroutine == PlayerState.Attacking && newState == PlayerState.Attacking)
+        {
+            DisplayLog("You cannot interupt attacking by attacking again!");
+        }
         else
         {
             // Interrupt or STOP the currentState Coroutine
-            if(currentStateCoroutine != null)
+            if (currentStateCoroutine != null)
                 StopCoroutine(currentStateCoroutine);
 
             DisplayLog("Switching PlayerState into  " + newState + " state from " + currentState);
@@ -194,7 +187,8 @@ public class PlayerController : MonoBehaviour
             currentState = newState;
 
             // Now, call the new state Coroutine depending on the newState
-            switch (newState){
+            switch (newState)
+            {
                 case PlayerState.Jumping:
                     currentStateCoroutine = StartCoroutine(DoJumping());
                     break;
@@ -207,15 +201,63 @@ public class PlayerController : MonoBehaviour
                 case PlayerState.WallJumping:
                     currentStateCoroutine = StartCoroutine(DoWallJumping());
                     break;
-                case PlayerState.Rolling:
-                    currentStateCoroutine = StartCoroutine(DoRolling());
-                    break;
                 case PlayerState.Attacking:
-                    currentStateCoroutine = StartCoroutine(DoAttacking());
+                    currentStateCoroutine = StartCoroutine(DoContinuousAttack());
+                    break;
+                case PlayerState.Shielding:
+                    currentStateCoroutine = StartCoroutine(DoShielding());
+                    break;
+                case PlayerState.Hurting:
+                    currentStateCoroutine = StartCoroutine(DoHurting());
+                    break;
+                case PlayerState.Idle:
+                    DisplayLog(newState + " return Normal X speed");
+                    SwitchXVelocityState(XVelocityState.Normal);
                     break;
                 default:
-                    DisplayLog(newState+" is doing nothing.");
-                    SetInputX(0);
+                    DisplayLog(newState + " is not recognized.");
+            }
+        }
+    }
+
+    private void SwitchXVelocityState(XVelocityState newXVelocityState)
+    {
+        // Uninteruptable Velocity States
+        if (currentXVelocityState == XVelocityState.Rolling)
+        {
+            DisplayLog("Cannot interrupt  " + currentXVelocityState + " state!");
+        }
+        else
+        {
+            // Interrupt any Coroutine Related to X Velocity State
+            if (currentXVelocityStateCoroutine != null)
+            {
+                StopCoroutine(currentXVelocityStateCoroutine);
+            }
+
+            currentXVelocityState = newXVelocityState;
+
+            // Now, call the new state Coroutine/Method depending on the newState
+            switch (newXVelocityState)
+            {
+                case XVelocityState.Normal:
+                    SetFloatMovementSpeed(originalMovementSpeed);
+                    DisplayLog("Normal X Velocity State");
+                    break;
+                case XVelocityState.Stop:
+                    SetFloatInputX(0);
+                    break;
+                case XVelocityState.Slow:
+                    SetFloatMovementSpeed(slowMovementSpeed);
+                    break;
+                case XVelocityState.Rolling:
+                    currentXVelocityStateCoroutine = StartCoroutine(DoRolling());
+                    break;
+                case XVelocityState.Overriden:
+                    DisplayLog("X Velocity is being overriden forcefully!");
+                    break;
+                default:
+                    DisplayLog(newState + " is not recognized.");
             }
         }
     }
@@ -224,9 +266,12 @@ public class PlayerController : MonoBehaviour
     // == Description: Using IEnumerators to be able to set WaitForSeconds, because some state is in a timer.
     IEnumerator DoJumping(){
         if(isGrounded){
+            playerAnimator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x,jumpForce);
             yield return new WaitForSeconds(0.2f);
-        }else if (!isGrounded && isWallDetected){
+        }
+        else if (!isGrounded && isWallDetected)
+        {
             // If not grounded and there is a Wall, then Wall Jump instead.
             SwitchState(PlayerState.WallJumping);
         }
@@ -236,29 +281,36 @@ public class PlayerController : MonoBehaviour
         {
             yield return null;
         }
-
         SwitchState(PlayerState.Falling);
     }
     IEnumerator DoFalling(){
         // Wait until grounded
         while(!isGrounded){
-            yield return null
+            yield return null;
         }
         SwitchState(PlayerState.Idle);
     }
-    IEnumerator DoWallSliding(){
+    IEnumerator DoWallSliding()
+    {
         // No Horizontal movement
-        rb.velocity = new Vector2(0,wallSlidingSpeed);
-        m_animator.SetBool("WallSlide", true);
+        SwitchXVelocityState(XVelocityState.Overriden);
+        rb.velocity = new Vector2(0, wallSlidingSpeed);
+        playerAnimator.SetBool("WallSlide", true);
         // Wait until not grounded or there is no wall detected
-        while(!isGrounded || !isWallDetected){
-            yield return null
+        while (!isGrounded || !isWallDetected)
+        {
+            yield return null;
         }
+        playerAnimator.SetBool("WallSlide", false);
         SwitchState(PlayerState.Idle);
+        
     }
-    IEnumerator DoWallJumping(){
+    IEnumerator DoWallJumping()
+    {
+        SwitchXVelocityState(XVelocityState.Overriden);
         // Jumps to opposite direction
-        rb.velocity = new Vector2((wallJumpForceX * -m_facingDirection),wallJumpForceY);
+        playerAnimator.SetTrigger("Jump");
+        rb.velocity = new Vector2(wallJumpForceX * -facingDirection, wallJumpForceY);
         yield return new WaitForSeconds(0.2f);
         // Wait until we start falling
         while (rb.velocity > 0)
@@ -266,298 +318,145 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
         SwitchState(PlayerState.Falling);
+        
     }
-    IEnumerator DoRolling(){
+    IEnumerator DoRolling()
+    {
+
         upperBodyCollider.enabled = false;
-        m_animator.SetTrigger("Roll");
-        rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
+        playerAnimator.SetTrigger("Roll");
+        rb.velocity = new Vector2(facingDirection * rollingSpeed, rb.velocity.y);
         yield return new WaitForSeconds(rollDuration);
 
-        // Wait until there is no wall on your head
-        while (isUpperWallDetected){
-            yield return null
+        // Continue Rolling While there are still obstacles in Players Head
+        while (isUpperWallDetected)
+        {
+            playerAnimator.SetTrigger("Roll");
+            yield return new WaitForSeconds(rollDuration);
         }
+
+        // Go back to Normal State and Apply a Cooldown
         upperBodyCollider.enabled = true;
-        StartCoroutine(SetRollInCooldown());
+        StartCoroutine(SetCooldownForRolling());
+        SwitchState(PlayerState.Idle);   
+    }
+    IEnumerator DoContinuousAttack()
+    {
+        while (true)
+        {
+            SwitchXVelocityState(XVelocityState.Slow);
+            DoAttacking();
+            yield return new WaitForSeconds(attackIntervalTime);
+            DoAttacking();
+        }
+    }
+    private void DoAttacking()
+    {
+        // Reference to the AttackPoint if not assigned
+        if (attackPoint == null)
+        {
+            attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
+        }
+
+
+            // Slow your movement speed during attack
+            SwitchXVelocityState(XVelocityState.Slow);
+
+            // Find all nearby enemies within the attack range/radius
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius);
+
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                if (enemy.CompareTag("Enemy"))
+                {
+                    // Apply damage to the enemy
+                    StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
+                }
+            }
+
+            //Variable for Current Attack Animation
+            currentAttackAnimation++;
+            // Call one of three attack animations "Attack1", "Attack2", "Attack3"
+            playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
+            Debug.Log("Attack: " + currentAttackAnimation);
+
+            // If the combo is complete (after the third attack), apply the cooldown
+            if (currentAttackAnimation >= 3)
+            {
+                // Reset animation
+                currentAttackAnimation = 0;
+                DisplayLog("Combo completed");
+            }
+    }
+
+    IEnumerator DoHurting()
+    {
+        SwitchXVelocityState(XVelocityState.Stop);
+        playerAnimator.SetTrigger("Hurt");
+
+        yield return new WaitForSeconds(hurtSeconds);
+
         SwitchState(PlayerState.Idle);
     }
-    IEnumerator DoAttacking(){
 
+    IEnumerator DoShielding()
+    {
+        SwitchXVelocityState(XVelocityState.Slow);
+        StartCoroutine(DoParry());
+        playerAnimator.SetTrigger("Block");
+        playerAnimator.SetBool("IdleBlock", true);
+        while (true)
+        {
+            yield return null;
+        }
+        // Wait until someone change your state
+    }
+    IEnumerator DoParry()
+    {
+        isParry = true;
+        yield return new WaitForSeconds(parryingTime);
+        isParry = false;
     }
 
     // ==== UI Button Controls/Triggers ==== 
     // ==== Add New Component - Event Trigger for your UI Buttons (Compatible for mobile devices)
     // ==== Add New Event Type ==== Check Comments what Event Type for each method.
-    public void onMoveRight() => SetInputX(1);              // PointerDown, PointerEnter
-    public void onMoveLeft() => SetInputX(-1);              // PointerDown, PointerEnter
+    public void OnMoveRight() => SetFloatInputX(1);              // PointerDown, PointerEnter
+    public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
     public void OnIdle() => SwitchState(Idle);              // PointerExit, PointerUp of Any Control Buttons
     public void OnJump() => SwitchState(Jumping);           // PointerDown, PointerEnter
     public void OnAttack() => SwitchState(Attacking);       // PointerDown, PointerEnter
-    public void OnRoll() => SwitchState(Rolling);           // PointerDown, PointerEnter
-    public void OnShield () => SwitchState (Shielding);     // PointerDown, PointerEnter
-
-    void UpdateTimers()
-    {
-        lastComboAttackTime += Time.deltaTime;
-
-        if (m_rolling)
-        {
-            m_rollCurrentTime += Time.deltaTime;
-            if (m_rollCurrentTime > m_rollDuration)
-            {
-                m_rolling = false;
-                upperBodyCollider.enabled = true;
-                m_rollCurrentTime = 0f;
-            }
-        }
-
-        if (isAttacking)
-        {
-            m_attackCurrentTime += Time.deltaTime;
-            if (m_attackCurrentTime > m_attackDuration)
-            {
-                isAttacking = false;
-                m_attackCurrentTime = 0f;
-            }
-        }
-
-        if (isWallJumping)
-        {
-            m_wallJumpCurrentTime += Time.deltaTime;
-            if (m_wallJumpCurrentTime > m_wallJumpDuration || m_isWallSliding)
-            {
-                isWallJumping = false;
-                m_wallJumpCurrentTime = 0f;
-            }
-        }
-    }
-
-    void CheckGroundedState()
-    {
-        if (!m_grounded && m_groundSensor.State())
-        {
-            m_grounded = true;
-            m_animator.SetBool("Grounded", true);
-        }
-        else if (m_grounded && !m_groundSensor.State())
-        {
-            m_grounded = false;
-            m_animator.SetBool("Grounded", false);
-        }
-    }
-
+    public void OnRoll() => SwitchXVelocityState(Rolling);  // PointerDown, PointerEnter
+    public void OnHoldShield () => SwitchState (Shielding);     // PointerDown, PointerEnter
     void HandleAnimationStates()
     {
-        if (Input.GetKeyDown("left shift")) { Roll(); }
-        else if (Input.GetKeyDown("space")) { Jump(); }
-        else if (Mathf.Abs(inputX) > Mathf.Epsilon)
+        
+        playerAnimator.SetFloat("AirSpeedY", rb.velocity.y);
+
+        if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {
             m_delayToIdle = 0.05f;
-            m_animator.SetInteger("AnimState", 1);
+            playerAnimator.SetInteger("AnimState", 1);
         }
         else
         {
             m_delayToIdle -= Time.deltaTime;
             if (m_delayToIdle < 0)
-                m_animator.SetInteger("AnimState", 0);
+                playerAnimator.SetInteger("AnimState", 0);
         }
     }
 
     void FlipPlayerSprite()
     {
-        if (rb.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; m_facingDirection = 1; }
-        else if (rb.velocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; m_facingDirection = -1; }
-    }
-
-
-    public void Attack()
-    {
-        if (!playerisHurt && !playerIsDead)
-        {
-            // Reference to the AttackPoint if not assigned
-            if (attackPoint == null)
-            {
-                attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
-            }
-
-            ReleaseBlock();
-
-            // Check Cooldown
-            if (!isAttacking && Time.time >= lastAttackTime + attackCooldown)
-            {
-                // Check In Between Time
-                if (lastComboAttackTime > attackInBetweenTime && !m_rolling)
-                {
-                    // Enter Attacking State
-                    isAttacking = true;
-                    // Release Block State
-                    isBlocking = false;
-
-                    StartCoroutine(SetSlowMovementSpeed(slowFactor, attackInBetweenTime));
-
-                    // Find all nearby enemies within the attack range
-                    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
-
-                    foreach (Collider2D enemy in hitEnemies)
-                    {
-                        if (enemy.CompareTag("Enemy"))
-                        {
-                            // Apply damage to the enemy
-                            StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
-                        }
-                    }
-
-                    //Variable for Current Attack Animation
-                    m_currentAttack++;
-
-                    // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-                    m_animator.SetTrigger("Attack" + m_currentAttack);
-                    Debug.Log("Attack" + m_currentAttack);
-
-                    // Reset timer
-                    lastComboAttackTime = 0.0f;
-
-                    // If the combo is complete (after the third attack), apply the cooldown
-                    if (m_currentAttack >= 3)
-                    {
-                        // Loop back to one for next combo
-                        m_currentAttack = 0;
-
-                        // Set cooldown after the full combo
-                        lastAttackTime = Time.time;
-
-                        //Allow Movement Horizontally
-                        //AllowMovement();
-                        Debug.Log("Combo completed, entering cooldown.");
-                        //StopAttackHold();
-                    }
-                }
-
-            }
-
-            // Reset combo animation if too much time has passed between attacks
-            if (lastComboAttackTime > attackInBetweenTime + 2f)
-            {
-                m_currentAttack = 0;
-                //AllowMovement();
-                Debug.Log("Combo is reset due to delay.");
-            }
-        }
-
-
-    }
-    //Method to Block Attacks
-    public void Block()
-    {
-        if (!playerIsDead && !playerIsDead && !isBlocking)
-        {
-            if (!m_rolling && !isAttacking && m_grounded && !isBlockCooldown)
-            {
-                //StartCoroutine(Parry());
-                m_animator.SetTrigger("Block");
-                isBlocking = true;
-                m_animator.SetBool("IdleBlock", true);
-            }
-        }
-
-    }
-    public void ReleaseBlock()
-    {
-        if (!playerIsDead && !playerisHurt)
-        {
-            if (isBlocking)
-            {
-                m_animator.SetBool("IdleBlock", false);
-                isBlocking = false;
-                //AllowMovement();
-                SetSlowMovementSpeed(1);
-                //StartCoroutine(SetSlowMovementSpeed(slowFactor,0.5f));
-                StartCoroutine(BlockCooldown());
-            }
-        }
-    }
-
-    IEnumerator BlockCooldown()
-    {
-        isBlockCooldown = true;
-        yield return new WaitForSeconds(blockCooldownsSeconds);
-        isBlockCooldown = false;
-    }
-    public void Roll()
-    {
-        if (!playerIsDead && !playerisHurt)
-        {
-            ReleaseBlock();
-
-            if (!m_rolling && !m_isWallSliding && !isRollInCooldown && !isWallJumping)
-            {
-                upperBodyCollider.enabled = false;
-                m_rolling = true;
-                m_animator.SetTrigger("Roll");
-                rb.velocity = new Vector2(m_facingDirection * m_rollForce, rb.velocity.y);
-                StartCoroutine(SetRollInCooldown());
-            }
-        }
-    }
-
-    IEnumerator SetRollInCooldown()
-    {
-        isRollInCooldown = true;
-        yield return new WaitForSeconds(m_rollCooldownSeconds);
-        isRollInCooldown = false;
-
-    }
-    public void Jump()
-    {
-        if (!playerIsDead && !playerisHurt)
-        {
-            ReleaseBlock();
-
-            //Check if on ground or wallsliding
-            if ((m_grounded || m_isWallSliding) && !m_rolling)
-            {
-                TriggerJumpAnimation();
-
-                //Wall Jump
-                //Add Sideways Velocity to Opposite Direction
-                if (m_isWallSliding)
-                {
-                    m_isWallSliding = false;
-                    isWallJumping = true;
-                    rb.velocity = new Vector2((m_wallJumpForce * -m_facingDirection), rb.velocity.y);
-                    Debug.Log("Wall Jump Added force is:" + m_wallJumpForce * -m_facingDirection);
-                }
-
-                //Add Upward Velocity to Jump
-                rb.velocity = new Vector2(rb.velocity.x, m_jumpForce);
-                m_groundSensor.Disable(0.2f);
-
-            }else if (!m_grounded)
-            {
-                Roll();
-            }
-        }
-    }
-    public void TriggerJumpAnimation()
-    {
-        m_animator.SetTrigger("Jump");
-        m_grounded = false;
-        m_animator.SetBool("Grounded", m_grounded);
-
-    }
-    IEnumerator Parry()
-    {
-        isParry = true;
-        yield return new WaitForSeconds(0.3f);
-        isParry = false;
-        yield break;
+        if (rb.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
+        else if (rb.velocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
     }
 
     void AE_SlideDust()
     {
         Vector3 spawnPosition;
 
-        if (m_facingDirection == 1)
+        if (facingDirection == 1)
             spawnPosition = m_wallSensorR2.transform.position;
         else
             spawnPosition = m_wallSensorL2.transform.position;
@@ -567,7 +466,7 @@ public class PlayerController : MonoBehaviour
             // Set correct arrow spawn position
             GameObject dust = Instantiate(m_slideDust, spawnPosition, gameObject.transform.localRotation) as GameObject;
             // Turn arrow in correct direction
-            dust.transform.localScale = new Vector3(m_facingDirection, 1, 1);
+            dust.transform.localScale = new Vector3(facingDirection, 1, 1);
         }
     }
 
@@ -575,98 +474,17 @@ public class PlayerController : MonoBehaviour
 
     public bool SetPlayerDead()
     {
-        DontAllowMovement();
-        playerIsDead = true;
-        return playerIsDead;
+        SwitchState(PlayerState.Dead);
+        return true;
     }
-
-    void DontAllowMovement() {
-        allowMovement = false;
-        SetInputX(0);  
-    }
-
-    void SetSlowMovementSpeed(float p_slowFactor) {
-        m_movementSpeed = m_originalMovementSpeed * p_slowFactor; // Apply slow factor if needed
-        Debug.Log("Slowing down player movement speed by factor: " + p_slowFactor);
-    }
-
-
-    IEnumerator SetSlowMovementSpeed(float p_slowFactor,float slowDuration)
-    {
-        Debug.Log("Slowing down player movement speed by factor: " + p_slowFactor);
-        m_movementSpeed = m_originalMovementSpeed * p_slowFactor;
-        yield return new WaitForSeconds(slowDuration);
-        Debug.Log("Resetting player movement speed to original value.");
-        m_movementSpeed = m_originalMovementSpeed;
-        yield break;
-    }
-
-    public void AllowMovement()
-    {
-        if (!isWallJumping)
-            allowMovement = true;
-    }
-
-    public void StartAttackHold()
-    {
-        if (attackCoroutine == null)
-            attackCoroutine = StartCoroutine(ContinuousAttack());
-    }
-
-    public void StopAttackHold()
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-        }
-    }
-
-    IEnumerator ContinuousAttack()
-    {
-        while (true)
-        {
-            DoAttack();
-            yield return new WaitForSeconds(0.3f);
-        }
-    }
-
-    void DoAttack()
-    {
-        Debug.Log("Attack!");
-        Attack();
-    }
-
     private void OnDrawGizmosSelected()
     {
         if (attackPoint != null)
         {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
         }
     }
 
-    public void SetPlayerIsHurtSeconds(float seconds)
-    {
-        if (!playerisHurt)
-        {
-            StartCoroutine(SetPlayerIsHurt(seconds));
-        }
-        else
-        {
-            StopCoroutine(SetPlayerIsHurt(seconds));
-            StartCoroutine(SetPlayerIsHurt(seconds));
-        }
-    }
 
-    IEnumerator SetPlayerIsHurt(float hurtSeconds)
-    {
-        DontAllowMovement();
-        playerisHurt = true;
-        m_animator.SetTrigger("Hurt");
-        yield return new WaitForSeconds(hurtSeconds);
-        playerisHurt = false;
-        AllowMovement();
-        yield break;
-    }
 }
