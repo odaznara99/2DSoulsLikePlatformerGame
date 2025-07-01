@@ -166,8 +166,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
             // If no input, then stop moving
             //SetFloatInputX(0); 
         }
+#if UNITY_EDITOR
         inputX = Input.GetAxis("Horizontal"); // This is for Unity Input System, to get the input from the keyboard
-
+#endif
         if (Input.GetKeyDown(KeyCode.Space))
         {
             OnJump(); // Jump
@@ -183,7 +184,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.Mouse1) || Input.GetKeyUp(KeyCode.K))
         {
-            OnIdle(); // Stop Shielding
+            OnNeutral(); // Stop Shielding
         }
         else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.L))
         {
@@ -502,7 +503,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // ==== Add New Event Type ==== Check Comments what Event Type for each method.
     public void OnMoveRight() => SetFloatInputX(1);              // PointerDown, PointerEnter
     public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
-    public void OnIdle() => SwitchState(PlayerState.Neutral);              // PointerExit, PointerUp of Any Control Buttons
+    public void OnNeutral() => SwitchState(PlayerState.Neutral);              // PointerExit, PointerUp of Any Control Buttons
     public void OnJump() => SwitchState(PlayerState.Jumping);           // PointerDown, PointerEnter
     public void OnHoldAttack() => SwitchState(PlayerState.Attacking);    // PointerDown, PointerEnter
     public void OnRoll() => SwitchXVelocityState(XVelocityState.Rolling);  // PointerDown, PointerEnter
