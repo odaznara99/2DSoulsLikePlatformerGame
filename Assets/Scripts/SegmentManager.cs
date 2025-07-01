@@ -17,13 +17,17 @@ public class SegmentManager : MonoBehaviour
     private Vector3 nextSpawnPoint;
     private int previousSegmentindex;
 
-    void Start()
+    private void Awake()
     {
-        //Find the player position
         if (player == null)
         {
             player = transform.Find("HeroKnight").GetComponent<Transform>();
         }
+
+    }
+
+    void Start()
+    {
 
         //To avoid zero or null
         if (maxSegments == 0) {

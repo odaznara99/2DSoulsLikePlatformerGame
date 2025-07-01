@@ -1,14 +1,13 @@
 // Second Organized version of PlayerController.cs which we use enum as Player States
 using UnityEngine;
 using System.Collections;
-using Cainos.LucidEditor;
 
 // === Player States === 
 // === Description: Using enum, to manage states. This way we can sure that PLAYER only have ONE STATE at a time. 
 // ===            : so we can avoid overriding Physics and Animations. Managing each state properly and isolatedly.
-public enum PlayerState{
-    Dead,
-    Idle,
+public enum PlayerState
+{
+    Neutral,
     Jumping,
     Falling,
     WallSliding,
@@ -18,7 +17,9 @@ public enum PlayerState{
     Hurting,
     LedgeGrabbing,
     Pushing,
-    Pulling
+    Pulling,
+    ForceInterupt, 
+    Dead // Uninterruptable State, Player is dead, cannot change state anymore
 }
 
 // === Separate Horizontal Movement, this state can coexist
@@ -31,23 +32,14 @@ public enum XVelocityState
     Overriden
 }
 
-public class PlayerControllerNew : MonoBehaviour
+public class PlayerControllerVersion2 : MonoBehaviour
 {
-    // === Header: Parameters ===
+
     [Header("Player Parameters")]
     [SerializeField] bool m_noBlood = false;
 
     [Header("Player Effects")]
     [SerializeField] GameObject m_slideDust;
-
-    [Header("Attack Parameters")]
-    public Transform attackPoint;
-    public float attackRadius = 2f;
-    public int attackDamage = 20;
-    public float attackIntervalTime = 0.5f;
-
-    [Header("Track Player's State")]
-    public bool playerisHurt = false;
 
     // === Private Variables === //
     private Animator playerAnimator;
@@ -58,26 +50,41 @@ public class PlayerControllerNew : MonoBehaviour
     private int currentAttackAnimation = 0;
     private float m_delayToIdle = 0.0f;
 
-    // === Variables for Movement Speed === //
-    public float movementSpeed = 4.0f; public float slowMovementSpeed = 1.5f;  private float originalMovementSpeed = 4.0f;
-    public float rollingSpeed = 5.0f;  private float originalRollingSpeed = 5.0f;
-    public float wallSlidingSpeed = -0.3f; // Y velocity of player during wall sliding. Should be negative
+    [Header("Player States")]
 
-    // === Variables for X Velocity === // these variables can override x velocity
-    [SerializeField] float inputX;
-    [SerializeField] XVelocityState currentXVelocityState;
-    [SerializeField] Coroutine currentXVelocityStateCoroutine;
- 
     // == Variables for Player State Tracking
-    [SerializeField]private Coroutine   currentStateCoroutine;
-    [SerializeField]private PlayerState currentState;
+    [SerializeField] private Coroutine currentStateCoroutine;
+    public PlayerState currentState;
+    // === Variables for X Velocity === // these variables can override x velocity
+    public XVelocityState currentXVelocityState;
+    [SerializeField] private Coroutine currentXVelocityStateCoroutine;
+    [SerializeField] private float inputX;
 
+
+    [Header("Physics Parameters")]
+    // === Variables for Movement Speed === //
+    public float jumpForce = 6.0f; // Force of the jump, Y velocity of player when jumping
+    public float movementSpeed = 4.0f; public float slowMovementSpeed = 1.5f; private float originalMovementSpeed = 4.0f;
+    public float rollingSpeed = 5.0f; private float originalRollingSpeed = 5.0f;
+    public float wallSlidingSpeed = -0.3f; // Y velocity of player during wall sliding. Should be negative
+    public float wallJumpForceX = 5.0f; // X velocity of player when wall jumping
+    public float wallJumpForceY = 6.0f; // Y velocity of player when wall jumping
+
+    // === Variables for Attack === //
+    [Header("Attack Parameters")]
+    public Transform attackPoint;
+    public float attackRadius = 2f;
+    public int attackDamage = 20;
+    public float attackIntervalTime = 0.5f;
+
+    [Header("Detection Triggers")]
     // == Variable for Sensors / Conditions / SubStates
     public bool isGrounded = false; // Sensor to detect if player is on a Ground (Tag)
     public bool isParry = false; // Set to true for split seconds, when player is shielding
     public bool isWallDetected = false; // Sensor to detect if there is a wall in front of the player
     public bool isUpperWallDetected = false; // Sensor to detect if there is a wall on player's head.
-    
+
+    [Header("Duration Variables")]
     // == Variables for Timing
     public float parryingTime = 0.3f; // Duration to parry an attack
     public float rollDuration = 0.5f; // Duration in Rolling state.
@@ -89,9 +96,9 @@ public class PlayerControllerNew : MonoBehaviour
     // === Unity Methods ===
     void Start()
     {
-        playerAnimator      = GetComponent<Animator>();
-        rb                  = GetComponent<Rigidbody2D>();
-        upperBodyCollider   = GetComponent<BoxCollider2D>();
+        playerAnimator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        upperBodyCollider = GetComponent<BoxCollider2D>();
 
         m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
         m_wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor_HeroKnight>();
@@ -110,8 +117,7 @@ public class PlayerControllerNew : MonoBehaviour
 
     void Update()
     {
-        FlipPlayerSprite();
-        HandleAnimationStates();
+        
 
         // === Horizontal Movements === // 
         // === Same logic, but variables was being modified by:
@@ -124,26 +130,71 @@ public class PlayerControllerNew : MonoBehaviour
         }
 
         // === Wall Detection ==== //
-            isWallDetected = (
-                (m_wallSensorR1.State() && m_wallSensorR2.State() && facingDirection == 1) 
-            ||  (m_wallSensorL1.State() && m_wallSensorL2.State() && facingDirection == -1)
-        );
+        isWallDetected = (
+            (m_wallSensorR1.State() && m_wallSensorR2.State() && facingDirection == 1)
+        || (m_wallSensorL1.State() && m_wallSensorL2.State() && facingDirection == -1)
+    );
 
         // === Ground Detection === //
         isGrounded = m_groundSensor.State();
-        playerAnimator.SetBool("Grounded", isGrounded);
+        
 
         // === Upper Wall Detection === //
-        isUpperWallDetected = m_wallSensorR1.State()||m_wallSensorR2.State();
+        isUpperWallDetected = m_wallSensorL2.State() && m_wallSensorR2.State();
 
         // === States that is automatically being triggered by a sensor detection ==== //
-        if (!isGrounded && isWallDetected){
+        if (!isGrounded && isWallDetected)
+        {
             SwitchState(PlayerState.WallSliding);
+        }
+
+        // Flip Player Sprite based on the direction of movement
+        FlipPlayerSprite();
+        // === Handle Animation States === //
+        HandleAnimationStates();
+
+
+        // === Player Inputs on KeyBoard ==== //
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            OnMoveLeft();
+        } else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            OnMoveRight();
+        }
+        else {
+            // If no input, then stop moving
+            //SetFloatInputX(0); 
+        }
+        inputX = Input.GetAxis("Horizontal"); // This is for Unity Input System, to get the input from the keyboard
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnJump(); // Jump
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
+        {
+            OnHoldAttack(); // Attack
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.K))
+        {
+            OnHoldShield(); // Shielding
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse1) || Input.GetKeyUp(KeyCode.K))
+        {
+            OnIdle(); // Stop Shielding
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.L))
+        {
+            OnRoll(); // Rolling
         }
     }
 
-    private void DisplayLog (string messageLog){
-        if (enabledDebugLog){
+    private void DisplayLog(string messageLog)
+    {
+        if (enabledDebugLog)
+        {
             Debug.Log(messageLog);
         }
     }
@@ -158,31 +209,40 @@ public class PlayerControllerNew : MonoBehaviour
 
     public void SetFloatMovementSpeed(float newMoveSpeed)
     {
-        movementSpeed = newMoveSpeed; 
+        movementSpeed = newMoveSpeed;
     }
     // == Method/Function to change a player state
-    private void SwitchState(PlayerState newState)
+    public void SwitchState(PlayerState newState)
     {
         // Uninterruptable States
-        if (currentState == PlayerState.Dead || currentState == PlayerState.Hurting)
+        if (currentState == PlayerState.Dead || currentState == PlayerState.Hurting && newState != PlayerState.ForceInterupt)
         {
             DisplayLog("Player is currently " + currentState + " cannot change this state!");
         }
-        else if (currentXVelocityState == XVelocityState.Rolling)
+        else if (currentXVelocityState == XVelocityState.Rolling
+            && newState != PlayerState.ForceInterupt
+            && newState != PlayerState.WallSliding)
         {
-            DisplayLog("You cannot interupt Rolling State of the player!");
+            DisplayLog(newState + " Cannot interupt " + currentXVelocityState + "!");
         }
-        else if (currentStateCoroutine == PlayerState.Attacking && newState == PlayerState.Attacking)
+        else if (currentState == PlayerState.Attacking
+            && newState == PlayerState.Attacking)
         {
-            DisplayLog("You cannot interupt attacking by attacking again!");
+            DisplayLog(newState + " Cannot interupt " + currentState + "!");
         }
+        else if (currentState == PlayerState.WallSliding
+            && (newState == PlayerState.Attacking || newState == PlayerState.Shielding))
+        {
+            DisplayLog(newState + " Cannot interupt "+ currentState + "!");
+        }
+        
         else
         {
             // Interrupt or STOP the currentState Coroutine
             if (currentStateCoroutine != null)
                 StopCoroutine(currentStateCoroutine);
 
-            DisplayLog("Switching PlayerState into  " + newState + " state from " + currentState);
+            DisplayLog("Switched " + newState + " state from " + currentState);
             // Replace the currentState to our newState
             currentState = newState;
 
@@ -194,6 +254,7 @@ public class PlayerControllerNew : MonoBehaviour
                     break;
                 case PlayerState.Falling:
                     currentStateCoroutine = StartCoroutine(DoFalling());
+                    //playerAnimator.SetBool("WallSlide", false);
                     break;
                 case PlayerState.WallSliding:
                     currentStateCoroutine = StartCoroutine(DoWallSliding());
@@ -208,27 +269,31 @@ public class PlayerControllerNew : MonoBehaviour
                     currentStateCoroutine = StartCoroutine(DoShielding());
                     break;
                 case PlayerState.Hurting:
+                    StopAllCoroutines(); // Stop all coroutines to avoid conflicts
                     currentStateCoroutine = StartCoroutine(DoHurting());
                     break;
-                case PlayerState.Idle:
-                    DisplayLog(newState + " return Normal X speed");
+                case PlayerState.Neutral:
+                    //DisplayLog(newState + " return Normal X speed");
+                    //playerAnimator.SetBool("IdleBlock", false);
+                    //playerAnimator.SetBool("WallSlide", false);
+                    //SetFloatInputX(0); // Reset Input X
                     SwitchXVelocityState(XVelocityState.Normal);
+                    break;
+                case PlayerState.ForceInterupt:
+                    // Force Interupt, return to Neutral State
+                    DisplayLog("Force Interupted, returning to Neutral State");
+                    SwitchState(PlayerState.Neutral);
                     break;
                 default:
                     DisplayLog(newState + " is not recognized.");
+                    break;
             }
         }
     }
 
     private void SwitchXVelocityState(XVelocityState newXVelocityState)
     {
-        // Uninteruptable Velocity States
-        if (currentXVelocityState == XVelocityState.Rolling)
-        {
-            DisplayLog("Cannot interrupt  " + currentXVelocityState + " state!");
-        }
-        else
-        {
+
             // Interrupt any Coroutine Related to X Velocity State
             if (currentXVelocityStateCoroutine != null)
             {
@@ -242,6 +307,7 @@ public class PlayerControllerNew : MonoBehaviour
             {
                 case XVelocityState.Normal:
                     SetFloatMovementSpeed(originalMovementSpeed);
+                    //playerAnimator.SetBool("WallSlide", false);
                     DisplayLog("Normal X Velocity State");
                     break;
                 case XVelocityState.Stop:
@@ -257,17 +323,19 @@ public class PlayerControllerNew : MonoBehaviour
                     DisplayLog("X Velocity is being overriden forcefully!");
                     break;
                 default:
-                    DisplayLog(newState + " is not recognized.");
+                    DisplayLog(newXVelocityState + " is not recognized.");
+                    break;
             }
-        }
     }
 
     // == IEnumerators , what player will DO during a specific state.
     // == Description: Using IEnumerators to be able to set WaitForSeconds, because some state is in a timer.
-    IEnumerator DoJumping(){
-        if(isGrounded){
+    IEnumerator DoJumping()
+    {
+        if (isGrounded)
+        {
             playerAnimator.SetTrigger("Jump");
-            rb.velocity = new Vector2(rb.velocity.x,jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             yield return new WaitForSeconds(0.2f);
         }
         else if (!isGrounded && isWallDetected)
@@ -277,18 +345,20 @@ public class PlayerControllerNew : MonoBehaviour
         }
 
         // Wait until we start falling
-        while (rb.velocity > 0)
+        while (rb.velocity.y > 0)
         {
             yield return null;
         }
         SwitchState(PlayerState.Falling);
     }
-    IEnumerator DoFalling(){
+    IEnumerator DoFalling()
+    {
         // Wait until grounded
-        while(!isGrounded){
+        while (!isGrounded)
+        {
             yield return null;
         }
-        SwitchState(PlayerState.Idle);
+        SwitchState(PlayerState.Neutral);
     }
     IEnumerator DoWallSliding()
     {
@@ -297,13 +367,13 @@ public class PlayerControllerNew : MonoBehaviour
         rb.velocity = new Vector2(0, wallSlidingSpeed);
         playerAnimator.SetBool("WallSlide", true);
         // Wait until not grounded or there is no wall detected
-        while (!isGrounded || !isWallDetected)
+        while (!isGrounded && isWallDetected)
         {
-            yield return null;
+            yield return new WaitForSeconds(0.2f);
         }
-        playerAnimator.SetBool("WallSlide", false);
-        SwitchState(PlayerState.Idle);
-        
+        //playerAnimator.SetBool("WallSlide", false);
+        SwitchState(PlayerState.Neutral);
+
     }
     IEnumerator DoWallJumping()
     {
@@ -313,16 +383,22 @@ public class PlayerControllerNew : MonoBehaviour
         rb.velocity = new Vector2(wallJumpForceX * -facingDirection, wallJumpForceY);
         yield return new WaitForSeconds(0.2f);
         // Wait until we start falling
-        while (rb.velocity > 0)
+        while (rb.velocity.y > 0)
         {
             yield return null;
         }
         SwitchState(PlayerState.Falling);
-        
+
     }
     IEnumerator DoRolling()
     {
-
+        // XVelocityState.Rolling
+        if (currentState == PlayerState.WallSliding) {
+            SwitchXVelocityState(XVelocityState.Overriden);
+            yield break;
+        }
+          
+        SwitchState(PlayerState.ForceInterupt);
         upperBodyCollider.enabled = false;
         playerAnimator.SetTrigger("Roll");
         rb.velocity = new Vector2(facingDirection * rollingSpeed, rb.velocity.y);
@@ -337,18 +413,20 @@ public class PlayerControllerNew : MonoBehaviour
 
         // Go back to Normal State and Apply a Cooldown
         upperBodyCollider.enabled = true;
-        StartCoroutine(SetCooldownForRolling());
-        SwitchState(PlayerState.Idle);   
+        
+        SwitchXVelocityState(XVelocityState.Normal);
+        SwitchState(PlayerState.Neutral);
     }
     IEnumerator DoContinuousAttack()
     {
-        while (true)
-        {
-            SwitchXVelocityState(XVelocityState.Slow);
-            DoAttacking();
-            yield return new WaitForSeconds(attackIntervalTime);
-            DoAttacking();
-        }
+        // PlayerState.Attacking
+        // is a state that can be interrupted by other states,
+        // so we can use this to attack continuously
+        SwitchXVelocityState(XVelocityState.Slow);
+        DoAttacking();
+        yield return new WaitForSeconds(attackIntervalTime);
+        SwitchState(PlayerState.Neutral);
+
     }
     private void DoAttacking()
     {
@@ -359,34 +437,35 @@ public class PlayerControllerNew : MonoBehaviour
         }
 
 
-            // Slow your movement speed during attack
-            SwitchXVelocityState(XVelocityState.Slow);
+        // Slow your movement speed during attack
+        SwitchXVelocityState(XVelocityState.Slow);
 
-            // Find all nearby enemies within the attack range/radius
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius);
+        // Find all nearby enemies within the attack range/radius
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius);
 
-            foreach (Collider2D enemy in hitEnemies)
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            if (enemy.CompareTag("Enemy"))
             {
-                if (enemy.CompareTag("Enemy"))
-                {
-                    // Apply damage to the enemy
-                    StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
-                }
+                // Apply damage to the enemy
+                StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
             }
+        }
 
-            //Variable for Current Attack Animation
-            currentAttackAnimation++;
-            // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-            playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
-            Debug.Log("Attack: " + currentAttackAnimation);
+        //Variable for Current Attack Animation
+        currentAttackAnimation++;
+        currentAttackAnimation = Random.Range(1, 4); // Randomly choose between 1, 2, or 3 for attack animation
+        // Call one of three attack animations "Attack1", "Attack2", "Attack3"
+        playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
+        Debug.Log("Attack: " + currentAttackAnimation);
 
-            // If the combo is complete (after the third attack), apply the cooldown
-            if (currentAttackAnimation >= 3)
-            {
-                // Reset animation
-                currentAttackAnimation = 0;
-                DisplayLog("Combo completed");
-            }
+        // If the combo is complete (after the third attack), apply the cooldown
+        if (currentAttackAnimation >= 3)
+        {
+            // Reset animation
+            currentAttackAnimation = 0;
+            DisplayLog("Combo completed");
+        }
     }
 
     IEnumerator DoHurting()
@@ -396,7 +475,7 @@ public class PlayerControllerNew : MonoBehaviour
 
         yield return new WaitForSeconds(hurtSeconds);
 
-        SwitchState(PlayerState.Idle);
+        SwitchState(PlayerState.ForceInterupt);
     }
 
     IEnumerator DoShielding()
@@ -404,7 +483,7 @@ public class PlayerControllerNew : MonoBehaviour
         SwitchXVelocityState(XVelocityState.Slow);
         StartCoroutine(DoParry());
         playerAnimator.SetTrigger("Block");
-        playerAnimator.SetBool("IdleBlock", true);
+        //playerAnimator.SetBool("IdleBlock", true);
         while (true)
         {
             yield return null;
@@ -423,15 +502,17 @@ public class PlayerControllerNew : MonoBehaviour
     // ==== Add New Event Type ==== Check Comments what Event Type for each method.
     public void OnMoveRight() => SetFloatInputX(1);              // PointerDown, PointerEnter
     public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
-    public void OnIdle() => SwitchState(Idle);              // PointerExit, PointerUp of Any Control Buttons
-    public void OnJump() => SwitchState(Jumping);           // PointerDown, PointerEnter
-    public void OnAttack() => SwitchState(Attacking);       // PointerDown, PointerEnter
-    public void OnRoll() => SwitchXVelocityState(Rolling);  // PointerDown, PointerEnter
-    public void OnHoldShield () => SwitchState (Shielding);     // PointerDown, PointerEnter
+    public void OnIdle() => SwitchState(PlayerState.Neutral);              // PointerExit, PointerUp of Any Control Buttons
+    public void OnJump() => SwitchState(PlayerState.Jumping);           // PointerDown, PointerEnter
+    public void OnHoldAttack() => SwitchState(PlayerState.Attacking);    // PointerDown, PointerEnter
+    public void OnRoll() => SwitchXVelocityState(XVelocityState.Rolling);  // PointerDown, PointerEnter
+    public void OnHoldShield() => SwitchState(PlayerState.Shielding);     // PointerDown, PointerEnter
     void HandleAnimationStates()
     {
-        
+        playerAnimator.SetBool("Grounded", isGrounded);
         playerAnimator.SetFloat("AirSpeedY", rb.velocity.y);
+        playerAnimator.SetBool("WallSlide", currentState == PlayerState.WallSliding);
+        playerAnimator.SetBool("IdleBlock", currentState == PlayerState.Shielding);
 
         if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {
@@ -476,6 +557,11 @@ public class PlayerControllerNew : MonoBehaviour
     {
         SwitchState(PlayerState.Dead);
         return true;
+    }
+
+    public void TriggerJumpAnimation() { 
+    playerAnimator.SetTrigger("Jump");
+
     }
     private void OnDrawGizmosSelected()
     {

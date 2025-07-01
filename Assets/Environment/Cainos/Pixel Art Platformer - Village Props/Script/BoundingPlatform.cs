@@ -33,7 +33,7 @@ namespace Cainos.PixelArtPlatformer_VillageProps
 
                 //Make the player Jump
                 if (rb2d.CompareTag("Player")) {
-                    rb2d.GetComponent<PlayerController>().TriggerJumpAnimation();
+                    rb2d.GetComponent<PlayerControllerVersion2>().TriggerJumpAnimation();
                 }
             }
             onPlatformRigidbodies.Clear();

@@ -25,7 +25,7 @@ public class Bandit : MonoBehaviour {
     public int       damage = 10; // Damage dealt to the player
 
     private Transform   player; // Reference to the player position
-    private PlayerController  playerScript; // Reference to the player main script
+    private PlayerControllerVersion2  playerScript; // Reference to the player main script
     private float       lastAttackTime = 0f; // Track when the enemy last attacked
     private bool        isAttacking = false; // Track if the enemy is currently attacking
     private bool        isFacingRight = false; // Track which direction the enemy is facing
@@ -41,7 +41,7 @@ public class Bandit : MonoBehaviour {
         m_body2d        = GetComponent<Rigidbody2D>();
         m_groundSensor  = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
 
-        playerScript    = GameObject.Find("HeroKnight").GetComponent<PlayerController>();
+        playerScript    = GameObject.Find("HeroKnight").GetComponent<PlayerControllerVersion2>();
         player          = GameObject.Find("HeroKnight").GetComponent<Transform>();
         attackPoint     = transform.Find("AttackPoint").GetComponent<Transform>();
         lastAttackTime  = Time.time - attackCooldown;
@@ -71,7 +71,7 @@ public class Bandit : MonoBehaviour {
         // Calculate the distance between the enemy and the attack point
         float distanceToAttackPoint = Vector2.Distance(attackPoint.position, player.position);
 
-        if (!m_isDead && !isHurting && !playerScript.playerIsDead)
+        if (!m_isDead && !isHurting && playerScript.currentState != PlayerState.Dead)
         {
             //Follow Player
             if (distanceToPlayer <= followRange && distanceToAttackPoint > attackRange)
@@ -100,7 +100,7 @@ public class Bandit : MonoBehaviour {
             }
         }
         //Player is Dead
-        else if (playerScript.playerIsDead) 
+        else if (playerScript.currentState != PlayerState.Dead) 
         {
             m_combatIdle = false;
         }
@@ -164,11 +164,11 @@ public class Bandit : MonoBehaviour {
         if (Mathf.Abs(m_body2d.velocity.x) > Mathf.Epsilon)
             m_animator.SetInteger("AnimState", 2);
 
-        //Combat Idle
+        //Combat Neutral
         else if (m_combatIdle)
             m_animator.SetInteger("AnimState", 1);
 
-        //Idle
+        //Neutral
         else
             m_animator.SetInteger("AnimState", 0);
     }

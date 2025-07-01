@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private PlayerController      player; //Reference to player script
+    private PlayerControllerVersion2      player; //Reference to player script
     private Animator        playerAnimator; //Reference to player animator
     public GameManager     gameManager; //Reference to GameManager script
     public  int             maxHealth = 100; // The maximum health the player can have
@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         UpdateHealthUI(); // If you have a UI to display health, update it here
 
-        player          = this.GetComponent<PlayerController>();
+        player          = this.GetComponent<PlayerControllerVersion2>();
         playerAnimator  = this.GetComponent<Animator>();
         gameManager     = GameManager.instance; // Get the GameManager instance
     }
@@ -35,20 +35,20 @@ public class PlayerHealth : MonoBehaviour
     // Method to handle taking damage
     public void TakeDamage(int damageAmount)
     {
-        if (!player.playerIsDead)
+        if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
         {
             if (!player.isParry)
             {
                 //Direct Hit
-                if (!player.isBlocking && !player.playerisHurt)
+                if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
                 {
                     //playerAnimator.SetTrigger("Hurt");
-                    player.SetPlayerIsHurtSeconds(hurtSeconds);
+                    player.SwitchState(PlayerState.Hurting); // Switch to the Hurting state
                     currentHealth -= damageAmount;
                     Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
                 }
                 //Damage Reduced/ Attack Blocked
-                else if (player.isBlocking) 
+                else if (player.currentState == PlayerState.Shielding) 
                 {
                     playerAnimator.SetTrigger("Block");
                     currentHealth -= 2;
