@@ -10,7 +10,6 @@ public enum PlayerState
 {
     Neutral,
     Jumping,
-    Falling,
     WallSliding,
     WallJumping,
     Attacking,
@@ -211,7 +210,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             return;
         }
         else if (currentState == PlayerState.Attacking
-            && newState == PlayerState.Attacking)
+            && (newState == PlayerState.Attacking||newState == PlayerState.Jumping ))
         {
             DisplayLog(newState + " Cannot interupt " + currentState + "!");
             return;
@@ -237,11 +236,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
             switch (newState)
             {
                 case PlayerState.Jumping:
+                    currentDoubleJumpCount++; // Increment the double jump count
                     currentStateCoroutine = StartCoroutine(DoJumping());
-                    break;
-                case PlayerState.Falling:
-                    currentStateCoroutine = StartCoroutine(DoFalling());
-                    //playerAnimator.SetBool("WallSlide", false);
                     break;
                 case PlayerState.WallSliding:
                     currentStateCoroutine = StartCoroutine(DoWallSliding());
@@ -330,14 +326,14 @@ public class PlayerControllerVersion2 : MonoBehaviour
     IEnumerator DoJumping()
     {
         if (isGrounded || 
-            (!isGrounded 
-            && currentDoubleJumpCount != maxDoubleJumpCount)
-            )
+                (  !isGrounded 
+                    && currentDoubleJumpCount <= maxDoubleJumpCount 
+                    && !isWallDetected)
+           )
         {
             playerAnimator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             yield return new WaitForSeconds(0.2f);
-            currentDoubleJumpCount++;
         }
         else if (!isGrounded && isWallDetected)
         {
@@ -347,15 +343,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         // Wait until we start falling
         while (rb.velocity.y > 0)
-        {
-            yield return null;
-        }
-        SwitchPlayerState(PlayerState.Falling);
-    }
-    IEnumerator DoFalling()
-    {
-        // Wait until grounded
-        while (!isGrounded)
         {
             yield return null;
         }
@@ -387,7 +374,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             yield return null;
         }
-        SwitchPlayerState(PlayerState.Falling);
+        SwitchPlayerState(PlayerState.Neutral);
 
     }
     IEnumerator DoRolling()
