@@ -2390,6 +2390,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: SGMT_Village_3 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 9014665866691294669, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 9014665866691294669, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3515083376454150125, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}

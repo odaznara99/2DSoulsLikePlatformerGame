@@ -1568,6 +1568,7 @@ Transform:
   - {fileID: 6229022538155525280}
   - {fileID: 9131565917012209686}
   - {fileID: 5023662069088644131}
+  - {fileID: 9014665866691294669}
   - {fileID: 3074333949572402266}
   - {fileID: 6428018719696305851}
   - {fileID: 7772504093449548838}
@@ -1785,6 +1786,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5044244007644545308}
     m_Modifications:
+    - target: {fileID: 3473933776736857807, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46874973
+      objectReference: {fileID: 0}
+    - target: {fileID: 4896191481212258448, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46875015
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227744662979700, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46875015
+      objectReference: {fileID: 0}
     - target: {fileID: 7449227744695052833, guid: d9997400142b1f14281284870012ac00, type: 3}
       propertyPath: m_Name
       value: PF Village Props - Bridge X6
@@ -1828,6 +1841,46 @@ PrefabInstance:
     - target: {fileID: 7449227744695052838, guid: d9997400142b1f14281284870012ac00, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227745069323854, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46875
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227745227324718, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46875015
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227745317694909, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46874994
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227745691709161, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46875
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227745839837356, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46875012
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227746015781122, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.06250001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227746311566382, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46874994
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227746372884870, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46874994
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227746525218644, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46875006
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449227746690101133, guid: d9997400142b1f14281284870012ac00, type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.46874973
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2602,6 +2655,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5260572382779035084, guid: c5f8f079905bce04f945cd8ff4ba545a, type: 3}
   m_PrefabInstance: {fileID: 5790200567622138321}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5898696382199807315
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5044244007644545308}
+    m_Modifications:
+    - target: {fileID: 3226521009676847256, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_Name
+      value: PF Village Props - Road Lamp (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+--- !u!4 &9014665866691294669 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3226521009676847262, guid: c13263f1f05170f4e849875cee5c46d0, type: 3}
+  m_PrefabInstance: {fileID: 5898696382199807315}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6384901812413107723
 PrefabInstance:
