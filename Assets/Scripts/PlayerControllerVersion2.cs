@@ -180,8 +180,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
 
     // == Method/Function to change a player state
-    private void SwitchPlayerState(PlayerState newState, PlayerState delayNewState = PlayerState.DelaySwitchingState)
+    private void SwitchPlayerState(PlayerState newState)
     {
+        if (currentState == PlayerState.Jumping && newState == PlayerState.Jumping) {
+            return;
+        }
 
         // Set Cooldown for Shielding when switching from Shielding state to new state
         if (currentState == PlayerState.Shielding 
@@ -194,9 +197,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
             DisplayLog("Shielding is on cooldown! Cannot switch to Shielding state!");
             return;
         }
-
-            // Uninterruptable States
-            if (currentState == PlayerState.Dead || (currentState == PlayerState.Hurting && newState != PlayerState.ForceInterupt))
+        // Uninterruptable States
+        else if (currentState == PlayerState.Dead || (currentState == PlayerState.Hurting && newState != PlayerState.ForceInterupt))
         {
             DisplayLog("Player is currently " + currentState + " cannot change this state!");
             return;
@@ -327,12 +329,15 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // == Description: Using IEnumerators to be able to set WaitForSeconds, because some state is in a timer.
     IEnumerator DoJumping()
     {
-        if (isGrounded || (!isGrounded && currentDoubleJumpCount != maxDoubleJumpCount))
+        if (isGrounded || 
+            (!isGrounded 
+            && currentDoubleJumpCount != maxDoubleJumpCount)
+            )
         {
             playerAnimator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            currentDoubleJumpCount++;
             yield return new WaitForSeconds(0.2f);
+            currentDoubleJumpCount++;
         }
         else if (!isGrounded && isWallDetected)
         {
@@ -584,7 +589,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             // === Ground Detection === //
             isGrounded = m_groundSensor.State();
 
-            if (isGrounded) { 
+            if (isGrounded && currentState != PlayerState.Jumping) { 
                 currentDoubleJumpCount = 0;
             }
 

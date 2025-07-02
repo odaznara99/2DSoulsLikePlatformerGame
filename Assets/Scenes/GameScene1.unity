@@ -6040,7 +6040,7 @@ MonoBehaviour:
   currentXVelocityState: 0
   inputX: 0
   jumpForce: 7
-  maxJumpCount: 1
+  maxDoubleJumpCount: 2
   currentDoubleJumpCount: 0
   movementSpeed: 4
   slowMovementSpeed: 1.5
