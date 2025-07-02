@@ -95,6 +95,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float hurtSeconds = 0.3f; // Duration in Hurting State
 
     // == Variable for Unity Editor
+    [Header("Unity Editor Settings")]
     public bool enabledDebugLog = true;
     public bool enabledKeyboardInput = false; // Enable Keyboard Input for Player Controller
 
@@ -153,7 +154,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         UpdateCooldownTimers();
 
         // === Player Inputs on KeyBoard ==== //
-        InputsFromKeyboard();
+        UpdateKeyboardInputs();
         
     }
 
@@ -640,49 +641,51 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
 
 
-    void InputsFromKeyboard() {
-        if (enabledKeyboardInput) 
-        { 
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            OnMoveLeft();
-        }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            OnMoveRight();
-        }
-        else
-        {
-            // If no input, then stop moving
-            //SetFloatInputX(0); 
-        }
+    void UpdateKeyboardInputs() {
 #if UNITY_EDITOR
-        inputX = Input.GetAxis("Horizontal"); // This is for Unity Input System, to get the input from the keyboard
-#endif
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnJump(); // Jump
-        }
+        if (enabledKeyboardInput) 
+            { 
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                OnMoveLeft();
+            }
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                OnMoveRight();
+            }
+            else
+            {
+                // If no input, then stop moving
+                //SetFloatInputX(0); 
+            }
 
-        // Inputs that cannot be on the same time.
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
-        {
-            OnHoldAttack(); // Attack
+            inputX = Input.GetAxis("Horizontal"); // This is for Unity Input System, to get the input from the keyboard
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                OnJump(); // Jump
+            }
+
+            // Inputs that cannot be on the same time.
+            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
+            {
+                OnHoldAttack(); // Attack
+            }
+            else if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.K))
+            {
+                OnHoldShield(); // Upon Press
+            }
+            else if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.K))
+            {
+                OnNeutral(); // Stop Shielding // Switch to Neutral State
+                //OnDelayedNeutral(); // Stop Shielding with a slight delay
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.L))
+            {
+                OnRoll(); // Rolling
+            }
         }
-        else if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.K))
-        {
-            OnHoldShield(); // Upon Press
-        }
-        else if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.K))
-        {
-            OnNeutral(); // Stop Shielding // Switch to Neutral State
-            //OnDelayedNeutral(); // Stop Shielding with a slight delay
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.L))
-        {
-            OnRoll(); // Rolling
-        }
-    }
+#endif
     }
 
 
