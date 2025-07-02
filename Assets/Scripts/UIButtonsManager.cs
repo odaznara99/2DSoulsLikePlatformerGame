@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 public class UIButtonsManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public PlayerController playerController;
+    public PlayerControllerVersion2 playerController;
     public GameObject buttonAttack;
     public GameObject buttonBlock;
     public GameObject buttonRoll;

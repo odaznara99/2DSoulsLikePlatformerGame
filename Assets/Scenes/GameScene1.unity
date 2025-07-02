@@ -801,9 +801,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: Jump
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnJump
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -977,10 +977,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnStop
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -993,10 +993,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnMoveRight
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1009,10 +1009,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnMoveRight
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1025,10 +1025,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnStop
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1440,7 +1440,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &443557970
 Transform:
   m_ObjectHideFlags: 0
@@ -3054,9 +3054,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: Block
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnHoldShield
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3070,9 +3070,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: ReleaseBlock
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnNeutral
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3086,9 +3086,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: ReleaseBlock
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnNeutral
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3325,7 +3325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1162348660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3517,6 +3517,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SGMT_Village_8 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 610654748022916092, guid: 5adff24ebe9b40d429769b83afd1bbcc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7521510363232390965, guid: 5adff24ebe9b40d429769b83afd1bbcc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3701,9 +3705,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: StartAttackHold
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnHoldAttack
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3717,9 +3721,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: StopAttackHold
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnNeutral
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3733,9 +3737,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: Attack
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnHoldAttack
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4261,7 +4265,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1708357802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4368,10 +4372,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnStop
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4384,10 +4388,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnMoveLeft
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4400,10 +4404,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnMoveLeft
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4416,10 +4420,10 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: SetHorizontalValue
-          m_Mode: 4
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnStop
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4666,9 +4670,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: Roll
+        - m_Target: {fileID: 8041958207723432735}
+          m_TargetAssemblyTypeName: PlayerControllerVersion2, Assembly-CSharp
+          m_MethodName: OnRoll
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -6036,6 +6040,8 @@ MonoBehaviour:
   currentXVelocityState: 0
   inputX: 0
   jumpForce: 7
+  maxJumpCount: 1
+  currentDoubleJumpCount: 0
   movementSpeed: 4
   slowMovementSpeed: 1.5
   rollingSpeed: 4.2
@@ -6053,7 +6059,8 @@ MonoBehaviour:
   parryingTime: 0.3
   rollDuration: 0.5
   hurtSeconds: 0.5
-  enabledDebugLog: 1
+  enabledDebugLog: 0
+  enabledKeyboardInput: 0
   rollingCooldown: 0.3
   shieldingCooldown: 0.3
   lastRollingTimestamp: 0

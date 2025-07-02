@@ -39,35 +39,34 @@ public class PlayerHealth : MonoBehaviour
         {
             if (!player.isParry)
             {
-                //Direct Hit
-                if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
-                {
-                    //playerAnimator.SetTrigger("Hurt");
-                    player.SwitchPlayerState(PlayerState.Hurting); // Switch to the Hurting state
-                    currentHealth -= damageAmount;
-                    Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
-                }
+
                 //Damage Reduced/ Attack Blocked
-                else if (player.currentState == PlayerState.Shielding) 
+                if (player.currentState == PlayerState.Shielding)
                 {
                     playerAnimator.SetTrigger("Block");
                     currentHealth -= 2;
-                    Debug.Log("Player: Blocks the attack! Took " + damageAmount + " reduced damage. Current health: " + currentHealth);
+                    Debug.Log("Shielded an attack! Took less damage. Current health: " + currentHealth);
                 }
-
-                // Make sure health doesn't go below zero
-                if (currentHealth < 0)
+                
+                else if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
                 {
-                    currentHealth = 0;
+                    // Killable Hit
+                    if (currentHealth < damageAmount)
+                    {
+                        currentHealth = 0;
+                        Die(); // If damage exceeds current health, call Die method
+                    }
+                    // Direct Hit
+                    else 
+                    {
+                        player.OnHurt(); ; // Switch to the Hurting state
+                        currentHealth -= damageAmount;
+                        Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
+                    }
                 }
-
+ 
                 UpdateHealthUI(); // Update the UI to reflect the health change
 
-                // Check if the player's health reaches zero
-                if (currentHealth == 0)
-                {
-                    Die();
-                }
             }
             //Parry Attack
             else
@@ -98,13 +97,8 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("Player died!");
-        player.SetPlayerDead();
-        playerAnimator.SetBool("noBlood", player.NoBlood());
-        playerAnimator.SetTrigger("Death");
-        player.enabled = false;
-
+        player.OnDead();
         // Optionally, you can trigger a death screen, restart the level, or respawn the player.
-        
         gameManager.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
     }
 

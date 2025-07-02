@@ -20,7 +20,8 @@ public enum PlayerState
     Pushing,
     Pulling,
     ForceInterupt, //This is a special state, to allow any state to be interrupted by this state
-    Dead
+    Dead,
+    DelaySwitchingState
 }
 
 // === Separate Horizontal Movement, this state can coexist
@@ -36,7 +37,7 @@ public enum XVelocityState
 public class PlayerControllerVersion2 : MonoBehaviour
 {
     [Header("Player Parameters")]
-    [SerializeField] bool m_noBlood = false;
+    public bool m_noBlood = false;
 
     [Header("Player Effects")]
     [SerializeField] GameObject m_slideDust;
@@ -54,6 +55,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     // == Variables for Player State Tracking
     private Coroutine currentStateCoroutine;
+    private Coroutine currentDelayingCoroutine; // A slight delay when transitioning to a newState
     public PlayerState currentState;
     // === Variables for X Velocity === // these variables can override x velocity
     public XVelocityState currentXVelocityState;
@@ -64,7 +66,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
     [Header("Physics Parameters")]
     // === Variables for Movement Speed === //
     public float jumpForce = 6.0f; // Force of the jump, Y velocity of player when jumping
-    public float movementSpeed = 4.0f; 
+    public int maxDoubleJumpCount = 1; // Maximum number of jumps player can perform (Double Jump)
+    [SerializeField]private int currentDoubleJumpCount = 0;
+    public float movementSpeed = 4.0f;
     public float slowMovementSpeed = 1.5f; private float originalMovementSpeed = 4.0f;
     public float rollingSpeed = 5.0f; private float originalRollingSpeed = 5.0f;
     public float wallSlidingSpeed = -0.3f; // Y velocity of player during wall sliding. Should be negative
@@ -93,14 +97,15 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     // == Variable for Unity Editor
     public bool enabledDebugLog = true;
+    public bool enabledKeyboardInput = false; // Enable Keyboard Input for Player Controller
 
     // === Variables for Cooldowns === //
     [Header("Cooldown Variables")]
     public float rollingCooldown = 3.0f; // Cooldown for rolling
     public float shieldingCooldown = 2.0f; // Cooldown for shielding
     // === Variables for Timeestamp === //
-    [SerializeField]private float lastRollingTimestamp = 0.0f; // Last time player rolled
-    [SerializeField]private float lastShieldingTimestamp = 0.0f; // Last time player shielded
+    [SerializeField] private float lastRollingTimestamp = 0.0f; // Last time player rolled
+    [SerializeField] private float lastShieldingTimestamp = 0.0f; // Last time player shielded
 
     // === Unity Methods ===
     void Start()
@@ -126,7 +131,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     void Update()
     {
-        
+
 
         // === Horizontal Movements === // 
         // === Same logic, but variables was being modified by:
@@ -138,24 +143,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
             rb.velocity = new Vector2(inputX * movementSpeed, rb.velocity.y);
         }
 
-        // === Wall Detection ==== //
-        isWallDetected = (
-            (m_wallSensorR1.State() && m_wallSensorR2.State() && facingDirection == 1)
-        || (m_wallSensorL1.State() && m_wallSensorL2.State() && facingDirection == -1)
-    );
-
-        // === Ground Detection === //
-        isGrounded = m_groundSensor.State();
-        
-
-        // === Upper Wall Detection === //
-        isUpperWallDetected = m_wallSensorL2.State() && m_wallSensorR2.State();
-
-        // === States that is automatically being triggered by a sensor detection ==== //
-        if (!isGrounded && isWallDetected)
-        {
-            SwitchPlayerState(PlayerState.WallSliding);
-        }
+        // === Handle Player Detection Triggers === //
+        UpdateDetectionTriggers();
 
         // Flip Player Sprite based on the direction of movement
         FlipPlayerSprite();
@@ -165,41 +154,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
         UpdateCooldownTimers();
 
         // === Player Inputs on KeyBoard ==== //
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            OnMoveLeft();
-        } else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            OnMoveRight();
-        }
-        else {
-            // If no input, then stop moving
-            //SetFloatInputX(0); 
-        }
-#if UNITY_EDITOR
-        inputX = Input.GetAxis("Horizontal"); // This is for Unity Input System, to get the input from the keyboard
-#endif
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnJump(); // Jump
-        }
-
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
-        {
-            OnHoldAttack(); // Attack
-        }
-        else if (Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.K))
-        {
-            OnHoldShield(); // Shielding
-        }
-        else if (Input.GetKeyUp(KeyCode.Mouse1) || Input.GetKeyUp(KeyCode.K))
-        {
-            OnNeutral(); // Stop Shielding
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.L))
-        {
-            OnRoll(); // Rolling
-        }
+        InputsFromKeyboard();
+        
     }
 
     private void DisplayLog(string messageLog)
@@ -224,43 +180,54 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
 
     // == Method/Function to change a player state
-    public void SwitchPlayerState(PlayerState newState)
+    private void SwitchPlayerState(PlayerState newState, PlayerState delayNewState = PlayerState.DelaySwitchingState)
     {
+
         // Set Cooldown for Shielding when switching from Shielding state to new state
-        if (currentState == PlayerState.Shielding && newState != currentState)
+        if (currentState == PlayerState.Shielding 
+            && newState != PlayerState.Shielding)
         {
             lastShieldingTimestamp = shieldingCooldown; // Set the cooldown for shielding
         }
 
-        // Uninterruptable States
-        if (currentState == PlayerState.Dead || currentState == PlayerState.Hurting && newState != PlayerState.ForceInterupt)
+        if (newState == PlayerState.Shielding && lastShieldingTimestamp > 0) {
+            DisplayLog("Shielding is on cooldown! Cannot switch to Shielding state!");
+            return;
+        }
+
+            // Uninterruptable States
+            if (currentState == PlayerState.Dead || (currentState == PlayerState.Hurting && newState != PlayerState.ForceInterupt))
         {
             DisplayLog("Player is currently " + currentState + " cannot change this state!");
+            return;
         }
         else if (currentXVelocityState == XVelocityState.Rolling
             && newState != PlayerState.ForceInterupt
             && newState != PlayerState.WallSliding)
         {
             DisplayLog(newState + " Cannot interupt " + currentXVelocityState + "!");
+            return;
         }
         else if (currentState == PlayerState.Attacking
             && newState == PlayerState.Attacking)
         {
             DisplayLog(newState + " Cannot interupt " + currentState + "!");
+            return;
         }
         else if (currentState == PlayerState.WallSliding
             && (newState == PlayerState.Attacking || newState == PlayerState.Shielding))
         {
-            DisplayLog(newState + " Cannot interupt "+ currentState + "!");
+            DisplayLog(newState + " Cannot interupt " + currentState + "!");
+            return;
         }
-        
+
         else
         {
             // Interrupt or STOP the currentState Coroutine
             if (currentStateCoroutine != null)
                 StopCoroutine(currentStateCoroutine);
 
-            DisplayLog("Switched " + newState + " state from " + currentState);
+            DisplayLog("Switched to" + newState + " state. (from " + currentState + ")");
             // Replace the currentState to our newState
             currentState = newState;
 
@@ -302,6 +269,10 @@ public class PlayerControllerVersion2 : MonoBehaviour
                     DisplayLog("Force Interupted, returning to Neutral State");
                     SwitchPlayerState(PlayerState.Neutral);
                     break;
+                case PlayerState.Dead:
+                    // Force Interupt, return to Neutral State
+                    DoDying();
+                    break;
                 default:
                     DisplayLog(newState + " is not recognized.");
                     break;
@@ -311,7 +282,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     private void SwitchXVelocityState(XVelocityState newXVelocityState)
     {
-        if(newXVelocityState == XVelocityState.Rolling && newXVelocityState != currentXVelocityState)
+        if (currentXVelocityState == XVelocityState.Rolling 
+            && newXVelocityState == XVelocityState.Rolling)
         {
             DisplayLog("Already in Rolling State, cannot switch to Rolling again!");
             return; // If already in Rolling state, then do nothing
@@ -319,46 +291,47 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         // Interrupt any Coroutine Related to X Velocity State
         if (currentXVelocityStateCoroutine != null)
-            {
-                StopCoroutine(currentXVelocityStateCoroutine);
-            }
+        {
+            StopCoroutine(currentXVelocityStateCoroutine);
+        }
 
-            currentXVelocityState = newXVelocityState;
+        currentXVelocityState = newXVelocityState;
 
-            // Now, call the new state Coroutine/Method depending on the newState
-            switch (newXVelocityState)
-            {
-                case XVelocityState.Normal:
-                    SetFloatMovementSpeed(originalMovementSpeed);
-                    //playerAnimator.SetBool("WallSlide", false);
-                    //DisplayLog("Normal X Velocity State");
-                    break;
-                case XVelocityState.Stop:
-                    SetFloatInputX(0);
-                    break;
-                case XVelocityState.Slow:
-                    SetFloatMovementSpeed(slowMovementSpeed);
-                    break;
-                case XVelocityState.Rolling:
-                    currentXVelocityStateCoroutine = StartCoroutine(DoRolling());
-                    break;
-                case XVelocityState.Overriden:
-                    //DisplayLog("X Velocity is being overriden forcefully!");
-                    break;
-                default:
-                    DisplayLog(newXVelocityState + " is not recognized.");
-                    break;
-            }
+        // Now, call the new state Coroutine/Method depending on the newState
+        switch (newXVelocityState)
+        {
+            case XVelocityState.Normal:
+                SetFloatMovementSpeed(originalMovementSpeed);
+                //playerAnimator.SetBool("WallSlide", false);
+                //DisplayLog("Normal X Velocity State");
+                break;
+            case XVelocityState.Stop:
+                SetFloatInputX(0);
+                break;
+            case XVelocityState.Slow:
+                SetFloatMovementSpeed(slowMovementSpeed);
+                break;
+            case XVelocityState.Rolling:
+                currentXVelocityStateCoroutine = StartCoroutine(DoRolling());
+                break;
+            case XVelocityState.Overriden:
+                //DisplayLog("X Velocity is being overriden forcefully!");
+                break;
+            default:
+                DisplayLog(newXVelocityState + " is not recognized.");
+                break;
+        }
     }
 
     // == IEnumerators , what player will DO during a specific state.
     // == Description: Using IEnumerators to be able to set WaitForSeconds, because some state is in a timer.
     IEnumerator DoJumping()
     {
-        if (isGrounded)
+        if (isGrounded || (!isGrounded && currentDoubleJumpCount != maxDoubleJumpCount))
         {
             playerAnimator.SetTrigger("Jump");
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            currentDoubleJumpCount++;
             yield return new WaitForSeconds(0.2f);
         }
         else if (!isGrounded && isWallDetected)
@@ -411,11 +384,12 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
         SwitchPlayerState(PlayerState.Falling);
 
-    } 
+    }
     IEnumerator DoRolling()
     {
         // XVelocityState.Rolling
-        if (currentState == PlayerState.WallSliding) {
+        if (currentState == PlayerState.WallSliding)
+        {
             SwitchXVelocityState(XVelocityState.Overriden);
             yield break;
         }
@@ -495,6 +469,12 @@ public class PlayerControllerVersion2 : MonoBehaviour
             DisplayLog("Combo completed");
         }
     }
+    void DoDying() {
+        Debug.Log("Player died!");
+        playerAnimator.SetBool("noBlood", m_noBlood);
+        playerAnimator.SetTrigger("Death");
+        this.enabled = false;
+    }
 
     IEnumerator DoHurting()
     {
@@ -517,7 +497,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         SwitchXVelocityState(XVelocityState.Slow);
         StartCoroutine(DoParry());
-        playerAnimator.SetTrigger("Block");
+        //playerAnimator.SetTrigger("Block");
         //playerAnimator.SetBool("IdleBlock", true);
         while (true)
         {
@@ -537,13 +517,17 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // ==== Add New Event Type ==== Check Comments what Event Type for each method.
     public void OnMoveRight() => SetFloatInputX(1);              // PointerDown, PointerEnter
     public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
-    public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral);              // PointerExit, PointerUp of Any Control Buttons
+    public void OnStop() => SetFloatInputX(0);
+    public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral);   // PointerExit, PointerUp of Any Control Buttons
     public void OnJump() => SwitchPlayerState(PlayerState.Jumping);           // PointerDown, PointerEnter
     public void OnHoldAttack() => SwitchPlayerState(PlayerState.Attacking);    // PointerDown, PointerEnter
     public void OnRoll() => SwitchXVelocityState(XVelocityState.Rolling);  // PointerDown, PointerEnter
     public void OnHoldShield() => SwitchPlayerState(PlayerState.Shielding);     // PointerDown, PointerEnter
+    public void OnHurt() => SwitchPlayerState(PlayerState.Hurting);
+    public void OnDead() => SwitchPlayerState(PlayerState.Dead);
 
-    void UpdateCooldownTimers() {
+    void UpdateCooldownTimers()
+    {
         // Handle Rolling Cooldown
         if (lastRollingTimestamp > 0)
         {
@@ -587,6 +571,44 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
     }
 
+    void UpdateDetectionTriggers() {
+        // === If Player is Dead, then disable all sensors and return === //
+        if (currentState != PlayerState.Dead)
+        {
+            // === Wall Detection ==== //
+            isWallDetected = (
+                (m_wallSensorR1.State() && m_wallSensorR2.State() && facingDirection == 1)
+            || (m_wallSensorL1.State() && m_wallSensorL2.State() && facingDirection == -1)
+            );
+
+            // === Ground Detection === //
+            isGrounded = m_groundSensor.State();
+
+            if (isGrounded) { 
+                currentDoubleJumpCount = 0;
+            }
+
+
+            // === Upper Wall Detection === //
+            isUpperWallDetected = m_wallSensorL2.State() && m_wallSensorR2.State();
+
+            // === States that is automatically being triggered by a sensor detection ==== //
+            if (!isGrounded && isWallDetected
+                && currentState != PlayerState.Hurting
+                && currentState != PlayerState.Dead
+                && currentState != PlayerState.WallJumping)
+            {
+                SwitchPlayerState(PlayerState.WallSliding);
+            }
+        }
+        else
+        {
+            isGrounded = false;
+            isWallDetected = false;
+            isUpperWallDetected = false;
+        }
+    }
+
     void FlipPlayerSprite()
     {
         if (rb.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
@@ -611,16 +633,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
     }
 
-    public bool NoBlood() => m_noBlood;
-
-    public bool SetPlayerDead()
+    public void TriggerJumpAnimation()
     {
-        SwitchPlayerState(PlayerState.Dead);
-        return true;
-    }
-
-    public void TriggerJumpAnimation() { 
-    playerAnimator.SetTrigger("Jump");
+        playerAnimator.SetTrigger("Jump");
 
     }
     private void OnDrawGizmosSelected()
@@ -630,6 +645,52 @@ public class PlayerControllerVersion2 : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
         }
+    }
+
+
+    void InputsFromKeyboard() {
+        if (enabledKeyboardInput) 
+        { 
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            OnMoveLeft();
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            OnMoveRight();
+        }
+        else
+        {
+            // If no input, then stop moving
+            //SetFloatInputX(0); 
+        }
+#if UNITY_EDITOR
+        inputX = Input.GetAxis("Horizontal"); // This is for Unity Input System, to get the input from the keyboard
+#endif
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnJump(); // Jump
+        }
+
+        // Inputs that cannot be on the same time.
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
+        {
+            OnHoldAttack(); // Attack
+        }
+        else if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.K))
+        {
+            OnHoldShield(); // Upon Press
+        }
+        else if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.K))
+        {
+            OnNeutral(); // Stop Shielding // Switch to Neutral State
+            //OnDelayedNeutral(); // Stop Shielding with a slight delay
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.L))
+        {
+            OnRoll(); // Rolling
+        }
+    }
     }
 
 
