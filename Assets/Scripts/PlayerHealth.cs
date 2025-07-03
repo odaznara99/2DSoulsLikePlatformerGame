@@ -51,7 +51,7 @@ public class PlayerHealth : MonoBehaviour
                 else if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
                 {
                     // Killable Hit
-                    if (currentHealth < damageAmount)
+                    if (currentHealth <= damageAmount)
                     {
                         currentHealth = 0;
                         Die(); // If damage exceeds current health, call Die method

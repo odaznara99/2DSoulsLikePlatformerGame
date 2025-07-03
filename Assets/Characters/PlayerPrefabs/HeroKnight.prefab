@@ -635,9 +635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3b1c2e26c544045bd3273c3e4ad63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_noBlood: 0
+  m_noBlood: 1
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
-  currentState: 1
+  currentState: 0
   currentXVelocityState: 0
   inputX: 0
   jumpForce: 7
@@ -656,7 +656,7 @@ MonoBehaviour:
   isGrounded: 0
   isParry: 0
   isWallDetected: 0
-  isUpperWallDetected: 1
+  isUpperWallDetected: 0
   parryingTime: 0.3
   rollDuration: 0.5
   hurtSeconds: 0.5

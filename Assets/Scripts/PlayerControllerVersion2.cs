@@ -182,9 +182,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // == Method/Function to change a player state
     private void SwitchPlayerState(PlayerState newState)
     {
-        if (currentState == PlayerState.Jumping && newState == PlayerState.Jumping) {
-            return;
-        }
+        //if (currentState == PlayerState.Jumping && newState == PlayerState.Jumping) {
+        //    return;
+        //}
 
         // Set Cooldown for Shielding when switching from Shielding state to new state
         if (currentState == PlayerState.Shielding 
@@ -237,7 +237,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             switch (newState)
             {
                 case PlayerState.Jumping:
-                    currentDoubleJumpCount++; // Increment the double jump count
+                    //currentDoubleJumpCount++; // Increment the double jump count
                     currentStateCoroutine = StartCoroutine(DoJumping());
                     break;
                 case PlayerState.WallSliding:
@@ -329,7 +329,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
         if (isGrounded || 
                 (  !isGrounded 
                     && currentDoubleJumpCount <= maxDoubleJumpCount 
-                    && !isWallDetected)
+                    && !isWallDetected
+                )
            )
         {
             playerAnimator.SetTrigger("Jump");
@@ -443,13 +444,13 @@ public class PlayerControllerVersion2 : MonoBehaviour
             if (enemy.CompareTag("Enemy"))
             {
                 // Apply damage to the enemy
-                StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
+                enemy.GetComponent<Bandit>().BanditReceiveDamage(attackDamage);
             }
         }
 
         //Variable for Current Attack Animation
         currentAttackAnimation++;
-        currentAttackAnimation = Random.Range(1, 4); // Randomly choose between 1, 2, or 3 for attack animation
+        //currentAttackAnimation = Random.Range(1, 4); // Randomly choose between 1, 2, or 3 for attack animation
         // Call one of three attack animations "Attack1", "Attack2", "Attack3"
         playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
         Debug.Log("Attack: " + currentAttackAnimation);
@@ -512,8 +513,40 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
     public void OnStop() => SetFloatInputX(0);
     public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral);   // PointerExit, PointerUp of Any Control Buttons
-    public void OnJump() => SwitchPlayerState(PlayerState.Jumping);           // PointerDown, PointerEnter
-    public void OnHoldAttack() => SwitchPlayerState(PlayerState.Attacking);    // PointerDown, PointerEnter
+    public void OnJump()
+    {
+
+        if (currentDoubleJumpCount < maxDoubleJumpCount && currentXVelocityState != XVelocityState.Rolling)
+        {
+
+            SwitchPlayerState(PlayerState.Jumping);
+            if (currentDoubleJumpCount < maxDoubleJumpCount)
+            {
+                currentDoubleJumpCount++; // Increment the double jump count
+            }
+            else
+            {
+                DisplayLog("Max Double Jump Count reached!");
+            }
+        }
+        else if (currentState == PlayerState.WallSliding && isWallDetected)
+        {
+            // If player is wall sliding, then wall jump instead
+            SwitchPlayerState(PlayerState.WallJumping);
+        }
+        else
+        {
+            DisplayLog("Cannot Jump, either not grounded or max double jump count reached!");
+        }
+    }        
+    public void OnHoldAttack() { 
+        if (currentState == PlayerState.Attacking)
+        {
+            DisplayLog("Already Attacking, cannot attack again!");
+            return; // If already attacking, then do nothing
+        }
+        SwitchPlayerState(PlayerState.Attacking); 
+    }    
     public void OnRoll() => SwitchXVelocityState(XVelocityState.Rolling);  // PointerDown, PointerEnter
     public void OnHoldShield() => SwitchPlayerState(PlayerState.Shielding);     // PointerDown, PointerEnter
     public void OnHurt() => SwitchPlayerState(PlayerState.Hurting);
@@ -577,6 +610,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             // === Ground Detection === //
             isGrounded = m_groundSensor.State();
 
+            // Reset Double Jump Count if Player is grounded
             if (isGrounded && currentState != PlayerState.Jumping) { 
                 currentDoubleJumpCount = 0;
             }
@@ -591,7 +625,21 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 && currentState != PlayerState.Dead
                 && currentState != PlayerState.WallJumping)
             {
-                SwitchPlayerState(PlayerState.WallSliding);
+                if (inputX == 1 && facingDirection == 1)
+                {
+                    SwitchPlayerState(PlayerState.WallSliding);
+                }
+                else if (inputX == -1 && facingDirection == -1)
+                {
+                    SwitchPlayerState(PlayerState.WallSliding);
+                } 
+                else
+                {
+                    // If player is not moving, then stop the wall sliding
+                    playerAnimator.SetTrigger("Jump");
+                    SwitchPlayerState(PlayerState.Neutral);
+
+                }
             }
         }
         else

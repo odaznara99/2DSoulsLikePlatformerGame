@@ -263,7 +263,7 @@ public class PlayerController : MonoBehaviour
                         if (enemy.CompareTag("Enemy"))
                         {
                             // Apply damage to the enemy
-                            StartCoroutine(enemy.GetComponent<Bandit>().TakeDamage(attackDamage));
+                            enemy.GetComponent<Bandit>().BanditReceiveDamage(attackDamage);
                         }
                     }
 

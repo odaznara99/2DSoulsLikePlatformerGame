@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class Bandit : MonoBehaviour {
 
@@ -12,7 +13,7 @@ public class Bandit : MonoBehaviour {
     public ParticleSystem       m_bloodSplash; // Reference to the blood splash particle system
     private bool                m_grounded = false;
     private bool                m_combatIdle = false;
-    private bool                m_isDead = false;
+    [SerializeField]private bool                m_isDead = false;
 
     //Added: Odaz 09/29/2024    
     public Transform attackPoint; // Attach this to a point in the scene or a child of the enemy
@@ -24,16 +25,23 @@ public class Bandit : MonoBehaviour {
     public int       health = 100; // Health of the enemy
     public int       damage = 10; // Damage dealt to the player
 
-    private Transform   player; // Reference to the player position
-    private PlayerControllerVersion2  playerScript; // Reference to the player main script
-    private float       lastAttackTime = 0f; // Track when the enemy last attacked
-    private bool        isAttacking = false; // Track if the enemy is currently attacking
-    private bool        isFacingRight = false; // Track which direction the enemy is facing
-    private bool        isHurting = false; // Track when the bandit is being Hurt
+    [SerializeField] private Transform   player; // Reference to the player position
+    [SerializeField] private PlayerHealth playerHealth; // Reference to the player's health script
+    [SerializeField] private PlayerControllerVersion2  playerScript; // Reference to the player main script
+    [SerializeField] private float       lastAttackTime = 0f; // Track when the enemy last attacked
+    [SerializeField] private bool        isAttacking = false; // Track if the enemy is currently attacking
+    [SerializeField] private bool        isFacingRight = false; // Track which direction the enemy is facing
+    [SerializeField] private bool        isHurting = false; // Track when the bandit is being Hurt
+
+    //private Coroutine attackCoroutine;
 
 
-    
 
+    private void Awake()
+    {
+        isAttacking = false; // Initialize attacking state
+        isHurting = false; // Initialize hurting state
+    }
 
     // Use this for initialization
     void Start () {
@@ -43,11 +51,13 @@ public class Bandit : MonoBehaviour {
 
         playerScript    = GameObject.Find("HeroKnight").GetComponent<PlayerControllerVersion2>();
         player          = GameObject.Find("HeroKnight").GetComponent<Transform>();
+        playerHealth    = player.GetComponent<PlayerHealth>();
         attackPoint     = transform.Find("AttackPoint").GetComponent<Transform>();
         lastAttackTime  = Time.time - attackCooldown;
 
         // Ignore Collision Between Enemy
         Physics2D.IgnoreLayerCollision(6, 6);
+        
     }
 	
 	// Update is called once per frame
@@ -57,6 +67,7 @@ public class Bandit : MonoBehaviour {
         if (player == null)
         {
             player = GameObject.Find("HeroKnight").GetComponent<Transform>();
+            playerHealth = player.GetComponent<PlayerHealth>();
         }
 
         //Reference to the AttackPoint if not assigned
@@ -95,6 +106,7 @@ public class Bandit : MonoBehaviour {
 
                 if (!isAttacking)
                 {
+                    //attackCoroutine = StartCoroutine(AttackPlayer());
                     StartCoroutine(AttackPlayer());
                 }
             }
@@ -126,39 +138,6 @@ public class Bandit : MonoBehaviour {
 
         //Set AirSpeed in animator
         m_animator.SetFloat("AirSpeed", m_body2d.velocity.y);
-
-       /* // -- Handle Animations --
-        //Death
-        if (Input.GetKeyDown("e")) {
-            if(!m_isDead)
-                m_animator.SetTrigger("Death");
-            else
-                m_animator.SetTrigger("Recover");
-
-            m_isDead = !m_isDead;
-        }
-            
-        //Hurt
-        else if (Input.GetKeyDown("q"))
-            m_animator.SetTrigger("Hurt");
-
-        //Attack
-        else if(Input.GetMouseButtonDown(0)) {
-            m_animator.SetTrigger("Attack");
-        }
-
-        //Change between idle and combat idle
-        else if (Input.GetKeyDown("f"))
-            m_combatIdle = !m_combatIdle;
-
-        //Jump
-        else if (Input.GetKeyDown("space") && m_grounded) {
-            m_animator.SetTrigger("Jump");
-            m_grounded = false;
-            m_animator.SetBool("Grounded", m_grounded);
-            m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
-            m_groundSensor.Disable(0.2f);
-        }*/
 
         //Run
         if (Mathf.Abs(m_body2d.velocity.x) > Mathf.Epsilon)
@@ -197,9 +176,6 @@ public class Bandit : MonoBehaviour {
             // Assuming you want to wait for the animation to reach a certain point before applying damage
             yield return new WaitForSeconds(attackTiming); // Adjust this timing as per your animation
 
-            // Reference to Player Health
-            PlayerHealth    playerHealth        = player.GetComponent<PlayerHealth>();
-
             if (playerHealth != null && !isHurting && !m_isDead)
             {
                 Debug.Log("Enemy: Attacks the player!");
@@ -216,26 +192,56 @@ public class Bandit : MonoBehaviour {
     }
 
     // Method to receive damage when attacked by the player
-    public IEnumerator TakeDamage(int damageAmount)
+    public void BanditReceiveDamage(int damageAmount)
     {
-        m_animator.SetTrigger("Hurt");
-        health -= damageAmount;
-
-        if (health <= 0)
+        if (health > 0 && !m_isDead)
         {
-            Die();
+            Debug.Log("Enemy: Receives " + damageAmount + " damage!");
+            StartCoroutine(TakeDamage(damageAmount));
         }
         else
         {
-            isHurting = true;
-            Instantiate(m_bloodSplash, transform.position, Quaternion.identity); // Instantiate blood splash effect
-            StopMovingHorizontally();
-            StopCoroutine(AttackPlayer());
-            Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
-            //Duration when the Enemy will be on Hurt State
-            yield return new WaitForSeconds(1f);
-            isHurting = false;
+            Debug.Log("Enemy is already dead, cannot take damage.");
         }
+    }
+
+    private IEnumerator TakeDamage(int damageAmount)
+    {
+        if (!m_isDead)
+        {
+            isHurting = true;
+            StopCoroutine(AttackPlayer());
+            //attackCoroutine = null; // Stop the attack coroutine if it's running
+            isAttacking = false; // Ensure the enemy is not attacking when hurt
+            m_animator.SetTrigger("Hurt");
+            health -= damageAmount;
+
+            if (health <= 0)
+            {
+                Die();
+                //isHurting = false;
+            }
+            else
+            {
+                Instantiate(m_bloodSplash, transform.position, Quaternion.identity); // Instantiate blood splash effect
+                StopMovingHorizontally();
+                Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
+                //Duration when the Enemy will be on Hurt State
+                yield return new WaitForSeconds(1f);
+                isHurting = false;
+                Debug.Log("isHurting = false");
+                yield break;
+
+            }
+            
+        }
+        else
+        {
+            Debug.Log("Enemy is already dead or currently hurting, cannot take damage.");
+        }
+        isHurting = false;
+        Debug.Log("isHurting = false");
+        yield break;
     }
 
     // Method to destroy the enemy when its health reaches zero
