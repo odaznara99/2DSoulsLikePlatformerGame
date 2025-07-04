@@ -10,9 +10,9 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
 
-    public CanvasGroup gameOverUI;        // Reference to the Game Over UI
-    public float gameOverFadeInSeconds = 2f;
-    public GameObject pauseMenuUI;       // Reference to the Pause Menu UI
+    public GameObject pauseScreen;       // Reference to the Pause Menu UI
+    public CanvasGroup gameOverScreen;        // Reference to the Game Over UI   
+    private float gameOverFadeInSeconds = 2f;
 
     void Awake()
     {
@@ -35,11 +35,11 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
 
         // Ensure UI elements are disabled at the start
-        if (gameOverUI != null)
-            gameOverUI.gameObject.SetActive(false);
+        if (gameOverScreen != null)
+            gameOverScreen.gameObject.SetActive(false);
 
-        if (pauseMenuUI != null)
-            pauseMenuUI.SetActive(false);
+        if (pauseScreen != null)
+            pauseScreen.SetActive(false);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Check UI References if becomes null
-        if (gameOverUI == null || pauseMenuUI == null) {
+        if (gameOverScreen == null || pauseScreen == null) {
 
             // Find the UI Objects
             FindUIElements();
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.R)) {
 
             RestartGame();
-        
+
         }
         // Handle Game Over Controls
         if (isGameOver && (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0)))
@@ -95,14 +95,14 @@ public class GameManager : MonoBehaviour
         playerScore = 0;
 
         // Disable Game Over UI
-        if (gameOverUI != null)
-            gameOverUI.gameObject.SetActive(false);
+        if (gameOverScreen != null)
+            gameOverScreen.gameObject.SetActive(false);
     }
 
     // Function to pause the game
     public void PauseGame()
     {
-        pauseMenuUI.SetActive(true);     // Enable pause menu UI
+        pauseScreen.SetActive(true);     // Enable pause menu UI
         Time.timeScale = 0f;             // Stop the time in-game
         isGamePaused = true;
     }
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
     // Function to resume the game from pause
     public void ResumeGame()
     {
-        pauseMenuUI.SetActive(false);    // Disable pause menu UI
+        pauseScreen.SetActive(false);    // Disable pause menu UI
         Time.timeScale = 1f;             // Resume the time in-game
         isGamePaused = false;
     }
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
         {
             isGameOver = true;
             Time.timeScale = 0f;         // Stop the time
-            gameOverUI.gameObject.SetActive(true);  // Show Game Over UI
+            gameOverScreen.gameObject.SetActive(true);  // Show Game Over UI
             Debug.Log("Game Over!");
         }
     }
@@ -130,8 +130,8 @@ public class GameManager : MonoBehaviour
     // Function to trigger Game Over with a delay
     public void TriggerGameOverWithDelay()
     {
-        
-        StartCoroutine(DelayFadeInPanel(gameOverUI, gameOverFadeInSeconds));
+
+        StartCoroutine(DelayFadeInPanel(gameOverScreen, gameOverFadeInSeconds));
         Debug.Log("Game Over!");
     }
 
@@ -167,9 +167,13 @@ public class GameManager : MonoBehaviour
         return playerScore;
     }
 
+    public void GoToMainMenu(){
+        SceneManager.LoadScene(0);
+    }
+
     void FindUIElements() {
-        pauseMenuUI = GameObject.Find("ScreenCanvas").transform.Find("PauseMenuPanel").gameObject;
-        gameOverUI  = GameObject.Find("ScreenCanvas").transform.Find("GameOverPanel").gameObject.GetComponent<CanvasGroup>();
+        pauseScreen = GameObject.Find("ScreenCanvas").transform.Find("PauseMenuPanel").gameObject;
+        gameOverScreen  = GameObject.Find("ScreenCanvas").transform.Find("GameOverPanel").gameObject.GetComponent<CanvasGroup>();
 
     }
 
@@ -188,8 +192,29 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        if (canvasGroup.name == gameOverUI.name) isGameOver = true;
+        if (canvasGroup.name == gameOverScreen.name) isGameOver = true;
         Debug.Log("Finish Fading In: " + canvasGroup.name);
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+    }
+
+    IEnumerator DelayFadeOutPanel(CanvasGroup canvasGroup, float fadeDuration)
+    {
+        Debug.Log("Start Fading In: " + canvasGroup.name);
+        float elapsed = 0f;
+        canvasGroup.alpha = 1f;
+        canvasGroup.gameObject.SetActive(true); // make sure it's visible
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
+
+            yield return null;
+        }
+
+        if (canvasGroup.name == gameOverScreen.name) isGameOver = true;
+        Debug.Log("Finish Fading Out: " + canvasGroup.name);
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
     }

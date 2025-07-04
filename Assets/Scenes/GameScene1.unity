@@ -203,7 +203,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &82018550
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2105,6 +2105,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0.53
       objectReference: {fileID: 0}
+    - target: {fileID: 1240621442208991183, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 961609327}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2115,19 +2119,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2167,11 +2171,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -771
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -626
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2657,7 +2661,7 @@ GameObject:
   - component: {fileID: 878804757}
   - component: {fileID: 878804759}
   m_Layer: 5
-  m_Name: InGamePanel
+  m_Name: In-Game Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2912,9 +2916,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edff8412f2f059a4c8936eb65b136d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverUI: {fileID: 1620842584}
-  gameOverFadeInSeconds: 2
-  pauseMenuUI: {fileID: 1917105202}
+  pauseScreen: {fileID: 1917105202}
+  gameOverScreen: {fileID: 1620842584}
 --- !u!1 &1048435849
 GameObject:
   m_ObjectHideFlags: 0
@@ -3127,7 +3130,7 @@ GameObject:
   - component: {fileID: 1052188229}
   - component: {fileID: 1052188231}
   m_Layer: 5
-  m_Name: ControlsPanel
+  m_Name: Player Controls Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4157,7 +4160,7 @@ GameObject:
   - component: {fileID: 1620842582}
   - component: {fileID: 1620842584}
   m_Layer: 5
-  m_Name: GameOverPanel
+  m_Name: Game Over Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4765,7 +4768,7 @@ GameObject:
   - component: {fileID: 1917105204}
   - component: {fileID: 1917105206}
   m_Layer: 5
-  m_Name: PauseMenuPanel
+  m_Name: Pause Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
