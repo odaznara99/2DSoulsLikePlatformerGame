@@ -70,6 +70,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 733407074967370547, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 733407074967370547, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.79
+      objectReference: {fileID: 0}
     - target: {fileID: 1827232232656843805, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.48
@@ -130,6 +138,14 @@ PrefabInstance:
       propertyPath: enemySpawnPoints.Array.data[3]
       value: 
       objectReference: {fileID: 2252191326886120330}
+    - target: {fileID: 6153063742754219163, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 6153063742754219163, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.86
+      objectReference: {fileID: 0}
     - target: {fileID: 6229022538155525280, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.87

@@ -35,6 +35,11 @@ public enum XVelocityState
 
 public class PlayerControllerVersion2 : MonoBehaviour
 {
+    // == Variable for Unity Editor
+    [Header("Unity Editor Settings")]
+    public bool enabledDebugLog = true;
+    public bool enabledKeyboardInput = false; // Enable Keyboard Input for Player Controller
+
     [Header("Player Parameters")]
     public bool m_noBlood = false;
 
@@ -93,11 +98,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float parryingTime = 0.3f; // Duration to parry an attack
     public float rollDuration = 0.5f; // Duration in Rolling state.
     public float hurtSeconds = 0.3f; // Duration in Hurting State
-
-    // == Variable for Unity Editor
-    [Header("Unity Editor Settings")]
-    public bool enabledDebugLog = true;
-    public bool enabledKeyboardInput = false; // Enable Keyboard Input for Player Controller
 
     // === Variables for Cooldowns === //
     [Header("Cooldown Variables")]
@@ -203,19 +203,23 @@ public class PlayerControllerVersion2 : MonoBehaviour
             DisplayLog("Player is currently " + currentState + " cannot change this state!");
             return;
         }
+        // Rolling State can't be interrupted
         else if (currentXVelocityState == XVelocityState.Rolling
             && newState != PlayerState.ForceInterupt
-            && newState != PlayerState.WallSliding)
+            && newState != PlayerState.WallSliding
+            && newState != PlayerState.Dead)
         {
             DisplayLog(newState + " Cannot interupt " + currentXVelocityState + "!");
             return;
         }
+        // Attackings State can't be interrupted
         else if (currentState == PlayerState.Attacking
             && (newState == PlayerState.Attacking||newState == PlayerState.Jumping ))
         {
             DisplayLog(newState + " Cannot interupt " + currentState + "!");
             return;
         }
+        // Wall Sliding State can't be interrupted by Attacking or Shielding
         else if (currentState == PlayerState.WallSliding
             && (newState == PlayerState.Attacking || newState == PlayerState.Shielding))
         {

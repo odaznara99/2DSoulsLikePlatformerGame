@@ -82,6 +82,7 @@ public class Bandit : MonoBehaviour {
         // Calculate the distance between the enemy and the attack point
         float distanceToAttackPoint = Vector2.Distance(attackPoint.position, player.position);
 
+        // Check if this enemy is dead or the player is dead
         if (!m_isDead && !isHurting && playerScript.currentState != PlayerState.Dead)
         {
             //Follow Player
@@ -168,8 +169,9 @@ public class Bandit : MonoBehaviour {
     // Method to attack the player
     IEnumerator AttackPlayer()
     {
-        if (Time.time >= lastAttackTime + attackCooldown)
+        if (Time.time >= lastAttackTime + attackCooldown + attackTiming)
         {
+            lastAttackTime = Time.time; // Update the time of the last attack  
             isAttacking = true;
             m_animator.SetTrigger("Attack");
 
@@ -184,9 +186,7 @@ public class Bandit : MonoBehaviour {
             else
             {
                 Debug.Log("Enemy: Attack was Interrupted!");
-            }
-
-            lastAttackTime = Time.time; // Update the time of the last attack           
+            }     
             isAttacking = false;
         }
     }
