@@ -120,8 +120,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over!");
     }
 
-    public void SetIsGameOver(bool gameOver) {
-        isGameOver = gameOver;
+    public void SetIsGameOver() {
+        isGameOver = true;
     }
 
     // Function to quit the game
