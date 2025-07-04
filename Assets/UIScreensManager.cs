@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UIScreensManager : MonoBehaviour
 {
@@ -79,5 +80,47 @@ public class UIScreensManager : MonoBehaviour
     public bool IsScreenActive(string name)
     {
         return screenDict.ContainsKey(name) && screenDict[name].activeSelf;
+    }
+
+    public void ShowScreenWithFadeIn(string name, float duration)
+    {
+        StartCoroutine(FadeInScreen(name, duration));
+    }
+
+    private IEnumerator FadeInScreen(string name, float duration)
+    {
+        HideAllScreens(); // optional
+
+        if (!screenDict.TryGetValue(name, out GameObject screen))
+        {
+            Debug.LogError($"Screen {name} not found!");
+            yield break;
+        }
+
+        screen.SetActive(true);
+
+        CanvasGroup cg = screen.GetComponent<CanvasGroup>();
+        if (cg == null)
+        {
+            Debug.LogWarning("No CanvasGroup found. Fading skipped.");
+            yield break;
+        }
+
+        cg.alpha = 0;
+        cg.interactable = false;
+        cg.blocksRaycasts = false;
+
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            cg.alpha = Mathf.Clamp01(timer / duration);
+            yield return null;
+        }
+
+        cg.alpha = 1;
+        cg.interactable = true;
+        cg.blocksRaycasts = true;
+        
     }
 }
