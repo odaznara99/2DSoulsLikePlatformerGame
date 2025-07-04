@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
 
-    public GameObject pauseScreen;       // Reference to the Pause Menu UI
     public CanvasGroup gameOverScreen;        // Reference to the Game Over UI   
     private float gameOverFadeInSeconds = 2f;
 
@@ -37,9 +36,6 @@ public class GameManager : MonoBehaviour
         // Ensure UI elements are disabled at the start
         if (gameOverScreen != null)
             gameOverScreen.gameObject.SetActive(false);
-
-        if (pauseScreen != null)
-            pauseScreen.SetActive(false);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -52,7 +48,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Check UI References if becomes null
-        if (gameOverScreen == null || pauseScreen == null) {
+        if (gameOverScreen == null) {
 
             // Find the UI Objects
             FindUIElements();
@@ -102,7 +98,8 @@ public class GameManager : MonoBehaviour
     // Function to pause the game
     public void PauseGame()
     {
-        pauseScreen.SetActive(true);     // Enable pause menu UI
+        //pauseScreen.SetActive(true);     // Enable pause menu UI
+        FindObjectOfType<UIScreensManager>().ShowScreen("Pause Screen");
         Time.timeScale = 0f;             // Stop the time in-game
         isGamePaused = true;
     }
@@ -110,9 +107,11 @@ public class GameManager : MonoBehaviour
     // Function to resume the game from pause
     public void ResumeGame()
     {
-        pauseScreen.SetActive(false);    // Disable pause menu UI
+        //pauseScreen.SetActive(false);    // Disable pause menu UI
         Time.timeScale = 1f;             // Resume the time in-game
         isGamePaused = false;
+        FindObjectOfType<UIScreensManager>().HideScreen("Pause Screen");
+        
     }
 
     // Function to handle Game Over
@@ -172,8 +171,7 @@ public class GameManager : MonoBehaviour
     }
 
     void FindUIElements() {
-        pauseScreen = GameObject.Find("ScreenCanvas").transform.Find("PauseMenuPanel").gameObject;
-        gameOverScreen  = GameObject.Find("ScreenCanvas").transform.Find("GameOverPanel").gameObject.GetComponent<CanvasGroup>();
+        gameOverScreen  = GameObject.Find("ScreenCanvas").transform.Find("Game Over Screen").gameObject.GetComponent<CanvasGroup>();
 
     }
 
