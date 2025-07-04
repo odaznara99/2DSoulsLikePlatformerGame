@@ -2158,10 +2158,6 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0.53
       objectReference: {fileID: 0}
-    - target: {fileID: 1240621442208991183, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 961609327}
     - target: {fileID: 1476492989899164353, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2274,10 +2270,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8537937754603007424, guid: 4320e9c566c6be849b37451cfc877da5, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 961609327}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2969,8 +2961,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edff8412f2f059a4c8936eb65b136d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseScreen: {fileID: 1917105202}
-  gameOverScreen: {fileID: 1620842584}
 --- !u!1 &1048435849
 GameObject:
   m_ObjectHideFlags: 0
@@ -4281,7 +4271,7 @@ MonoBehaviour:
   - {fileID: 4743650585900254744, guid: 3617a235e5585b54fad7225ef3eeb223, type: 3}
   - {fileID: 610654748022916092, guid: 5adff24ebe9b40d429769b83afd1bbcc, type: 3}
   player: {fileID: 4135637085881948554}
-  maxSegments: 0
+  maxSegments: 15
 --- !u!4 &1708357803
 Transform:
   m_ObjectHideFlags: 0
@@ -5259,10 +5249,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PauseButton
       objectReference: {fileID: 0}
-    - target: {fileID: 8343550677492616135, guid: 5b9a190608d01944685d0844cac67b8d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 961609327}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

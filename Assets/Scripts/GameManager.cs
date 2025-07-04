@@ -35,7 +35,8 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // When a new scene is loaded, find the UI elements again
-       // FindUIElements();
+        // FindUIElements();
+        Time.timeScale = 1f;
     }
 
 
@@ -146,6 +147,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void GoToMainMenu(){
+        Time.timeScale = 1f;
         SceneManager.LoadScene(0);
     }
 
