@@ -10,9 +10,6 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
 
-    //public CanvasGroup gameOverScreen;        // Reference to the Game Over UI   
-    //private float gameOverFadeInSeconds = 2f;
-
     void Awake()
     {
         // Ensure there's only one GameManager instance
@@ -33,9 +30,6 @@ public class GameManager : MonoBehaviour
         isGamePaused = false;
         isGameOver = false;
 
-        // Ensure UI elements are disabled at the start
-       // if (gameOverScreen != null)
-         //   gameOverScreen.gameObject.SetActive(false);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -82,9 +76,7 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
         playerScore = 0;
 
-        // Disable Game Over UI
-       // if (gameOverScreen != null)
-         //   gameOverScreen.gameObject.SetActive(false);
+
     }
 
     // Function to pause the game
@@ -105,9 +97,6 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<UIScreensManager>().HideScreen("Pause Screen");
         
     }
-
-    // Function to handle Game Over
-
 
     // Function to trigger Game Over with a delay
     public void TriggerGameOverWithDelay()
@@ -160,30 +149,5 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    void FindUIElements() {
-      //  gameOverScreen  = GameObject.Find("ScreenCanvas").transform.Find("Game Over Screen").gameObject.GetComponent<CanvasGroup>();
-
-    }
-
-    IEnumerator DelayFadeInPanel(CanvasGroup canvasGroup,float fadeDuration)
-    {
-        Debug.Log("Start Fading In: " + canvasGroup.name);
-        float elapsed = 0f;
-        canvasGroup.alpha = 0f;
-        canvasGroup.gameObject.SetActive(true); // make sure it's visible
-
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            canvasGroup.alpha = Mathf.Clamp01(elapsed / fadeDuration);
-            
-            yield return null;
-        }
-
-       // if (canvasGroup.name == gameOverScreen.name) isGameOver = true;
-        Debug.Log("Finish Fading In: " + canvasGroup.name);
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
-    }
 
 }
