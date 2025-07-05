@@ -45,6 +45,7 @@ public class PlayerHealth : MonoBehaviour
                 {
                     playerAnimator.SetTrigger("Block");
                     currentHealth -= 2;
+                    AudioManager.Instance.PlaySFX("Block");
                     Debug.Log("Shielded an attack! Took less damage. Current health: " + currentHealth);
                 }
                 

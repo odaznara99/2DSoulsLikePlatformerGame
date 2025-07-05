@@ -26,6 +26,7 @@ public class SceneLoader : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsync(sceneName));
+        AudioManager.Instance.PlayMusic("MedievalOpener");
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)

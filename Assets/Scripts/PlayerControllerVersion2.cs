@@ -430,6 +430,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
     private void DoAttacking()
     {
+        
+
         // Reference to the AttackPoint if not assigned
         if (attackPoint == null)
         {
@@ -457,6 +459,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
         //currentAttackAnimation = Random.Range(1, 4); // Randomly choose between 1, 2, or 3 for attack animation
         // Call one of three attack animations "Attack1", "Attack2", "Attack3"
         playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
+        // Play Sounds
+        AudioManager.Instance.PlaySFX("Attack" + currentAttackAnimation);
         Debug.Log("Attack: " + currentAttackAnimation);
 
         // If the combo is complete (after the third attack), apply the cooldown
