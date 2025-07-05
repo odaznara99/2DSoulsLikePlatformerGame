@@ -10,7 +10,7 @@ public class PlayerHealth : MonoBehaviour
 {
     private PlayerControllerVersion2      player; //Reference to player script
     private Animator        playerAnimator; //Reference to player animator
-    public GameManager     gameManager; //Reference to GameManager script
+    private GameManager     gameManager; //Reference to GameManager script
     public  int             maxHealth = 100; // The maximum health the player can have
     public  int             currentHealth;  // The player's current health
     public int hazardDamage = 25; // Damage taken from hazards
