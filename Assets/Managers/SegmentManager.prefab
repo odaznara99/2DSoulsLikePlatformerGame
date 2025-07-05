@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &95812324857241236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5091383226317361430}
+  - component: {fileID: 1033358784977508855}
+  m_Layer: 0
+  m_Name: SegmentManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5091383226317361430
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95812324857241236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1033358784977508855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95812324857241236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dba924fd12f3a8e41b66c5862d8c5da9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDebugLogs: 0
+  segmentPrefabs:
+  - {fileID: 8611169255893809227, guid: f4e754235872b5c45b68564906412d90, type: 3}
+  - {fileID: 4743650585900254744, guid: 5d0219a0831c1a34e8fcc40fd6199a2d, type: 3}
+  - {fileID: 4743650585900254744, guid: 99a38703a33c8be45b79f5e7c6cacc5a, type: 3}
+  - {fileID: 5506974605406375848, guid: b6603f0149f922b4487285c3e7a75d27, type: 3}
+  - {fileID: 6561137531303206810, guid: 8c77d7190a7b48f4a9a07eb6584670ae, type: 3}
+  - {fileID: 8611169255893809227, guid: 01a4dcc530b11a643a719b85960995f1, type: 3}
+  - {fileID: 6742463458218483318, guid: 1630c28aaa007814ba19056bd9812b88, type: 3}
+  - {fileID: 4743650585900254744, guid: 64b91b7c09d097a4eb0328228e5b6719, type: 3}
+  - {fileID: 1754318016638606955, guid: 70a72aaa095b9b940a570f5522146a30, type: 3}
+  - {fileID: 4743650585900254744, guid: f02e3ac122dc02c47b52bed2693323b9, type: 3}
+  - {fileID: 4867002139571936495, guid: 18c781cfb097f3b41b6bde8f80f42e94, type: 3}
+  - {fileID: 4743650585900254744, guid: d41e13dd8093ed143b29261296f69445, type: 3}
+  - {fileID: 3252834071685731285, guid: 5180767257d7d3049a910bbcd499cb6f, type: 3}
+  - {fileID: 4743650585900254744, guid: c575fee097425bd4e9518f606b30f9df, type: 3}
+  - {fileID: 6802092134576115169, guid: 90f4166b2ebc09d4195a43b01b6f5411, type: 3}
+  - {fileID: 4743650585900254744, guid: 3617a235e5585b54fad7225ef3eeb223, type: 3}
+  - {fileID: 610654748022916092, guid: 5adff24ebe9b40d429769b83afd1bbcc, type: 3}
+  player: {fileID: 0}
+  maxSegments: 15

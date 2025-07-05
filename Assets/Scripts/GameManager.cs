@@ -71,7 +71,8 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         // Reload the active scene to restart
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneLoader.Instance.LoadScene(SceneManager.GetActiveScene().name);
 
         // Reset game over flag and score
         isGameOver = false;
@@ -148,7 +149,8 @@ public class GameManager : MonoBehaviour
 
     public void GoToMainMenu(){
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
+        //SceneManager.LoadScene(0);
+        SceneLoader.Instance.LoadScene("StartMenu");
     }
 
 

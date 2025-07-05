@@ -5,7 +5,8 @@ public class MenuController : MonoBehaviour
 {
     public void NewGame()
     {
-        SceneManager.LoadScene("GameScene1"); // Use the actual scene name
+        //SceneManager.LoadScene("GameScene1"); // Use the actual scene name
+        SceneLoader.Instance.LoadScene("GameScene1"); // Use the SceneLoader to load the scene
     }
 
     public void LoadGame()
