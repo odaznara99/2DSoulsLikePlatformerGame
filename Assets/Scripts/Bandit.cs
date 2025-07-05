@@ -9,6 +9,7 @@ public enum EnemyState
     Patrol,
     Chase,
     Attack,
+    StopAttack,
     Hurt,
     StopHurt,
     Dead
@@ -44,9 +45,9 @@ public class Bandit : MonoBehaviour {
     [SerializeField] private PlayerHealth playerHealth; // Reference to the player's health script
     [SerializeField] private PlayerControllerVersion2  playerScript; // Reference to the player main script
     [SerializeField] private float       lastAttackTime = 0f; // Track when the enemy last attacked
-    [SerializeField] private bool        isAttacking = false; // Track if the enemy is currently attacking
+    //[SerializeField] private bool        isAttacking = false; // Track if the enemy is currently attacking
     [SerializeField] private bool        isFacingRight = false; // Track which direction the enemy is facing
-    [SerializeField] private bool        isHurting = false; // Track when the bandit is being Hurt
+    //[SerializeField] private bool        isHurting = false; // Track when the bandit is being Hurt
 
     //private Coroutine attackCoroutine;
 
@@ -54,8 +55,8 @@ public class Bandit : MonoBehaviour {
 
     private void Awake()
     {
-        isAttacking = false; // Initialize attacking state
-        isHurting = false; // Initialize hurting state
+       // isAttacking = false; // Initialize attacking state
+       // isHurting = false; // Initialize hurting state
     }
 
     // Use this for initialization
@@ -98,39 +99,46 @@ public class Bandit : MonoBehaviour {
         float distanceToAttackPoint = Vector2.Distance(attackPoint.position, player.position);
 
         // Check if this enemy is dead or the player is dead
-        if (currentState != EnemyState.Dead && !isHurting && playerScript.currentState != PlayerState.Dead)
+        if (currentState != EnemyState.Dead 
+            && currentState != EnemyState.Hurt 
+            && playerScript.currentState != PlayerState.Dead)
         {
-            //Follow Player
-            if (distanceToPlayer <= followRange && distanceToAttackPoint > attackRange)
+            //Chase the Player in Follow Range
+            if (distanceToPlayer <= followRange 
+                && distanceToAttackPoint > attackRange
+                && currentState != EnemyState.Attack
+                && distanceToPlayer > attackRange)
             {
-                ChaseState();
+                //ChaseState();
+                SwitchEnemyState(EnemyState.Chase); // Switch to Chase state
                 //m_combatIdle = true;
             }
-            //Player Out of Range
-            else
+            //Attack the Player in Attack Range
+            else if (distanceToPlayer <= attackRange)
             {
-                // Stop moving if outside the follow range or too close (attack range)
-                //StopMovingHorizontally();
-                SwitchEnemyState(EnemyState.Idle); // Switch to Idle state
-                m_combatIdle = false;
-            }
-
-            //Attack the Player on Range
-            if (distanceToPlayer <= attackRange)
-            {
-                m_combatIdle = true;
+                m_combatIdle = true; // Combat Pose of the Enemy
                 StopMovingHorizontally();
 
-                if (!isAttacking)
+                if (currentState != EnemyState.Attack)
                 {
                     //attackCoroutine = StartCoroutine(AttackState());
                     //StartCoroutine(AttackState());
                     SwitchEnemyState(EnemyState.Attack); // Switch to Attack state
                 }
             }
+            //Player Out of Range
+            else
+            {
+                // Stop moving if outside the follow range or too close (attack range)
+                StopMovingHorizontally();
+                //SwitchEnemyState(EnemyState.Idle); // Switch to Idle state
+                m_combatIdle = false;
+            }
+
+            
         }
         //Player is Dead
-        else if (playerScript.currentState != PlayerState.Dead) 
+        else if (playerScript.currentState == PlayerState.Dead) 
         {
             m_combatIdle = false;
         }
@@ -190,13 +198,15 @@ public class Bandit : MonoBehaviour {
         if (Time.time >= lastAttackTime + attackCooldown + attackTiming)
         {
             lastAttackTime = Time.time; // Update the time of the last attack  
-            isAttacking = true;
+            //isAttacking = true;
             m_animator.SetTrigger("Attack");
 
             // Assuming you want to wait for the animation to reach a certain point before applying damage
             yield return new WaitForSeconds(attackTiming); // Adjust this timing as per your animation
 
-            if (playerHealth != null && !isHurting && currentState != EnemyState.Dead)
+            if (playerHealth != null 
+                && currentState != EnemyState.Hurt 
+                && currentState != EnemyState.Dead)
             {
                 Debug.Log("Enemy: Attacks the player!");
                 playerHealth.TakeDamage(damage);               
@@ -204,9 +214,12 @@ public class Bandit : MonoBehaviour {
             else
             {
                 Debug.Log("Enemy: Attack was Interrupted!");
+                //SwitchEnemyState(EnemyState.StopAttack);
             }     
-            isAttacking = false;
+            //isAttacking = false;
+            //SwitchEnemyState(EnemyState.StopAttack); // Switch to StopHurt state after attacking
         }
+        SwitchEnemyState(EnemyState.StopAttack);
     }
 
     // Method to receive damage when attacked by the player
@@ -229,7 +242,7 @@ public class Bandit : MonoBehaviour {
 
     private IEnumerator HurtState(int damageAmount)
     {
-        if (currentState != EnemyState.Dead && currentState != EnemyState.Hurt)
+        if (currentState != EnemyState.Dead)
         {
             m_animator.SetTrigger("Hurt");
             health -= damageAmount;
@@ -246,7 +259,8 @@ public class Bandit : MonoBehaviour {
                 StopMovingHorizontally();
                 Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
                 //Duration when the Enemy will be on Hurt State
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.3f);
+                Debug.Log("Hurting Stops");
                 SwitchEnemyState(EnemyState.StopHurt); // Switch back to Idle state after hurting
 
             }
@@ -254,7 +268,7 @@ public class Bandit : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Enemy is already dead or currently hurting, cannot take damage.");
+            Debug.Log("Enemy is already dead, cannot take damage.");
         }
         yield break;
     }
@@ -333,8 +347,16 @@ public class Bandit : MonoBehaviour {
 
     void SwitchEnemyState(EnemyState newState, int damageAmount = 0) {
 
-        if (currentState == EnemyState.Hurt && newState != EnemyState.StopHurt
+        if (currentState == EnemyState.Hurt 
+            && newState != EnemyState.StopHurt
             && newState != EnemyState.Dead) {
+            Debug.Log("Enemy is currently hurting, cannot switch to " + newState);
+            return;
+        }
+
+        if (currentState == EnemyState.Attack && newState == EnemyState.Attack)
+        {
+            Debug.Log("Enemy is currently attacking, cannot switch to " + newState);
             return;
         }
 
@@ -342,6 +364,8 @@ public class Bandit : MonoBehaviour {
         {
             StopCoroutine(currentStateCoroutine);
         }
+
+        currentState = newState; // Update the current state
         switch (newState) {
             case EnemyState.Idle:
                 //currentStateCoroutine = StartCoroutine(IdleState());
@@ -359,8 +383,16 @@ public class Bandit : MonoBehaviour {
             case EnemyState.Attack:
                 currentStateCoroutine = StartCoroutine(AttackState());
                 break;
+            case EnemyState.StopAttack:
+                //currentStateCoroutine = StartCoroutine(HurtState(damageAmount));
+                IdleState();
+                break;
             case EnemyState.Hurt:
                 currentStateCoroutine = StartCoroutine(HurtState(damageAmount));
+                break;
+            case EnemyState.StopHurt:
+                //currentStateCoroutine = StartCoroutine(HurtState(damageAmount));
+                IdleState();
                 break;
             case EnemyState.Dead:
                 //currentStateCoroutine = StartCoroutine(DeadState());
