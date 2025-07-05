@@ -2,7 +2,22 @@
 using System.Collections;
 using Unity.VisualScripting;
 
+
+public enum EnemyState
+{
+    Idle,
+    Patrol,
+    Chase,
+    Attack,
+    Hurt,
+    StopHurt,
+    Dead
+}
+
 public class Bandit : MonoBehaviour {
+
+    public  EnemyState  currentState = EnemyState.Idle; // Current state of the enemy
+    private Coroutine   currentStateCoroutine; // Current coroutine according to the state
 
     //[SerializeField] float      m_speed = 4.0f;
     [SerializeField] float      m_jumpForce = 7.5f;
@@ -13,7 +28,7 @@ public class Bandit : MonoBehaviour {
     public ParticleSystem       m_bloodSplash; // Reference to the blood splash particle system
     private bool                m_grounded = false;
     private bool                m_combatIdle = false;
-    [SerializeField]private bool                m_isDead = false;
+    //[SerializeField]private bool                EnemyState.Dead = false;
 
     //Added: Odaz 09/29/2024    
     public Transform attackPoint; // Attach this to a point in the scene or a child of the enemy
@@ -83,19 +98,20 @@ public class Bandit : MonoBehaviour {
         float distanceToAttackPoint = Vector2.Distance(attackPoint.position, player.position);
 
         // Check if this enemy is dead or the player is dead
-        if (!m_isDead && !isHurting && playerScript.currentState != PlayerState.Dead)
+        if (currentState != EnemyState.Dead && !isHurting && playerScript.currentState != PlayerState.Dead)
         {
             //Follow Player
             if (distanceToPlayer <= followRange && distanceToAttackPoint > attackRange)
             {
-                FollowPlayer();
+                ChaseState();
                 //m_combatIdle = true;
             }
             //Player Out of Range
             else
             {
                 // Stop moving if outside the follow range or too close (attack range)
-                StopMovingHorizontally();
+                //StopMovingHorizontally();
+                SwitchEnemyState(EnemyState.Idle); // Switch to Idle state
                 m_combatIdle = false;
             }
 
@@ -107,8 +123,9 @@ public class Bandit : MonoBehaviour {
 
                 if (!isAttacking)
                 {
-                    //attackCoroutine = StartCoroutine(AttackPlayer());
-                    StartCoroutine(AttackPlayer());
+                    //attackCoroutine = StartCoroutine(AttackState());
+                    //StartCoroutine(AttackState());
+                    SwitchEnemyState(EnemyState.Attack); // Switch to Attack state
                 }
             }
         }
@@ -121,6 +138,7 @@ public class Bandit : MonoBehaviour {
         else
         {
             StopMovingHorizontally();
+            //SwitchEnemyState(EnemyState.Dead); // Switch to Dead state
         }
         // Update sprite direction based on movement
         FlipSpriteBasedOnVelocity(); 
@@ -154,7 +172,7 @@ public class Bandit : MonoBehaviour {
     }
 
     // Method to follow the player
-    void FollowPlayer()
+    void ChaseState()
     {
         // Calculate the direction to the player
         Vector2 direction = (player.position - transform.position).normalized;
@@ -167,7 +185,7 @@ public class Bandit : MonoBehaviour {
     }
 
     // Method to attack the player
-    IEnumerator AttackPlayer()
+    IEnumerator AttackState()
     {
         if (Time.time >= lastAttackTime + attackCooldown + attackTiming)
         {
@@ -178,7 +196,7 @@ public class Bandit : MonoBehaviour {
             // Assuming you want to wait for the animation to reach a certain point before applying damage
             yield return new WaitForSeconds(attackTiming); // Adjust this timing as per your animation
 
-            if (playerHealth != null && !isHurting && !m_isDead)
+            if (playerHealth != null && !isHurting && currentState != EnemyState.Dead)
             {
                 Debug.Log("Enemy: Attacks the player!");
                 playerHealth.TakeDamage(damage);               
@@ -194,10 +212,10 @@ public class Bandit : MonoBehaviour {
     // Method to receive damage when attacked by the player
     public void BanditReceiveDamage(int damageAmount)
     {
-        if (health > 0 && !m_isDead)
+        if (health > 0 && currentState != EnemyState.Dead)
         {
             Debug.Log("Enemy: Receives " + damageAmount + " damage!");
-            StartCoroutine(TakeDamage(damageAmount));
+            StartCoroutine(HurtState(damageAmount));
         }
         else
         {
@@ -205,20 +223,21 @@ public class Bandit : MonoBehaviour {
         }
     }
 
-    private IEnumerator TakeDamage(int damageAmount)
+    public void TakeDamage(int damageAmount) { 
+        SwitchEnemyState(EnemyState.Hurt, damageAmount); // Switch to Hurt state with damage amount
+    }
+
+    private IEnumerator HurtState(int damageAmount)
     {
-        if (!m_isDead)
+        if (currentState != EnemyState.Dead && currentState != EnemyState.Hurt)
         {
-            isHurting = true;
-            StopCoroutine(AttackPlayer());
-            //attackCoroutine = null; // Stop the attack coroutine if it's running
-            isAttacking = false; // Ensure the enemy is not attacking when hurt
             m_animator.SetTrigger("Hurt");
             health -= damageAmount;
 
             if (health <= 0)
             {
-                Die();
+                //Die();
+                SwitchEnemyState(EnemyState.Dead); // Switch to Dead state
                 //isHurting = false;
             }
             else
@@ -228,9 +247,7 @@ public class Bandit : MonoBehaviour {
                 Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(1f);
-                isHurting = false;
-                Debug.Log("isHurting = false");
-                yield break;
+                SwitchEnemyState(EnemyState.StopHurt); // Switch back to Idle state after hurting
 
             }
             
@@ -239,20 +256,11 @@ public class Bandit : MonoBehaviour {
         {
             Debug.Log("Enemy is already dead or currently hurting, cannot take damage.");
         }
-        isHurting = false;
-        Debug.Log("isHurting = false");
         yield break;
     }
 
     // Method to destroy the enemy when its health reaches zero
-    void Die()
-    {
-        Debug.Log("Enemy died!");
-        m_animator.SetTrigger("Death");
-        m_isDead = true;       
-        Destroy(gameObject,1f); // Destroy the enemy object
-        //GetComponent<Bandit>().enabled = false;
-    }
+
     //Method to make the Bandit Jump
     void Jump() {
 
@@ -301,5 +309,65 @@ public class Bandit : MonoBehaviour {
 
     void StopMovingHorizontally() {
         m_body2d.velocity = new Vector2(0, m_body2d.velocity.y);
+    }
+
+    void PatrolState()
+    {         // Implement patrol logic here
+        // For example, move back and forth between two points or randomly within a defined area
+        // This is a placeholder for the patrol logic
+        Debug.Log("Patrolling...");
+    }
+
+    void IdleState() {
+        StopMovingHorizontally();
+        Debug.Log("Idle");
+
+    }
+
+    void DeadState() {
+        Debug.Log("Enemy died!");
+        m_animator.SetTrigger("Death");
+        //EnemyState.Dead = true;
+        Destroy(gameObject, 1f);
+    }
+
+    void SwitchEnemyState(EnemyState newState, int damageAmount = 0) {
+
+        if (currentState == EnemyState.Hurt && newState != EnemyState.StopHurt
+            && newState != EnemyState.Dead) {
+            return;
+        }
+
+        if (currentStateCoroutine != null)
+        {
+            StopCoroutine(currentStateCoroutine);
+        }
+        switch (newState) {
+            case EnemyState.Idle:
+                //currentStateCoroutine = StartCoroutine(IdleState());
+                IdleState();
+                break;
+            case EnemyState.Patrol:
+
+                //currentStateCoroutine = StartCoroutine(PatrolState());
+                PatrolState();
+                break;
+            case EnemyState.Chase:
+                //currentStateCoroutine = StartCoroutine(ChaseState());
+                ChaseState();
+                break;
+            case EnemyState.Attack:
+                currentStateCoroutine = StartCoroutine(AttackState());
+                break;
+            case EnemyState.Hurt:
+                currentStateCoroutine = StartCoroutine(HurtState(damageAmount));
+                break;
+            case EnemyState.Dead:
+                //currentStateCoroutine = StartCoroutine(DeadState());
+                DeadState();
+                break;
+        }
+
+
     }
 }
