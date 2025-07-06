@@ -3,6 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
+    public GameObject settingsScreen;
+
+    private void Start()
+    {
+        AudioManager.Instance.PlayMusic("Ballad");
+    }
     public void NewGame()
     {
         //SceneManager.LoadScene("GameScene1"); // Use the actual scene name
@@ -15,9 +21,10 @@ public class MenuController : MonoBehaviour
         Debug.Log("Load Game clicked");
     }
 
-    public void Options()
+    public void Settings(bool setActive)
     {
-        Debug.Log("Options clicked");
+        Debug.Log("Settings is set to" + setActive);
+        settingsScreen.SetActive(setActive);
         //SceneManager.LoadScene("Options");
     }
 

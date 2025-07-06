@@ -34,6 +34,8 @@ public class AudioManager : MonoBehaviour
         foreach (var clip in sfxClips)
             if (!sfxDict.ContainsKey(clip.name))
                 sfxDict.Add(clip.name, clip);
+
+        LoadAudioSettings();
     }
 
     public void PlayMusic(string clipName, bool loop = true)
@@ -67,13 +69,48 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private float musicVolume = 1f;
+    private float sfxVolume = 1f;
+
+    public bool musicEnabled = true;
+    public bool sfxEnabled = true;
+
     public void SetMusicVolume(float volume)
     {
-        musicSource.volume = volume;
+        musicVolume = volume;
+        musicSource.volume = musicEnabled ? musicVolume : 0f;
     }
 
     public void SetSFXVolume(float volume)
     {
-        sfxSource.volume = volume;
+        sfxVolume = volume;
+        sfxSource.volume = sfxEnabled ? sfxVolume : 0f;
     }
+
+    public void ToggleMusic(bool isOn)
+    {
+        musicEnabled = isOn;
+        musicSource.volume = isOn ? musicVolume : 0f;
+    }
+
+    public void ToggleSFX(bool isOn)
+    {
+        sfxEnabled = isOn;
+        sfxSource.volume = isOn ? sfxVolume : 0f;
+    }
+
+    private void LoadAudioSettings()
+    {
+        musicVolume = PlayerPrefs.GetFloat(PlayerPrefKeys.MusicVolume, 1f);
+        sfxVolume = PlayerPrefs.GetFloat(PlayerPrefKeys.SFXVolume, 1f);
+        musicEnabled = PlayerPrefs.GetInt(PlayerPrefKeys.MusicEnabled, 1) == 1;
+        sfxEnabled = PlayerPrefs.GetInt(PlayerPrefKeys.SFXEnabled, 1) == 1;
+
+        SetMusicVolume(musicVolume);
+        SetSFXVolume(sfxVolume);
+        ToggleMusic(musicEnabled);
+        ToggleSFX(sfxEnabled);
+    }
+
+
 }
