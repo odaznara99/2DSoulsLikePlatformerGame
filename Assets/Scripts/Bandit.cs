@@ -32,7 +32,8 @@ public class Bandit : MonoBehaviour {
     //[SerializeField]private bool                EnemyState.Dead = false;
 
     //Added: Odaz 09/29/2024    
-    public Transform attackPoint; // Attach this to a point in the scene or a child of the enemy
+    public Transform attackPoint; // Attach this to a point in the scene or a child of the enemya
+    public Transform headPoint; // Attach this to a point in the scene or a child of the enemy for head detection
     public float     moveSpeed = 2f; // Speed of the enemy
     public float     followRange = 10f; // Range in which the enemy follows the player
     public float     attackRange = 1.5f; // Range in which the enemy attacks the player    
@@ -255,7 +256,7 @@ public class Bandit : MonoBehaviour {
             }
             else
             {
-                Instantiate(m_bloodSplash, transform.position, Quaternion.identity); // Instantiate blood splash effect
+                Instantiate(m_bloodSplash, headPoint.position, Quaternion.identity); // Instantiate blood splash effect
                 StopMovingHorizontally();
                 Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
                 //Duration when the Enemy will be on Hurt State

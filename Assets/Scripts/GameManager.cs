@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<UIScreensManager>().ShowScreen("Pause Screen");
         Time.timeScale = 0f;             // Stop the time in-game
         isGamePaused = true;
+        AudioManager.Instance.PlaySFX("Click"); 
     }
 
     // Function to resume the game from pause
@@ -97,12 +98,15 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;             // Resume the time in-game
         isGamePaused = false;
         FindObjectOfType<UIScreensManager>().HideScreen("Pause Screen");
-        
+        AudioManager.Instance.PlaySFX("Click");
+
     }
 
     // Function to trigger Game Over with a delay
     public void TriggerGameOverWithDelay()
     {
+        AudioManager.Instance.StopMusic(); // Stop current music
+        AudioManager.Instance.PlayMusic("GameOver"); // Play game over sound
 
         //StartCoroutine(DelayFadeInPanel(gameOverScreen, gameOverFadeInSeconds));
         FindObjectOfType<UIScreensManager>().ShowScreenWithFadeIn("Game Over Screen",2f);
@@ -148,6 +152,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void GoToMainMenu(){
+        AudioManager.Instance.PlayMusic("Ballad");
         Time.timeScale = 1f;
         //SceneManager.LoadScene(0);
         SceneLoader.Instance.LoadScene("StartMenu");

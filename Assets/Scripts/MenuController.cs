@@ -12,24 +12,28 @@ public class MenuController : MonoBehaviour
     public void NewGame()
     {
         //SceneManager.LoadScene("GameScene1"); // Use the actual scene name
+        AudioManager.Instance.PlaySFX("Click");
         SceneLoader.Instance.LoadScene("GameScene1"); // Use the SceneLoader to load the scene
     }
 
     public void LoadGame()
     {
         // Your load logic here
+        AudioManager.Instance.PlaySFX("Click");
         Debug.Log("Load Game clicked");
     }
 
     public void Settings(bool setActive)
     {
         Debug.Log("Settings is set to" + setActive);
+        AudioManager.Instance.PlaySFX("Click");
         settingsScreen.SetActive(setActive);
         //SceneManager.LoadScene("Options");
     }
 
     public void QuitGame()
     {
+        AudioManager.Instance.PlaySFX("Click");
         Debug.Log("Quit Game");
         Application.Quit();
 
