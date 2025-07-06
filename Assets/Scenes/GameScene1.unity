@@ -207,17 +207,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4307025996580754200, guid: 6fa2e1f9c7066884cb5a86b587d27c1f, type: 3}
   m_PrefabInstance: {fileID: 9167637778988750773}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &961609327 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3619693336465886900, guid: deb9cadae593272428b458aeebd13815, type: 3}
-  m_PrefabInstance: {fileID: 3391199107880063823}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edff8412f2f059a4c8936eb65b136d50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1052188227 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6912027309136740218, guid: 6fa2e1f9c7066884cb5a86b587d27c1f, type: 3}
@@ -675,10 +664,6 @@ PrefabInstance:
       propertyPath: healthText
       value: 
       objectReference: {fileID: 822758621}
-    - target: {fileID: 712506135812361986, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
-      propertyPath: gameManager
-      value: 
-      objectReference: {fileID: 961609327}
     - target: {fileID: 7721701825642549688, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.13

@@ -575,6 +575,7 @@ GameObject:
   - component: {fileID: 7077461748514592953}
   - component: {fileID: 2632896295486777246}
   - component: {fileID: 430750399797686370}
+  - component: {fileID: 100267485337794080}
   m_Layer: 3
   m_Name: HeroKnight
   m_TagString: Player
@@ -616,7 +617,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8137c407a85a64458e98d6ff4ab2fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
   hazardDamage: 25
@@ -846,3 +846,15 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0027472973, y: 0.36722493}
   m_Size: {x: 0.50321436, y: 0.6023383}
   m_Direction: 0
+--- !u!114 &100267485337794080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8226440734884926468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9fc8cf473d38cf42961e4db25ca81b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
