@@ -1049,6 +1049,7 @@ MonoBehaviour:
   progressText: {fileID: 3345919022299566804}
   fadeImage: {fileID: 662599336696578238}
   fadeDuration: 1
+  loadingDotsText: {fileID: 1824179978762429634}
 --- !u!1 &8919254519169852011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,7 +1062,7 @@ GameObject:
   - component: {fileID: 2565160253572890698}
   - component: {fileID: 1824179978762429634}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Loading Dots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

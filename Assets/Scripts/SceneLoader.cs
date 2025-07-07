@@ -15,6 +15,13 @@ public class SceneLoader : MonoBehaviour
     public Image fadeImage;
     public float fadeDuration = 1f;
 
+    // For Loading Dots Animation
+    public Text loadingDotsText;  // or TMP_Text if using TextMeshPro
+    private string baseText = "Loading";
+    private float dotTimer = 0f;
+    private int dotCount = 0;
+
+
 
     private void Awake()
     {
@@ -36,6 +43,21 @@ public class SceneLoader : MonoBehaviour
             StartCoroutine(Fade(1f, 0f));
         }
     }
+
+    private void Update()
+    {
+        if (loadingScreen.activeSelf && loadingDotsText != null)
+        {
+            dotTimer += Time.deltaTime;
+            if (dotTimer >= 0.5f)
+            {
+                dotTimer = 0f;
+                dotCount = (dotCount + 1) % 4;  // cycles between 0 to 3
+                loadingDotsText.text = baseText + new string('.', dotCount);
+            }
+        }
+    }
+
 
 
     public void LoadScene(string sceneName)
