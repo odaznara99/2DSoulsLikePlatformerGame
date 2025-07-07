@@ -11,6 +11,11 @@ public class SceneLoader : MonoBehaviour
     public Slider progressBar;
     public Text progressText;
 
+    // Variables for Fade In/Out Transition
+    public Image fadeImage;
+    public float fadeDuration = 1f;
+
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -23,6 +28,16 @@ public class SceneLoader : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        if (fadeImage != null)
+        {
+            fadeImage.color = new Color(0, 0, 0, 1f);
+            StartCoroutine(Fade(1f, 0f));
+        }
+    }
+
+
     public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsync(sceneName));
@@ -32,6 +47,9 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator LoadSceneAsync(string sceneName)
     {
+        // Fade Out to black
+        yield return StartCoroutine(Fade(0f, 1f));
+
         loadingScreen.SetActive(true);
 
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
@@ -45,12 +63,40 @@ public class SceneLoader : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(1f); // Optional delay for smoothness
+        yield return new WaitForSeconds(3f); // Optional delay
 
         progressBar.value = 1f;
         progressText.text = "100%";
 
         op.allowSceneActivation = true;
+
+        // Wait for the next frame before fading in
+        yield return null;
+
+        // Fade In to clear
         loadingScreen.SetActive(false);
+        yield return StartCoroutine(Fade(1f, 0f));
+
+        
     }
+
+    private IEnumerator Fade(float startAlpha, float endAlpha)
+    {
+        float elapsed = 0f;
+        Color color = fadeImage.color;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / fadeDuration);
+            color.a = Mathf.Lerp(startAlpha, endAlpha, t);
+            fadeImage.color = color;
+            yield return null;
+        }
+
+        color.a = endAlpha;
+        fadeImage.color = color;
+    }
+
+
 }
