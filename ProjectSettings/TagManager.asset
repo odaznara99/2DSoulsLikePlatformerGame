@@ -41,10 +41,19 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Background3
+  - name: Sky
+    uniqueID: 1435709795
+    locked: 0
+  - name: Clouds
+    uniqueID: 3619077147
+    locked: 0
+  - name: Mountains
+    uniqueID: 1285989835
+    locked: 0
+  - name: 2ndTrees
     uniqueID: 3715537377
     locked: 0
-  - name: Background2
+  - name: 1stTrees
     uniqueID: 387210089
     locked: 0
   - name: Background

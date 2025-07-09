@@ -1,35 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RepeatingBackground : MonoBehaviour
 {
-    public BoxCollider2D backgroundCollider;  // Reference to the background's BoxCollider2D
-    private float backgroundWidth;             // Width of the background
+    public BoxCollider2D backgroundCollider;
+    private float backgroundWidth;
+    private Transform cam;
 
     void Start()
     {
-        // Get the BoxCollider2D component attached to the parent object
-       // backgroundCollider = GameObject.Find("Background_Parent").GetComponent<BoxCollider2D>();
-
-        // Calculate the width of the background based on the collider's size
-        backgroundWidth = backgroundCollider.size.x;
+        cam = Camera.main.transform;
+        backgroundWidth = backgroundCollider.size.x * transform.localScale.x; // Scale-aware
     }
 
     void Update()
     {
-        // Check if the background has moved beyond its own width
-        if (transform.position.x < -backgroundWidth)
+        float camHorizontalExtent = Camera.main.orthographicSize * Screen.width / Screen.height;
+        float edgeVisiblePositionRight = transform.position.x + (backgroundWidth / 2f);
+        float edgeVisiblePositionLeft = transform.position.x - (backgroundWidth / 2f);
+
+        float camPosX = cam.position.x;
+
+        // If the camera has moved past the right edge of the background
+        if (camPosX > edgeVisiblePositionRight)
         {
-            RepositionBackground();
+            RepositionBackground(+1);
+        }
+        // If the camera has moved past the left edge of the background
+        else if (camPosX < edgeVisiblePositionLeft)
+        {
+            RepositionBackground(-1);
         }
     }
 
-    // Reposition the background to create a seamless repeat
-    private void RepositionBackground()
+    private void RepositionBackground(int direction)
     {
-        Debug.Log("Reposition BG");
-        Vector2 groundOffset = new Vector2(backgroundWidth * 2f, 0);
-        transform.position = (Vector2)transform.position + groundOffset;
+        Vector3 offset = new Vector3(backgroundWidth * direction, 0, 0);
+        transform.position += offset;
     }
 }
