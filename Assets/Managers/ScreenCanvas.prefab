@@ -485,6 +485,7 @@ GameObject:
   - component: {fileID: 2663892602813868127}
   - component: {fileID: 3603042303207257883}
   - component: {fileID: 8476505268944066138}
+  - component: {fileID: 2349372401389231173}
   m_Layer: 5
   m_Name: Text (TMP) (1)
   m_TagString: Untagged
@@ -608,6 +609,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2349372401389231173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746972442107049719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd2414ec45a937e4a80f5d6abf6cb446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 8476505268944066138}
+  blinkSpeed: 1
 --- !u!1 &1025581496259285776
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,7 +755,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 127}
+  m_AnchoredPosition: {x: 0, y: 266}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4419883923075655846
@@ -771,7 +786,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GAME OVER
+  m_text: YOU DIED
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cf8804298033b914497445fe4e6a8fa0, type: 2}
   m_sharedMaterial: {fileID: 7949499565217974684, guid: cf8804298033b914497445fe4e6a8fa0, type: 2}
@@ -798,8 +813,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 120.61
-  m_fontSizeBase: 120.61
+  m_fontSize: 273
+  m_fontSizeBase: 273
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2863,7 +2878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: 276}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1832881813443816056
@@ -2894,7 +2909,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GAME OVER
+  m_text: YOU DIED
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cf8804298033b914497445fe4e6a8fa0, type: 2}
   m_sharedMaterial: {fileID: 7949499565217974684, guid: cf8804298033b914497445fe4e6a8fa0, type: 2}
@@ -2921,8 +2936,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 120.61
-  m_fontSizeBase: 120.61
+  m_fontSize: 273
+  m_fontSizeBase: 273
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2974,6 +2989,7 @@ GameObject:
   - component: {fileID: 5942171412558412305}
   - component: {fileID: 9091884441153855510}
   - component: {fileID: 1250090044002930829}
+  - component: {fileID: 5762125203545406742}
   m_Layer: 5
   m_Name: Text Shadow 2
   m_TagString: Untagged
@@ -3097,6 +3113,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5762125203545406742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8576872941858557069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd2414ec45a937e4a80f5d6abf6cb446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1250090044002930829}
+  blinkSpeed: 1
 --- !u!1 &8761716403373397981
 GameObject:
   m_ObjectHideFlags: 0
@@ -3699,15 +3729,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1199077761508671229, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.53
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1199077761508671229, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1199077761508671229, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.53
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1558051176052866174, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_Pivot.x
@@ -3815,11 +3845,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4217347146732703619, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4217347146732703619, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5065541555765360972, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_Color.b
@@ -3835,11 +3865,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5788339479520409433, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5788339479520409433, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6157193598812581308, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3859,15 +3889,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6547372615415053026, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6547372615415053026, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6547372615415053026, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.75
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7580107330881972853, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
+      propertyPath: m_Text
+      value: QUIT
       objectReference: {fileID: 0}
     - target: {fileID: 8828221734245820073, guid: 897a8ac79a7239e44990d62f74233169, type: 3}
       propertyPath: m_Color.b
