@@ -14,7 +14,7 @@ public class SmoothCameraFollow : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (target == null || targetRigidbody == null) return;
+        if (target == null || targetRigidbody == null || targetHeroKnight.currentState==PlayerState.Dead) return;
 
         Vector3 dynamicOffset = offset;
 
