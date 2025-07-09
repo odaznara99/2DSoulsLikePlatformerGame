@@ -11,14 +11,19 @@ public class PlayerHealth : MonoBehaviour
     private PlayerControllerVersion2      player; //Reference to player script
     private Animator        playerAnimator; //Reference to player animator
     private GameManager     gameManager; //Reference to GameManager script
-    public  int             maxHealth = 100; // The maximum health the player can have
-    public  int             currentHealth;  // The player's current health
-    public int hazardDamage = 25; // Damage taken from hazards
+    public  float             maxHealth = 100f; // The maximum health the player can have
+    public  float             currentHealth;  // The player's current health
+    public float shieldDamageReduction = 0.90f;
+    public float hazardDamage = 25; // Damage taken from hazards
     public float hurtSeconds = 0.2f; // Seconds the player is in HURT state
 
     [Header("Health UI")]
     public UnityEngine.UI.Image healthBar;
-    public Text healthText; 
+    public Text healthText;
+
+    [Header("Floating Damage Text")]
+    public GameObject floatingTextPrefab;
+    public Transform worldCanvas;
 
     // Start is called before the first frame update
     void Start()
@@ -30,10 +35,11 @@ public class PlayerHealth : MonoBehaviour
         player          = this.GetComponent<PlayerControllerVersion2>();
         playerAnimator  = this.GetComponent<Animator>();
         gameManager     = GameManager.instance; // Get the GameManager instance
+        worldCanvas     = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
     }
 
     // Method to handle taking damage
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(float damageAmount)
     {
         if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
         {
@@ -45,6 +51,12 @@ public class PlayerHealth : MonoBehaviour
                 {
                     playerAnimator.SetTrigger("Block");
                     currentHealth -= 2;
+                    damageAmount = damageAmount - (damageAmount * shieldDamageReduction);
+                    if (floatingTextPrefab)
+                    {
+                        GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                        ft.GetComponent<FloatingText>().SetText("-" + 2.ToString());
+                    }
                     AudioManager.Instance.PlaySFX("Block");
                     Debug.Log("Shielded an attack! Took less damage. Current health: " + currentHealth);
                 }
@@ -55,6 +67,11 @@ public class PlayerHealth : MonoBehaviour
                     if (currentHealth <= damageAmount)
                     {
                         currentHealth = 0;
+                        if (floatingTextPrefab)
+                        {
+                            GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                            ft.GetComponent<FloatingText>().SetText("-" +damageAmount.ToString());
+                        }
                         Die(); // If damage exceeds current health, call Die method
                     }
                     // Direct Hit
@@ -62,7 +79,12 @@ public class PlayerHealth : MonoBehaviour
                     {
                         player.OnHurt(); ; // Switch to the Hurting state
                         currentHealth -= damageAmount;
-                        Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
+                        if (floatingTextPrefab)
+                        {
+                            GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                            ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
+                        }
+                        //Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
                     }
                 }
  

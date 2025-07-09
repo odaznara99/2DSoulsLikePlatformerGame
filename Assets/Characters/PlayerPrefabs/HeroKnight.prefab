@@ -623,6 +623,8 @@ MonoBehaviour:
   hurtSeconds: 0.2
   healthBar: {fileID: 0}
   healthText: {fileID: 0}
+  floatingTextPrefab: {fileID: 3106159360136694730, guid: e15316900ce917949b022d6f521c60b2, type: 3}
+  worldCanvas: {fileID: 0}
 --- !u!114 &1806744474678443789
 MonoBehaviour:
   m_ObjectHideFlags: 0

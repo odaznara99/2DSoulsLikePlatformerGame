@@ -43,9 +43,9 @@ GameObject:
   - component: {fileID: 3933668140797679038}
   - component: {fileID: 5333670457249206232}
   - component: {fileID: 1612010754573114861}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3456,7 +3456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5260572382779035085, guid: c5f8f079905bce04f945cd8ff4ba545a, type: 3}
       propertyPath: m_SortingLayer
-      value: -2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 5260572382779035085, guid: c5f8f079905bce04f945cd8ff4ba545a, type: 3}
       propertyPath: m_SortingLayerID
@@ -4558,7 +4558,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5260572382779035085, guid: c5f8f079905bce04f945cd8ff4ba545a, type: 3}
       propertyPath: m_SortingLayer
-      value: -2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 5260572382779035085, guid: c5f8f079905bce04f945cd8ff4ba545a, type: 3}
       propertyPath: m_SortingLayerID

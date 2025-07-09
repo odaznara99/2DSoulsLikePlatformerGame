@@ -28,6 +28,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -2.02
       objectReference: {fileID: 0}
+    - target: {fileID: 3129448380376791241, guid: b6603f0149f922b4487285c3e7a75d27, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3129448380376791241, guid: b6603f0149f922b4487285c3e7a75d27, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 3416171453001131235, guid: b6603f0149f922b4487285c3e7a75d27, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

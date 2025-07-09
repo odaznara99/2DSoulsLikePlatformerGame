@@ -78,6 +78,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float wallSlidingSpeed = -0.3f; // Y velocity of player during wall sliding. Should be negative
     public float wallJumpForceX = 5.0f; // X velocity of player when wall jumping
     public float wallJumpForceY = 6.0f; // Y velocity of player when wall jumping
+    
 
     // === Variables for Attack === //
     [Header("Attack Parameters")]
@@ -85,6 +86,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float attackRadius = 2f;
     public int attackDamage = 20;
     public float attackIntervalTime = 0.5f;
+    public float playerKnockbackForce = 15f; // Knock back to enemies
 
     [Header("Detection Triggers")]
     // == Variable for Sensors / Conditions / SubStates
@@ -449,8 +451,15 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             if (enemy.CompareTag("Enemy"))
             {
+                // Get the enemy script
+                Bandit enemyScript = enemy.GetComponent<Bandit>();
+
                 // Apply damage to the enemy
-                enemy.GetComponent<Bandit>().TakeDamage(attackDamage);
+                enemyScript.TakeDamage(attackDamage);
+
+                // Apply knockback to the enemy
+                Vector2 knockDirection = enemy.transform.position - transform.position;
+                enemyScript.ApplyKnockback(knockDirection,playerKnockbackForce);
             }
         }
 

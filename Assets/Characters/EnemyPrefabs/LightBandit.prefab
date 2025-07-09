@@ -37,6 +37,8 @@ Transform:
   m_Children:
   - {fileID: 4269114208525818}
   - {fileID: 8207164269522517271}
+  - {fileID: 3966328490769667905}
+  - {fileID: 4933796663511475077}
   - {fileID: 1533785881213562945}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -64,11 +66,22 @@ MonoBehaviour:
   attackTiming: 0.5
   health: 100
   damage: 20
+  floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
+  worldCanvas: {fileID: 0}
   player: {fileID: 0}
   playerHealth: {fileID: 0}
   playerScript: {fileID: 0}
   lastAttackTime: 0
   isFacingRight: 0
+  knockbackResistance: 0
+  knockbackDuration: 0.2
+  groundCheck: {fileID: 4933796663511475077}
+  wallCheck: {fileID: 3966328490769667905}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  checkDistance: 0.2
+  jumpForce: 10
 --- !u!95 &95346456782871180
 Animator:
   serializedVersion: 5
@@ -339,6 +352,68 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16, y: 0.03}
   m_EdgeRadius: 0
+--- !u!1 &44648656680619042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4933796663511475077}
+  m_Layer: 6
+  m_Name: NoGroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4933796663511475077
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44648656680619042}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.807, y: -0.092, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4805181885227780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4899365025621953094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3966328490769667905}
+  m_Layer: 6
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3966328490769667905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4899365025621953094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.835, y: 0.704, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4805181885227780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6020638010057669250
 GameObject:
   m_ObjectHideFlags: 0

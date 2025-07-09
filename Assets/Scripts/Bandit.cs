@@ -7,6 +7,7 @@ public enum EnemyState
 {
     Idle,
     Patrol,
+    Jump,
     Chase,
     Attack,
     StopAttack,
@@ -24,7 +25,7 @@ public class Bandit : MonoBehaviour {
     [SerializeField] float      m_jumpForce = 7.5f;
 
     private Animator            m_animator;
-    private Rigidbody2D         m_body2d;
+    private Rigidbody2D         rb;
     private Sensor_Bandit       m_groundSensor;
     public ParticleSystem       m_bloodSplash; // Reference to the blood splash particle system
     private bool                m_grounded = false;
@@ -39,9 +40,14 @@ public class Bandit : MonoBehaviour {
     public float     attackRange = 1.5f; // Range in which the enemy attacks the player    
     public float     attackCooldown = 1f; // Time between attacks
     public float     attackTiming = 0.5f; // Timing the end of Attack Animation
-    public int       health = 100; // Health of the enemy
-    public int       damage = 10; // Damage dealt to the player
+    public float     health = 100; // Health of the enemy
+    public float     damage = 10; // Damage dealt to the player
 
+    [Header("Floating Damage Text")]
+    public GameObject floatingTextPrefab;
+    public Transform worldCanvas;
+
+    [Header("References")]
     [SerializeField] private Transform   player; // Reference to the player position
     [SerializeField] private PlayerHealth playerHealth; // Reference to the player's health script
     [SerializeField] private PlayerControllerVersion2  playerScript; // Reference to the player main script
@@ -51,6 +57,20 @@ public class Bandit : MonoBehaviour {
     //[SerializeField] private bool        isHurting = false; // Track when the bandit is being Hurt
 
     //private Coroutine attackCoroutine;
+
+    [Header("Knockback Variables")]
+    //public Rigidbody2D rb;
+    //public float knockbackForce = 10f;
+    public float knockbackResistance = 0f;
+    public float knockbackDuration = 0.2f;
+    private bool isKnocked = false;
+
+    [Header("Sensors to Jump")]
+    public Transform groundCheck;
+    public Transform wallCheck;
+    public LayerMask groundLayer;
+    public float checkDistance = 0.2f;
+    public float jumpForce = 10f;
 
 
 
@@ -63,7 +83,7 @@ public class Bandit : MonoBehaviour {
     // Use this for initialization
     void Start () {
         m_animator      = GetComponent<Animator>();
-        m_body2d        = GetComponent<Rigidbody2D>();
+        rb              = GetComponent<Rigidbody2D>();
         m_groundSensor  = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
 
         playerScript    = GameObject.Find("HeroKnight").GetComponent<PlayerControllerVersion2>();
@@ -71,14 +91,15 @@ public class Bandit : MonoBehaviour {
         playerHealth    = player.GetComponent<PlayerHealth>();
         attackPoint     = transform.Find("AttackPoint").GetComponent<Transform>();
         lastAttackTime  = Time.time - attackCooldown;
+        worldCanvas     = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
 
         // Ignore Collision Between Enemy
         Physics2D.IgnoreLayerCollision(6, 6);
         
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
 
         //Reference to the Player if not assigned
         if (player == null)
@@ -100,12 +121,12 @@ public class Bandit : MonoBehaviour {
         float distanceToAttackPoint = Vector2.Distance(attackPoint.position, player.position);
 
         // Check if this enemy is dead or the player is dead
-        if (currentState != EnemyState.Dead 
-            && currentState != EnemyState.Hurt 
+        if (currentState != EnemyState.Dead
+            && currentState != EnemyState.Hurt
             && playerScript.currentState != PlayerState.Dead)
         {
             //Chase the Player in Follow Range
-            if (distanceToPlayer <= followRange 
+            if (distanceToPlayer <= followRange
                 && distanceToAttackPoint > attackRange
                 && currentState != EnemyState.Attack
                 && distanceToPlayer > attackRange)
@@ -118,7 +139,7 @@ public class Bandit : MonoBehaviour {
             else if (distanceToPlayer <= attackRange)
             {
                 m_combatIdle = true; // Combat Pose of the Enemy
-                StopMovingHorizontally();
+                StopXVelocity();
 
                 if (currentState != EnemyState.Attack)
                 {
@@ -131,26 +152,28 @@ public class Bandit : MonoBehaviour {
             else
             {
                 // Stop moving if outside the follow range or too close (attack range)
-                StopMovingHorizontally();
-                //SwitchEnemyState(EnemyState.Idle); // Switch to Idle state
+                StopXVelocity();
+                //SwitchEn0emyState(EnemyState.Idle); // Switch to Idle state
                 m_combatIdle = false;
             }
 
-            
+
         }
         //Player is Dead
-        else if (playerScript.currentState == PlayerState.Dead) 
+        else if (playerScript.currentState == PlayerState.Dead)
         {
             m_combatIdle = false;
         }
         //Enemy is Dead
         else
         {
-            StopMovingHorizontally();
+            //StopXVelocity();
             //SwitchEnemyState(EnemyState.Dead); // Switch to Dead state
         }
         // Update sprite direction based on movement
-        FlipSpriteBasedOnVelocity(); 
+        if (!isKnocked && currentState != EnemyState.Dead) { 
+            FlipSpriteBasedOnVelocity(); 
+        }
 
         //Check if character just landed on the ground
         if (!m_grounded && m_groundSensor.State()) {
@@ -165,10 +188,10 @@ public class Bandit : MonoBehaviour {
         }
 
         //Set AirSpeed in animator
-        m_animator.SetFloat("AirSpeed", m_body2d.velocity.y);
+        m_animator.SetFloat("AirSpeed", rb.velocity.y);
 
         //Run
-        if (Mathf.Abs(m_body2d.velocity.x) > Mathf.Epsilon)
+        if (Mathf.Abs(rb.velocity.x) > Mathf.Epsilon)
             m_animator.SetInteger("AnimState", 2);
 
         //Combat Neutral
@@ -178,6 +201,20 @@ public class Bandit : MonoBehaviour {
         //Neutral
         else
             m_animator.SetInteger("AnimState", 0);
+
+        bool isGroundAhead = Physics2D.Raycast(groundCheck.position, Vector2.down, checkDistance, groundLayer);
+        bool isWallAhead = Physics2D.Raycast(wallCheck.position, Vector2.right * transform.localScale.x, checkDistance, groundLayer);
+
+        // Jump if there's a wall or no ground
+        if (isWallAhead || !isGroundAhead)
+        {
+            if (m_grounded) // Optional: only jump if on ground
+                Jump();
+        }
+
+        Debug.DrawRay(groundCheck.position, Vector2.down * checkDistance, Color.red);
+        Debug.DrawRay(wallCheck.position, Vector2.right * transform.localScale.x * checkDistance, Color.blue);
+
     }
 
     // Method to follow the player
@@ -190,7 +227,7 @@ public class Bandit : MonoBehaviour {
         direction.y = 0;
 
         // Maintain the current vertical velocity (y) to preserve gravity
-        m_body2d.velocity = new Vector2(direction.x * moveSpeed, m_body2d.velocity.y);
+        rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
     }
 
     // Method to attack the player
@@ -237,11 +274,11 @@ public class Bandit : MonoBehaviour {
         }
     }
 
-    public void TakeDamage(int damageAmount) { 
+    public void TakeDamage(float damageAmount) { 
         SwitchEnemyState(EnemyState.Hurt, damageAmount); // Switch to Hurt state with damage amount
     }
 
-    private IEnumerator HurtState(int damageAmount)
+    private IEnumerator HurtState(float damageAmount)
     {
         if (currentState != EnemyState.Dead)
         {
@@ -257,8 +294,13 @@ public class Bandit : MonoBehaviour {
             else
             {
                 Instantiate(m_bloodSplash, headPoint.position, Quaternion.identity); // Instantiate blood splash effect
-                StopMovingHorizontally();
-                Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
+                //StopXVelocity();
+                if (floatingTextPrefab)
+                {
+                    GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                    ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
+                }
+                //Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(0.3f);
                 Debug.Log("Hurting Stops");
@@ -282,8 +324,30 @@ public class Bandit : MonoBehaviour {
         m_animator.SetTrigger("Jump");
         m_grounded = false;
         m_animator.SetBool("Grounded", m_grounded);
-        m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
+        rb.velocity = new Vector2(rb.velocity.x, m_jumpForce);
         m_groundSensor.Disable(0.2f);
+    }
+    public void ApplyKnockback(Vector2 direction, float knockbackForce)
+    {
+        if (!isKnocked)
+        {
+            StartCoroutine(KnockbackCoroutine(direction, knockbackForce));
+        }
+    }
+
+    IEnumerator KnockbackCoroutine(Vector2 direction, float knockbackForce)
+    {
+        isKnocked = true;
+
+        float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
+
+        rb.velocity = Vector2.zero;
+        rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(knockbackDuration);
+
+        rb.velocity = Vector2.zero;
+        isKnocked = false;
     }
 
     // Optional: For visual representation, you can use Gizmos to show the follow and attack ranges in the editor
@@ -296,17 +360,30 @@ public class Bandit : MonoBehaviour {
         // Draw attack range around the attackPoint
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * checkDistance);
+        }
+
+        if (wallCheck != null)
+        {
+            Gizmos.color = Color.blue;
+            Vector3 direction = Vector3.right * transform.localScale.x;
+            Gizmos.DrawLine(wallCheck.position, wallCheck.position + direction * checkDistance);
+        }
     }
 
     void FlipSpriteBasedOnVelocity()
     {
         // Check the enemy's velocity on the X-axis to determine direction
-        if (m_body2d.velocity.x > 0 && !isFacingRight)
+        if (rb.velocity.x > 0 && !isFacingRight)
         {
             // Moving right but currently facing left, so flip to face right
             FlipSprite();
         }
-        else if (m_body2d.velocity.x < 0 && isFacingRight)
+        else if (rb.velocity.x < 0 && isFacingRight)
         {
             // Moving left but currently facing right, so flip to face left
             FlipSprite();
@@ -322,8 +399,8 @@ public class Bandit : MonoBehaviour {
         transform.localScale = localScale;
     }
 
-    void StopMovingHorizontally() {
-        m_body2d.velocity = new Vector2(0, m_body2d.velocity.y);
+    void StopXVelocity() {
+        rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
     void PatrolState()
@@ -334,7 +411,7 @@ public class Bandit : MonoBehaviour {
     }
 
     void IdleState() {
-        StopMovingHorizontally();
+        StopXVelocity();
         Debug.Log("Idle");
 
     }
@@ -346,7 +423,7 @@ public class Bandit : MonoBehaviour {
         Destroy(gameObject, 1f);
     }
 
-    void SwitchEnemyState(EnemyState newState, int damageAmount = 0) {
+    void SwitchEnemyState(EnemyState newState, float damageAmount = 0) {
 
         if (currentState == EnemyState.Hurt 
             && newState != EnemyState.StopHurt
