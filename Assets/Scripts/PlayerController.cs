@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
         WallSliding();
 
         HandleAnimationStates();
-        m_animator.SetFloat("AirSpeedY", m_body2d.velocity.y);
+        m_animator.SetFloat("AirSpeedY", m_body2d.linearVelocity.y);
 
         if (isBlocking)
         {
@@ -189,8 +189,8 @@ public class PlayerController : MonoBehaviour
 
     void FlipPlayerSprite()
     {
-        if (m_body2d.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; m_facingDirection = 1; }
-        else if (m_body2d.velocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; m_facingDirection = -1; }
+        if (m_body2d.linearVelocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; m_facingDirection = 1; }
+        else if (m_body2d.linearVelocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; m_facingDirection = -1; }
     }
 
     void WallSliding()
@@ -227,7 +227,7 @@ public class PlayerController : MonoBehaviour
                
 #endif
             if (!m_rolling && !isWallJumping)
-            m_body2d.velocity = new Vector2(inputX * m_movementSpeed, m_body2d.velocity.y);
+            m_body2d.linearVelocity = new Vector2(inputX * m_movementSpeed, m_body2d.linearVelocity.y);
     }
 
     public void Attack()
@@ -354,7 +354,7 @@ public class PlayerController : MonoBehaviour
                 upperBodyCollider.enabled = false;
                 m_rolling = true;
                 m_animator.SetTrigger("Roll");
-                m_body2d.velocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.velocity.y);
+                m_body2d.linearVelocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.linearVelocity.y);
                 StartCoroutine(SetRollInCooldown());
             }
         }
@@ -384,12 +384,12 @@ public class PlayerController : MonoBehaviour
                 {
                     m_isWallSliding = false;
                     isWallJumping = true;
-                    m_body2d.velocity = new Vector2((m_wallJumpForce * -m_facingDirection), m_body2d.velocity.y);
+                    m_body2d.linearVelocity = new Vector2((m_wallJumpForce * -m_facingDirection), m_body2d.linearVelocity.y);
                     Debug.Log("Wall Jump Added force is:" + m_wallJumpForce * -m_facingDirection);
                 }
 
                 //Add Upward Velocity to Jump
-                m_body2d.velocity = new Vector2(m_body2d.velocity.x, m_jumpForce);
+                m_body2d.linearVelocity = new Vector2(m_body2d.linearVelocity.x, m_jumpForce);
                 m_groundSensor.Disable(0.2f);
 
             }else if (!m_grounded)

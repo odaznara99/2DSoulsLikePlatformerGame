@@ -142,7 +142,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             currentXVelocityState == XVelocityState.Slow ||
             currentXVelocityState == XVelocityState.Stop)
         {
-            rb.velocity = new Vector2(inputX * movementSpeed, rb.velocity.y);
+            rb.linearVelocity = new Vector2(inputX * movementSpeed, rb.linearVelocity.y);
         }
 
         // === Handle Player Detection Triggers === //
@@ -340,7 +340,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
            )
         {
             playerAnimator.SetTrigger("Jump");
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             yield return new WaitForSeconds(0.2f);
         }
         else if (!isGrounded && isWallDetected)
@@ -350,7 +350,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
 
         // Wait until we start falling
-        while (rb.velocity.y > 0)
+        while (rb.linearVelocity.y > 0)
         {
             yield return null;
         }
@@ -360,7 +360,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     {
         // No Horizontal movement
         SwitchXVelocityState(XVelocityState.Overriden);
-        rb.velocity = new Vector2(0, wallSlidingSpeed);
+        rb.linearVelocity = new Vector2(0, wallSlidingSpeed);
         // Wait until not grounded or there is no wall detected
         while (!isGrounded && isWallDetected)
         {
@@ -375,10 +375,10 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchXVelocityState(XVelocityState.Overriden);
         // Jumps to opposite direction
         playerAnimator.SetTrigger("Jump");
-        rb.velocity = new Vector2(wallJumpForceX * -facingDirection, wallJumpForceY);
+        rb.linearVelocity = new Vector2(wallJumpForceX * -facingDirection, wallJumpForceY);
         yield return new WaitForSeconds(0.2f);
         // Wait until we start falling
-        while (rb.velocity.y > 0)
+        while (rb.linearVelocity.y > 0)
         {
             yield return null;
         }
@@ -403,7 +403,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchPlayerState(PlayerState.ForceInterupt);
         upperBodyCollider.enabled = false;
         playerAnimator.SetTrigger("Roll");
-        rb.velocity = new Vector2(facingDirection * rollingSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(facingDirection * rollingSpeed, rb.linearVelocity.y);
         yield return new WaitForSeconds(rollDuration);
 
         // Continue Rolling While there are still obstacles in Players Head
@@ -597,7 +597,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     void UpdateAnimationStates()
     {
         playerAnimator.SetBool("Grounded", isGrounded);
-        playerAnimator.SetFloat("AirSpeedY", rb.velocity.y);
+        playerAnimator.SetFloat("AirSpeedY", rb.linearVelocity.y);
         playerAnimator.SetBool("WallSlide", currentState == PlayerState.WallSliding);
         playerAnimator.SetBool("IdleBlock", currentState == PlayerState.Shielding);
 
@@ -669,8 +669,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     void FlipPlayerSprite()
     {
-        if (rb.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
-        else if (rb.velocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
+        if (rb.linearVelocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
+        else if (rb.linearVelocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
     }
 
     void AE_SlideDust()

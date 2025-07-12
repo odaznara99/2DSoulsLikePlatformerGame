@@ -19,7 +19,7 @@ public class SmoothCameraFollow : MonoBehaviour
         Vector3 dynamicOffset = offset;
 
         // If falling, shift the camera downward slightly
-        if (targetRigidbody.velocity.y < lookAheadVelocity & !targetHeroKnight.isGrounded)
+        if (targetRigidbody.linearVelocity.y < lookAheadVelocity & !targetHeroKnight.isGrounded)
         {
             dynamicOffset.y += fallLookAhead; // Looks down
         }
