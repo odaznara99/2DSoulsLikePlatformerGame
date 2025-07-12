@@ -263,7 +263,7 @@ public class PlayerController : MonoBehaviour
                         if (enemy.CompareTag("Enemy"))
                         {
                             // Apply damage to the enemy
-                            enemy.GetComponent<Bandit>().BanditReceiveDamage(attackDamage);
+                            enemy.GetComponent<EnemyAI>().BanditReceiveDamage(attackDamage);
                         }
                     }
 

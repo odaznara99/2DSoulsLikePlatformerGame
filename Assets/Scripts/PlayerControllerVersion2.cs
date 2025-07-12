@@ -452,7 +452,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             if (enemy.CompareTag("Enemy"))
             {
                 // Get the enemy script
-                Bandit enemyScript = enemy.GetComponent<Bandit>();
+                EnemyAI enemyScript = enemy.GetComponent<EnemyAI>();
 
                 // Apply damage to the enemy
                 enemyScript.TakeDamage(attackDamage);

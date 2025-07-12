@@ -16,7 +16,7 @@ public enum EnemyState
     Dead
 }
 
-public class Bandit : MonoBehaviour {
+public class EnemyAI : MonoBehaviour {
 
     public  EnemyState  currentState = EnemyState.Idle; // Current state of the enemy
     private Coroutine   currentStateCoroutine; // Current coroutine according to the state
@@ -318,7 +318,7 @@ public class Bandit : MonoBehaviour {
 
     // Method to destroy the enemy when its health reaches zero
 
-    //Method to make the Bandit Jump
+    //Method to make the EnemyAI Jump
     void Jump() {
 
         m_animator.SetTrigger("Jump");
