@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Enemy
   - Hazard
@@ -66,6 +66,9 @@ TagManager:
   - name: Platforms
     uniqueID: 2130810699
     locked: 0
+  - name: Platforms2
+    uniqueID: 2431066273
+    locked: 0
   - name: Player
     uniqueID: 2389035017
     locked: 0
@@ -81,3 +84,5 @@ TagManager:
   - name: Foreground3
     uniqueID: 2445809233
     locked: 0
+  m_RenderingLayers:
+  - Default
