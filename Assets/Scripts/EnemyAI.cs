@@ -209,7 +209,8 @@ public class EnemyAI : MonoBehaviour {
         if (isWallAhead || !isGroundAhead)
         {
             if (m_grounded) // Optional: only jump if on ground
-                Jump();
+                //DoJump();
+                SwitchEnemyState(EnemyState.Jump); // Switch to Jump state
         }
 
         Debug.DrawRay(groundCheck.position, Vector2.down * checkDistance, Color.red);
@@ -319,7 +320,7 @@ public class EnemyAI : MonoBehaviour {
     // Method to destroy the enemy when its health reaches zero
 
     //Method to make the EnemyAI Jump
-    void Jump() {
+    void DoJump() {
 
         m_animator.SetTrigger("Jump");
         m_grounded = false;
@@ -457,6 +458,10 @@ public class EnemyAI : MonoBehaviour {
             case EnemyState.Chase:
                 //currentStateCoroutine = StartCoroutine(ChaseState());
                 ChaseState();
+                break;
+            case EnemyState.Jump:
+                //currentStateCoroutine = StartCoroutine(DeadState());
+                DoJump();
                 break;
             case EnemyState.Attack:
                 currentStateCoroutine = StartCoroutine(AttackState());

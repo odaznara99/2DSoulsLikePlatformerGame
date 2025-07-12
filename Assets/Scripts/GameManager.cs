@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         //pauseScreen.SetActive(true);     // Enable pause menu UI
-        FindObjectOfType<UIScreensManager>().ShowScreen("Pause Screen");
+        FindFirstObjectByType<UIScreensManager>().ShowScreen("Pause Screen");
         Time.timeScale = 0f;             // Stop the time in-game
         isGamePaused = true;
         AudioManager.Instance.PlaySFX("Click"); 
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
         //pauseScreen.SetActive(false);    // Disable pause menu UI
         Time.timeScale = 1f;             // Resume the time in-game
         isGamePaused = false;
-        FindObjectOfType<UIScreensManager>().HideScreen("Pause Screen");
+        FindFirstObjectByType<UIScreensManager>().HideScreen("Pause Screen");
         AudioManager.Instance.PlaySFX("Click");
 
     }
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlayMusic("GameOver"); // Play game over sound
 
         //StartCoroutine(DelayFadeInPanel(gameOverScreen, gameOverFadeInSeconds));
-        FindObjectOfType<UIScreensManager>().ShowScreenWithFadeIn("Game Over Screen",2f);
+        FindFirstObjectByType<UIScreensManager>().ShowScreenWithFadeIn("Game Over Screen",2f);
         //isGameOver = true;  // Set the game over flag
         Invoke("SetIsGameOver", 2f); // isGameOver flag after 2 seconds
         Debug.Log("Game Over!");
