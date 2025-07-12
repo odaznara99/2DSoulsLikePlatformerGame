@@ -22,7 +22,7 @@ public class EnemyAI : MonoBehaviour {
     private Coroutine   currentStateCoroutine; // Current coroutine according to the state
 
     //[SerializeField] float      m_speed = 4.0f;
-    [SerializeField] float      m_jumpForce = 7.5f;
+    //[SerializeField] float      m_jumpForce = 7.5f;
 
     private Animator            m_animator;
     private Rigidbody2D         rb;
@@ -71,6 +71,10 @@ public class EnemyAI : MonoBehaviour {
     public LayerMask groundLayer;
     public float checkDistance = 0.2f;
     public float jumpForce = 10f;
+    // Set X velocity for jump (adjust 2.0f to your desired jump horizontal speed)
+    public float jumpHorizontalSpeed = 5.0f;
+    private float lastJumpTime = 0f;
+    public float jumpCooldown = 5f;
 
 
 
@@ -129,7 +133,9 @@ public class EnemyAI : MonoBehaviour {
             if (distanceToPlayer <= followRange
                 && distanceToAttackPoint > attackRange
                 && currentState != EnemyState.Attack
-                && distanceToPlayer > attackRange)
+                && distanceToPlayer > attackRange
+                //&& currentState != EnemyState.Jump
+                && m_grounded)
             {
                 //ChaseState();
                 SwitchEnemyState(EnemyState.Chase); // Switch to Chase state
@@ -206,11 +212,13 @@ public class EnemyAI : MonoBehaviour {
         bool isWallAhead = Physics2D.Raycast(wallCheck.position, Vector2.right * transform.localScale.x, checkDistance, groundLayer);
 
         // Jump if there's a wall or no ground
-        if (isWallAhead || !isGroundAhead)
+        if ((isWallAhead || !isGroundAhead) && m_grounded)
         {
-            if (m_grounded) // Optional: only jump if on ground
-                //DoJump();
+            if (Time.time >= lastJumpTime + jumpCooldown)
+            {
+                lastJumpTime = Time.time;
                 SwitchEnemyState(EnemyState.Jump); // Switch to Jump state
+            }
         }
 
         Debug.DrawRay(groundCheck.position, Vector2.down * checkDistance, Color.red);
@@ -281,6 +289,12 @@ public class EnemyAI : MonoBehaviour {
 
     private IEnumerator HurtState(float damageAmount)
     {
+        if (currentState == EnemyState.Dead)
+        {
+            Debug.Log("Enemy is already dead, cannot take damage.");
+            yield break; // Exit if the enemy is dead
+        }
+
         if (currentState != EnemyState.Dead)
         {
             m_animator.SetTrigger("Hurt");
@@ -305,6 +319,7 @@ public class EnemyAI : MonoBehaviour {
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(0.3f);
                 Debug.Log("Hurting Stops");
+                m_animator.ResetTrigger("Hurt");
                 SwitchEnemyState(EnemyState.StopHurt); // Switch back to Idle state after hurting
 
             }
@@ -321,11 +336,15 @@ public class EnemyAI : MonoBehaviour {
 
     //Method to make the EnemyAI Jump
     void DoJump() {
-
         m_animator.SetTrigger("Jump");
         m_grounded = false;
         m_animator.SetBool("Grounded", m_grounded);
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, m_jumpForce);
+
+        float facingDirection = isFacingRight ? 1f : -1f;
+        rb.linearVelocity = new Vector2(jumpHorizontalSpeed * facingDirection, jumpForce);
+
+        Debug.Log("Jump velocity: " + rb.linearVelocity);
+
         m_groundSensor.Disable(0.2f);
     }
     public void ApplyKnockback(Vector2 direction, float knockbackForce)
@@ -338,6 +357,11 @@ public class EnemyAI : MonoBehaviour {
 
     IEnumerator KnockbackCoroutine(Vector2 direction, float knockbackForce)
     {
+        if (currentState == EnemyState.Dead )
+        {
+            yield break; // Do not apply knockback if already dead
+        }
+
         isKnocked = true;
 
         float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
@@ -401,7 +425,9 @@ public class EnemyAI : MonoBehaviour {
     }
 
     void StopXVelocity() {
-        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        if (currentState != EnemyState.Jump) {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        }
     }
 
     void PatrolState()

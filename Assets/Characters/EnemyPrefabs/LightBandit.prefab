@@ -55,13 +55,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  m_jumpForce: 7.5
   m_bloodSplash: {fileID: 3718151813254276880, guid: bbd5fde97a32b5e498ed1e42aa4530bb, type: 3}
   attackPoint: {fileID: 8207164269522517271}
   headPoint: {fileID: 1533785881213562945}
-  moveSpeed: 2
-  followRange: 10
-  attackRange: 1.5
+  moveSpeed: 3
+  followRange: 5
+  attackRange: 0.5
   attackCooldown: 1
   attackTiming: 0.5
   health: 100
@@ -81,7 +80,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   checkDistance: 0.2
-  jumpForce: 10
+  jumpForce: 6.8
+  jumpHorizontalSpeed: 3
+  jumpCooldown: 5
 --- !u!95 &95346456782871180
 Animator:
   serializedVersion: 7
