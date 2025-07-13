@@ -8,6 +8,7 @@ TagManager:
   - Hazard
   - DeadZone
   - Ground
+  - Objects
   layers:
   - Default
   - TransparentFX

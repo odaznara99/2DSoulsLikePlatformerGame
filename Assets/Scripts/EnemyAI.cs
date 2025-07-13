@@ -336,6 +336,12 @@ public class EnemyAI : MonoBehaviour {
 
     //Method to make the EnemyAI Jump
     void DoJump() {
+        if (!m_grounded || isKnocked || currentState == EnemyState.Dead)
+        {
+            Debug.Log("Cannot jump, not grounded or already knocked or dead.");
+            SwitchEnemyState(EnemyState.Idle); // Switch to Idle state if not grounded
+            return; // Exit if not grounded or already knocked or dead
+        }
         m_animator.SetTrigger("Jump");
         m_grounded = false;
         m_animator.SetBool("Grounded", m_grounded);
