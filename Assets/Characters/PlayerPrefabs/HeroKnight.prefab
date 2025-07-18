@@ -619,6 +619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
+  shieldDamageReduction: 0.9
   hazardDamage: 25
   hurtSeconds: 0.2
   healthBar: {fileID: 0}
@@ -638,7 +639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enabledDebugLog: 0
-  enabledKeyboardInput: 0
+  enabledKeyboardInput: 1
   m_noBlood: 1
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
   currentState: 0
@@ -649,7 +650,7 @@ MonoBehaviour:
   currentDoubleJumpCount: 0
   movementSpeed: 4
   slowMovementSpeed: 1.5
-  rollingSpeed: 4.2
+  rollingSpeed: 6
   wallSlidingSpeed: -0.3
   wallJumpForceX: 5
   wallJumpForceY: 6
@@ -657,6 +658,7 @@ MonoBehaviour:
   attackRadius: 1.5
   attackDamage: 20
   attackIntervalTime: 0.5
+  playerKnockbackForce: 3
   isGrounded: 0
   isParry: 0
   isWallDetected: 0

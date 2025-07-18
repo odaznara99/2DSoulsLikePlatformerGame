@@ -16,44 +16,45 @@ public enum EnemyState
     Dead
 }
 
-public class Bandit : MonoBehaviour {
+public class Bandit : MonoBehaviour
+{
 
-    public  EnemyState  currentState = EnemyState.Idle; // Current state of the enemy
-    private Coroutine   currentStateCoroutine; // Current coroutine according to the state
+    public EnemyState currentState = EnemyState.Idle; // Current state of the enemy
+    private Coroutine currentStateCoroutine; // Current coroutine according to the state
 
     //[SerializeField] float      m_speed = 4.0f;
-    [SerializeField] float      m_jumpForce = 7.5f;
+    //[SerializeField] float      m_jumpForce = 7.5f;
 
-    private Animator            m_animator;
-    private Rigidbody2D         rb;
-    private Sensor_Bandit       m_groundSensor;
-    public ParticleSystem       m_bloodSplash; // Reference to the blood splash particle system
-    private bool                m_grounded = false;
-    private bool                m_combatIdle = false;
+    private Animator m_animator;
+    private Rigidbody2D rb;
+    private Sensor_Bandit m_groundSensor;
+    public ParticleSystem m_bloodSplash; // Reference to the blood splash particle system
+    private bool m_grounded = false;
+    private bool m_combatIdle = false;
     //[SerializeField]private bool                EnemyState.Dead = false;
 
     //Added: Odaz 09/29/2024    
     public Transform attackPoint; // Attach this to a point in the scene or a child of the enemya
     public Transform headPoint; // Attach this to a point in the scene or a child of the enemy for head detection
-    public float     moveSpeed = 2f; // Speed of the enemy
-    public float     followRange = 10f; // Range in which the enemy follows the player
-    public float     attackRange = 1.5f; // Range in which the enemy attacks the player    
-    public float     attackCooldown = 1f; // Time between attacks
-    public float     attackTiming = 0.5f; // Timing the end of Attack Animation
-    public float     health = 100; // Health of the enemy
-    public float     damage = 10; // Damage dealt to the player
+    public float moveSpeed = 2f; // Speed of the enemy
+    public float followRange = 10f; // Range in which the enemy follows the player
+    public float attackRange = 1.5f; // Range in which the enemy attacks the player    
+    public float attackCooldown = 1f; // Time between attacks
+    public float attackTiming = 0.5f; // Timing the end of Attack Animation
+    public float health = 100; // Health of the enemy
+    public float damage = 10; // Damage dealt to the player
 
     [Header("Floating Damage Text")]
     public GameObject floatingTextPrefab;
     public Transform worldCanvas;
 
     [Header("References")]
-    [SerializeField] private Transform   player; // Reference to the player position
+    [SerializeField] private Transform player; // Reference to the player position
     [SerializeField] private PlayerHealth playerHealth; // Reference to the player's health script
-    [SerializeField] private PlayerControllerVersion2  playerScript; // Reference to the player main script
-    [SerializeField] private float       lastAttackTime = 0f; // Track when the enemy last attacked
+    [SerializeField] private PlayerControllerVersion2 playerScript; // Reference to the player main script
+    [SerializeField] private float lastAttackTime = 0f; // Track when the enemy last attacked
     //[SerializeField] private bool        isAttacking = false; // Track if the enemy is currently attacking
-    [SerializeField] private bool        isFacingRight = false; // Track which direction the enemy is facing
+    [SerializeField] private bool isFacingRight = false; // Track which direction the enemy is facing
     //[SerializeField] private bool        isHurting = false; // Track when the bandit is being Hurt
 
     //private Coroutine attackCoroutine;
@@ -71,42 +72,53 @@ public class Bandit : MonoBehaviour {
     public LayerMask groundLayer;
     public float checkDistance = 0.2f;
     public float jumpForce = 10f;
+    // Set X velocity for jump (adjust 2.0f to your desired jump horizontal speed)
+    public float jumpHorizontalSpeed = 5.0f;
+    private float lastJumpTime = 0f;
+    public float jumpCooldown = 5f;
 
 
 
     private void Awake()
     {
-       // isAttacking = false; // Initialize attacking state
-       // isHurting = false; // Initialize hurting state
+        // isAttacking = false; // Initialize attacking state
+        // isHurting = false; // Initialize hurting state
+        m_animator = GetComponent<Animator>();
+        m_animator.ResetTrigger("Jump");
     }
 
     // Use this for initialization
-    void Start () {
-        m_animator      = GetComponent<Animator>();
-        rb              = GetComponent<Rigidbody2D>();
-        m_groundSensor  = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_Bandit>();
 
-        playerScript    = GameObject.Find("HeroKnight").GetComponent<PlayerControllerVersion2>();
-        player          = GameObject.Find("HeroKnight").GetComponent<Transform>();
-        playerHealth    = player.GetComponent<PlayerHealth>();
-        attackPoint     = transform.Find("AttackPoint").GetComponent<Transform>();
-        lastAttackTime  = Time.time - attackCooldown;
-        worldCanvas     = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
+        playerScript = GameObject.Find("HeroKnight").GetComponent<PlayerControllerVersion2>();
+        player = GameObject.Find("HeroKnight").GetComponent<Transform>();
+        playerHealth = player.GetComponent<PlayerHealth>();
+        attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
+        lastAttackTime = Time.time - attackCooldown;
+        worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
 
         // Ignore Collision Between Enemy
         Physics2D.IgnoreLayerCollision(6, 6);
-        
+
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
         //Reference to the Player if not assigned
         if (player == null)
         {
             player = GameObject.Find("HeroKnight").GetComponent<Transform>();
             playerHealth = player.GetComponent<PlayerHealth>();
+            playerScript = player.GetComponent<PlayerControllerVersion2>();
+            Debug.Log("Player not assigned, finding HeroKnight in the scene.");
         }
+
+        
 
         //Reference to the AttackPoint if not assigned
         if (attackPoint == null)
@@ -129,7 +141,9 @@ public class Bandit : MonoBehaviour {
             if (distanceToPlayer <= followRange
                 && distanceToAttackPoint > attackRange
                 && currentState != EnemyState.Attack
-                && distanceToPlayer > attackRange)
+                && distanceToPlayer > attackRange
+                //&& currentState != EnemyState.Jump
+                && m_grounded)
             {
                 //ChaseState();
                 SwitchEnemyState(EnemyState.Chase); // Switch to Chase state
@@ -171,18 +185,21 @@ public class Bandit : MonoBehaviour {
             //SwitchEnemyState(EnemyState.Dead); // Switch to Dead state
         }
         // Update sprite direction based on movement
-        if (!isKnocked && currentState != EnemyState.Dead) { 
-            FlipSpriteBasedOnVelocity(); 
+        if (!isKnocked && currentState != EnemyState.Dead)
+        {
+            FlipSpriteBasedOnVelocity();
         }
 
         //Check if character just landed on the ground
-        if (!m_grounded && m_groundSensor.State()) {
+        if (!m_grounded && m_groundSensor.State())
+        {
             m_grounded = true;
             m_animator.SetBool("Grounded", m_grounded);
         }
 
         //Check if character just started falling
-        if(m_grounded && !m_groundSensor.State()) {
+        if (m_grounded && !m_groundSensor.State())
+        {
             m_grounded = false;
             m_animator.SetBool("Grounded", m_grounded);
         }
@@ -206,10 +223,13 @@ public class Bandit : MonoBehaviour {
         bool isWallAhead = Physics2D.Raycast(wallCheck.position, Vector2.right * transform.localScale.x, checkDistance, groundLayer);
 
         // Jump if there's a wall or no ground
-        if (isWallAhead || !isGroundAhead)
+        if ((isWallAhead || !isGroundAhead) && m_grounded)
         {
-            if (m_grounded) // Optional: only jump if on ground
-                Jump();
+            if (Time.time >= lastJumpTime + jumpCooldown)
+            {
+                lastJumpTime = Time.time;
+                SwitchEnemyState(EnemyState.Jump); // Switch to Jump state
+            }
         }
 
         Debug.DrawRay(groundCheck.position, Vector2.down * checkDistance, Color.red);
@@ -242,18 +262,18 @@ public class Bandit : MonoBehaviour {
             // Assuming you want to wait for the animation to reach a certain point before applying damage
             yield return new WaitForSeconds(attackTiming); // Adjust this timing as per your animation
 
-            if (playerHealth != null 
-                && currentState != EnemyState.Hurt 
+            if (playerHealth != null
+                && currentState != EnemyState.Hurt
                 && currentState != EnemyState.Dead)
             {
                 Debug.Log("Enemy: Attacks the player!");
-                playerHealth.TakeDamage(damage);               
+                playerHealth.TakeDamage(damage);
             }
             else
             {
                 Debug.Log("Enemy: Attack was Interrupted!");
                 //SwitchEnemyState(EnemyState.StopAttack);
-            }     
+            }
             //isAttacking = false;
             //SwitchEnemyState(EnemyState.StopAttack); // Switch to StopHurt state after attacking
         }
@@ -274,12 +294,19 @@ public class Bandit : MonoBehaviour {
         }
     }
 
-    public void TakeDamage(float damageAmount) { 
+    public void TakeDamage(float damageAmount)
+    {
         SwitchEnemyState(EnemyState.Hurt, damageAmount); // Switch to Hurt state with damage amount
     }
 
     private IEnumerator HurtState(float damageAmount)
     {
+        if (currentState == EnemyState.Dead)
+        {
+            Debug.Log("Enemy is already dead, cannot take damage.");
+            yield break; // Exit if the enemy is dead
+        }
+
         if (currentState != EnemyState.Dead)
         {
             m_animator.SetTrigger("Hurt");
@@ -304,10 +331,11 @@ public class Bandit : MonoBehaviour {
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(0.3f);
                 Debug.Log("Hurting Stops");
+                m_animator.ResetTrigger("Hurt");
                 SwitchEnemyState(EnemyState.StopHurt); // Switch back to Idle state after hurting
 
             }
-            
+
         }
         else
         {
@@ -319,12 +347,23 @@ public class Bandit : MonoBehaviour {
     // Method to destroy the enemy when its health reaches zero
 
     //Method to make the Bandit Jump
-    void Jump() {
-
+    void DoJump()
+    {
+        if (!m_grounded || isKnocked || currentState == EnemyState.Dead)
+        {
+            Debug.Log("Cannot jump, not grounded or already knocked or dead.");
+            SwitchEnemyState(EnemyState.Idle); // Switch to Idle state if not grounded
+            return; // Exit if not grounded or already knocked or dead
+        }
         m_animator.SetTrigger("Jump");
         m_grounded = false;
         m_animator.SetBool("Grounded", m_grounded);
-        rb.velocity = new Vector2(rb.velocity.x, m_jumpForce);
+
+        float facingDirection = isFacingRight ? 1f : -1f;
+        rb.velocity = new Vector2(jumpHorizontalSpeed * facingDirection, jumpForce);
+
+        Debug.Log("Jump velocity: " + rb.velocity);
+
         m_groundSensor.Disable(0.2f);
     }
     public void ApplyKnockback(Vector2 direction, float knockbackForce)
@@ -337,6 +376,11 @@ public class Bandit : MonoBehaviour {
 
     IEnumerator KnockbackCoroutine(Vector2 direction, float knockbackForce)
     {
+        if (currentState == EnemyState.Dead)
+        {
+            yield break; // Do not apply knockback if already dead
+        }
+
         isKnocked = true;
 
         float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
@@ -399,8 +443,12 @@ public class Bandit : MonoBehaviour {
         transform.localScale = localScale;
     }
 
-    void StopXVelocity() {
-        rb.velocity = new Vector2(0, rb.velocity.y);
+    void StopXVelocity()
+    {
+        if (currentState != EnemyState.Jump)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
     }
 
     void PatrolState()
@@ -410,24 +458,28 @@ public class Bandit : MonoBehaviour {
         Debug.Log("Patrolling...");
     }
 
-    void IdleState() {
+    void IdleState()
+    {
         StopXVelocity();
         Debug.Log("Idle");
 
     }
 
-    void DeadState() {
+    void DeadState()
+    {
         Debug.Log("Enemy died!");
         m_animator.SetTrigger("Death");
         //EnemyState.Dead = true;
         Destroy(gameObject, 1f);
     }
 
-    void SwitchEnemyState(EnemyState newState, float damageAmount = 0) {
+    void SwitchEnemyState(EnemyState newState, float damageAmount = 0)
+    {
 
-        if (currentState == EnemyState.Hurt 
+        if (currentState == EnemyState.Hurt
             && newState != EnemyState.StopHurt
-            && newState != EnemyState.Dead) {
+            && newState != EnemyState.Dead)
+        {
             Debug.Log("Enemy is currently hurting, cannot switch to " + newState);
             return;
         }
@@ -444,7 +496,8 @@ public class Bandit : MonoBehaviour {
         }
 
         currentState = newState; // Update the current state
-        switch (newState) {
+        switch (newState)
+        {
             case EnemyState.Idle:
                 //currentStateCoroutine = StartCoroutine(IdleState());
                 IdleState();
@@ -457,6 +510,10 @@ public class Bandit : MonoBehaviour {
             case EnemyState.Chase:
                 //currentStateCoroutine = StartCoroutine(ChaseState());
                 ChaseState();
+                break;
+            case EnemyState.Jump:
+                //currentStateCoroutine = StartCoroutine(DeadState());
+                DoJump();
                 break;
             case EnemyState.Attack:
                 currentStateCoroutine = StartCoroutine(AttackState());

@@ -55,17 +55,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  m_jumpForce: 0
   m_bloodSplash: {fileID: 3718151813254276880, guid: bbd5fde97a32b5e498ed1e42aa4530bb, type: 3}
   attackPoint: {fileID: 8207164269522517271}
   headPoint: {fileID: 1533785881213562945}
   moveSpeed: 1.5
-  followRange: 4
+  followRange: 5.5
   attackRange: 0.68
   attackCooldown: 1
   attackTiming: 0.5
   health: 100
-  damage: 20
+  damage: 40
   floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
   worldCanvas: {fileID: 0}
   player: {fileID: 0}
@@ -81,7 +80,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   checkDistance: 0.2
-  jumpForce: 10
+  jumpForce: 7
+  jumpHorizontalSpeed: 5
+  jumpCooldown: 5
 --- !u!95 &95346456782871180
 Animator:
   serializedVersion: 5
