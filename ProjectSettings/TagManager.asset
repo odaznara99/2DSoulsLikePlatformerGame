@@ -63,6 +63,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: GrassBack
+    uniqueID: 3263832397
+    locked: 0
   - name: Platforms
     uniqueID: 2130810699
     locked: 0
@@ -71,6 +74,9 @@ TagManager:
     locked: 0
   - name: Effects
     uniqueID: 1457414637
+    locked: 0
+  - name: Grass Front
+    uniqueID: 2389231627
     locked: 0
   - name: Foreground1
     uniqueID: 451979135

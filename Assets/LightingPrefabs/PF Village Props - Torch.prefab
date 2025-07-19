@@ -47,12 +47,12 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.86
-  m_Color: {r: 1, g: 0.5141552, b: 0.11792451, a: 1}
+  m_FalloffIntensity: 0.66
+  m_Color: {r: 1, g: 0.6643457, b: 0.11792451, a: 1}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 000000004b97017f09c8658eed61de56
+  m_ApplyToSortingLayers: 000000004b97017f09c8658eed61de564d218ac20bc8688e
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -70,8 +70,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 3.53
+  m_PointLightInnerRadius: 4.95
+  m_PointLightOuterRadius: 7.7
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -5007,8 +5007,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 2130810699
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300022, guid: 7810966f0f690954c87305933cabf2b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5038,7 +5038,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8186748154644464390
 Transform:
   m_ObjectHideFlags: 0
