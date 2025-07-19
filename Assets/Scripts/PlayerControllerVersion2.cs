@@ -458,8 +458,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 enemyScript.TakeDamage(attackDamage);
 
                 // Apply knockback to the enemy
-                Vector2 knockDirection = enemy.transform.position - transform.position;
-                enemyScript.ApplyKnockback(knockDirection,playerKnockbackForce);
+                //Vector2 knockDirection = enemy.transform.position - transform.position;
+                //enemyScript.ApplyKnockback(knockDirection,playerKnockbackForce);
             }
         }
 

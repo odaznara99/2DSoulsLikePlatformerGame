@@ -267,7 +267,7 @@ public class Bandit : MonoBehaviour
                 && currentState != EnemyState.Dead)
             {
                 Debug.Log("Enemy: Attacks the player!");
-                playerHealth.TakeDamage(damage);
+                playerHealth.TakeDamage(damage, this.gameObject);
             }
             else
             {
@@ -473,7 +473,7 @@ public class Bandit : MonoBehaviour
         Destroy(gameObject, 1f);
     }
 
-    void SwitchEnemyState(EnemyState newState, float damageAmount = 0)
+    public void SwitchEnemyState(EnemyState newState, float damageAmount = 0)
     {
 
         if (currentState == EnemyState.Hurt

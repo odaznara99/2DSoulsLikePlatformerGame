@@ -14,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     public  float             maxHealth = 100f; // The maximum health the player can have
     public  float             currentHealth;  // The player's current health
     public float shieldDamageReduction = 0.90f;
+    public float shieldKnockForce = 3f; // Force applied to the enemy when parrying
     public float hazardDamage = 25; // Damage taken from hazards
     public float hurtSeconds = 0.2f; // Seconds the player is in HURT state
 
@@ -39,14 +40,14 @@ public class PlayerHealth : MonoBehaviour
     }
 
     // Method to handle taking damage
-    public void TakeDamage(float damageAmount)
+    public void TakeDamage(float damageAmount, GameObject attacker)
     {
         if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
         {
             if (!player.isParry)
             {
 
-                //Damage Reduced/ Attack Blocked
+                //Shielded the Attack
                 if (player.currentState == PlayerState.Shielding)
                 {
                     playerAnimator.SetTrigger("Block");
@@ -63,7 +64,7 @@ public class PlayerHealth : MonoBehaviour
                 
                 else if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
                 {
-                    // Killable Hit
+                    // Killable Hit to the Player
                     if (currentHealth <= damageAmount)
                     {
                         currentHealth = 0;
@@ -74,7 +75,7 @@ public class PlayerHealth : MonoBehaviour
                         }
                         Die(); // If damage exceeds current health, call Die method
                     }
-                    // Direct Hit
+                    // Direct Hit to the Player
                     else 
                     {
                         player.OnHurt(); ; // Switch to the Hurting state
@@ -91,14 +92,39 @@ public class PlayerHealth : MonoBehaviour
                 UpdateHealthUI(); // Update the UI to reflect the health change
 
             }
-            //Parry Attack
+            //Parry Successful No Damage to the Player
             else
             {
                 playerAnimator.SetTrigger("Block");
+
+                if(attacker != null){
+                    ParrySuccess(attacker); // Knock the enemy back
+                }
+                
                 Debug.Log("Player parry the attack! No Damage Taken!");
             }
         }
     }
+
+    // Method to handle parry success
+    void ParrySuccess(GameObject enemy)
+    {
+        Bandit ec = enemy.GetComponent<Bandit>();
+        Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            Vector2 knockDirection = (enemy.transform.position - transform.position).normalized;
+            ec.ApplyKnockback(knockDirection, shieldKnockForce); // Apply knockback to the enemy
+        }
+
+        // Optional: stun, animation, etc.
+        
+        if (ec != null)
+        {
+            ec.SwitchEnemyState(EnemyState.Hurt,1);
+        }
+    }
+
 
     // Method to handle healing the player (optional)
     public void Heal(int healAmount)
@@ -140,14 +166,14 @@ public class PlayerHealth : MonoBehaviour
     {
         if (collision.collider.CompareTag("Hazard")) {
 
-            TakeDamage(hazardDamage);
+            TakeDamage(hazardDamage,null);
         
         }
 
         if (collision.collider.CompareTag("DeadZone"))
         {
 
-            TakeDamage(currentHealth);
+            TakeDamage(currentHealth, null);
             //Die();
 
         }
@@ -159,7 +185,7 @@ public class PlayerHealth : MonoBehaviour
         if (collision.CompareTag("DeadZone"))
         {
 
-            TakeDamage(currentHealth);
+            TakeDamage(currentHealth, null);
             //Die();
 
         }
