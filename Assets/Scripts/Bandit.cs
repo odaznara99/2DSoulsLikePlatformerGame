@@ -482,11 +482,14 @@ public class Bandit : MonoBehaviour
         {
             EnemyManager.Instance.UnregisterEnemy();
         }
-        Destroy(gameObject, 1f);
+        Destroy(gameObject, 5f);
     }
 
     public void SwitchEnemyState(EnemyState newState, float damageAmount = 0)
     {
+        if (currentState == EnemyState.Dead) {
+            return;
+        }
 
         if (currentState == EnemyState.Hurt
             && newState != EnemyState.StopHurt

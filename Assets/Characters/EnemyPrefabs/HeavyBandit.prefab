@@ -149,7 +149,7 @@ MonoBehaviour:
   attackPoint: {fileID: 7339971507065404554}
   headPoint: {fileID: 5179133575754451609}
   moveSpeed: 1
-  followRange: 10
+  followRange: 18
   attackRange: 0.78
   attackCooldown: 2
   attackTiming: 0.5

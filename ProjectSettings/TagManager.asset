@@ -8,6 +8,7 @@ TagManager:
   - Hazard
   - DeadZone
   - Ground
+  - Gate
   layers:
   - Default
   - TransparentFX

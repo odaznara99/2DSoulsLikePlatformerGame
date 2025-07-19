@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3678104684269669328}
   - component: {fileID: 348723540073579641}
+  - component: {fileID: 204783161452235790}
   m_Layer: 0
   m_Name: UI Manager
   m_TagString: Untagged
@@ -53,3 +54,19 @@ MonoBehaviour:
     screenObject: {fileID: 0}
   - screenName: Game Over Screen
     screenObject: {fileID: 0}
+--- !u!114 &204783161452235790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3896838311430431188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f988640ca6b9c5d4d8cd74a8ae021c7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messageBox: {fileID: 0}
+  messageText: {fileID: 0}
+  messageDuration: 5
+  fadeDuration: 0.5

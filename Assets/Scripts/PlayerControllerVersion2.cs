@@ -669,6 +669,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     void FlipPlayerSprite()
     {
+        if (currentState == PlayerState.Attacking || currentState == PlayerState.Shielding)
+        {
+            // Do not flip player sprite while attacking
+            return;
+        }
         if (rb.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
         else if (rb.velocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
     }

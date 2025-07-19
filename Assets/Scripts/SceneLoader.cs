@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO; // Needed for Path methods
 using System.Collections;
 
 public class SceneLoader : MonoBehaviour
@@ -67,6 +68,24 @@ public class SceneLoader : MonoBehaviour
         AudioManager.Instance.PlayMusic("Ballad");
     }
 
+    public void LoadNextScene() {
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextIndex = currentIndex + 1;
+
+        if (nextIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            // Get full path (like "Assets/Scenes/Level2.unity")
+            string nextScenePath = SceneUtility.GetScenePathByBuildIndex(nextIndex);
+
+            // Extract just the scene name ("Level2")
+            string nextSceneName = Path.GetFileNameWithoutExtension(nextScenePath);
+
+            Debug.Log("Next scene name is: " + nextSceneName);
+            LoadScene(nextSceneName);
+        }
+
+    }
+
     private IEnumerator LoadSceneAsync(string sceneName)
     {
         // Fade Out to black
@@ -97,6 +116,9 @@ public class SceneLoader : MonoBehaviour
 
         // Fade In to clear
         loadingScreen.SetActive(false);
+
+
+        MessageManager.Instance.ShowMessage(sceneName,false,100);
         yield return StartCoroutine(Fade(1f, 0f));
 
         
