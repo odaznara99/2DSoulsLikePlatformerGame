@@ -77,6 +77,14 @@ public class Bandit : MonoBehaviour
     private float lastJumpTime = 0f;
     public float jumpCooldown = 5f;
 
+    private bool wasSpawned = false;
+
+    // Called by spawner after instantiation
+    public void SetAsSpawned()
+    {
+        wasSpawned = true;
+    }
+
 
 
     private void Awake()
@@ -470,6 +478,10 @@ public class Bandit : MonoBehaviour
         Debug.Log("Enemy died!");
         m_animator.SetTrigger("Death");
         //EnemyState.Dead = true;
+        if (wasSpawned)
+        {
+            EnemyManager.Instance.UnregisterEnemy();
+        }
         Destroy(gameObject, 1f);
     }
 

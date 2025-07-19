@@ -149,7 +149,7 @@ MonoBehaviour:
   attackPoint: {fileID: 7339971507065404554}
   headPoint: {fileID: 5179133575754451609}
   moveSpeed: 1
-  followRange: 5.5
+  followRange: 10
   attackRange: 0.78
   attackCooldown: 2
   attackTiming: 0.5
@@ -233,7 +233,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1905932279
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 317b8365a4649ab459f6cb58ec8f9f18, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

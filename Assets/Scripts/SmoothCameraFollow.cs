@@ -33,4 +33,15 @@ public class SmoothCameraFollow : MonoBehaviour
         // Only update x and y to keep the Z constant (2D camera)
         transform.position = new Vector3(smoothedPosition.x, smoothedPosition.y, transform.position.z);
     }
+
+    public void SetMaxCameraBounds(float minX, float maxX)
+    {
+        this.minX = minX;
+        this.maxX = maxX;
+    }
+
+    public void SetMaxCameraBounds(float maxX)
+    {
+        this.maxX = maxX;
+    }
 }
