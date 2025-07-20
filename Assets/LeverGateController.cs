@@ -6,6 +6,7 @@ public class LeverGateController : MonoBehaviour
     [Header("References")]
     public GameObject gate;
     public bool isGateOpen = false;
+    private bool stillRotatingLever = false;
 
     [Header("Gate Settings")]
     public Vector3 openPositionOffset = new Vector3(0, 3f, 0);
@@ -21,9 +22,22 @@ public class LeverGateController : MonoBehaviour
             initialGatePosition = gate.transform.position;
     }
 
+    bool canToggleGate()
+    {
+        // Check if the lever is currently rotating
+        if (stillRotatingLever)
+            return false;
+
+        // Check if the player is nearby
+        if (!isPlayerNearby)
+            return false;
+
+        return true;
+    }
+
     void Update()
     {
-        if (isPlayerNearby && Input.GetKeyDown(KeyCode.E))
+        if (canToggleGate() && Input.GetKeyDown(KeyCode.E))
         {
             ToggleGate();
         }
@@ -35,10 +49,17 @@ public class LeverGateController : MonoBehaviour
         {
             isGateOpen = true;
 
-            // Start lever rotation (e.g., rotate to -45 degrees on Z axis)
+            // Start lever rotation (e.g., rotate to 50 degrees on Z axis)
             StartCoroutine(RotateLever(new Vector3(0, 0, 50f)));
 
-            StartCoroutine(OpenGate());
+            
+        } 
+        else
+        {
+            isGateOpen = false;
+
+            // Start lever rotation back to 0 degrees
+            StartCoroutine(RotateLever(new Vector3(0, 0, 130f)));
         }
     }
 
@@ -52,12 +73,27 @@ public class LeverGateController : MonoBehaviour
             yield return null;
         }
         gate.transform.position = targetPos;
+        stillRotatingLever = false; // Reset the lever rotation state
 
-        
+
+
+    }
+
+    private IEnumerator CloseGate()
+    {
+        Vector3 targetPos = initialGatePosition;
+        while (Vector3.Distance(gate.transform.position, targetPos) > 0.01f)
+        {
+            gate.transform.position = Vector3.MoveTowards(gate.transform.position, targetPos, openSpeed * Time.deltaTime);
+            yield return null;
+        }
+        gate.transform.position = targetPos;
+        stillRotatingLever = false; // Reset the lever rotation state
     }
 
     IEnumerator RotateLever(Vector3 targetRotation, float speed = 180f)
     {
+        stillRotatingLever = true;
         Quaternion start = transform.rotation;
         Quaternion end = Quaternion.Euler(targetRotation);
         float t = 0;
@@ -70,6 +106,11 @@ public class LeverGateController : MonoBehaviour
         }
 
         transform.rotation = end;
+
+        if (isGateOpen)
+            StartCoroutine(OpenGate());
+        else
+            StartCoroutine(CloseGate());
     }
 
 

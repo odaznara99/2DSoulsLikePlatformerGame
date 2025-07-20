@@ -196,7 +196,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6882211167080817599, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_Name
-      value: LeverSystem
+      value: LeverSystem - Gate
       objectReference: {fileID: 0}
     - target: {fileID: 8083465299211957173, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_LocalPosition.x
@@ -321,7 +321,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &170830004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,7 +551,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 911149bd35aa5a744bf104d300440d27, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -569,8 +569,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 2130810699
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -7730,7 +7730,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1094061137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7910,11 +7910,11 @@ MonoBehaviour:
   m_LightType: 4
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 000000004b97017f09c8658eed61de561954efdb7fa7f01abf73a4985116c891695b1417
+  m_ApplyToSortingLayers: 633193551bbcb6d7cba5a64ce19976dd695b14171954efdb000000004d218ac24b97017f09c8658eed61de560bc8688e7fa7f01abf73a4985116c891
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -8128,7 +8128,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1463368327
 Transform:
   m_ObjectHideFlags: 0
@@ -8236,7 +8236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2090089552
 Transform:
   m_ObjectHideFlags: 0

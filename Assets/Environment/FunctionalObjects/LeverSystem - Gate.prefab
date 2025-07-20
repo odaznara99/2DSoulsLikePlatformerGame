@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8083465299211957173}
   m_Layer: 0
-  m_Name: LeverSystem
+  m_Name: LeverSystem - Gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
