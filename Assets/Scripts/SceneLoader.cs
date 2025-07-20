@@ -86,6 +86,26 @@ public class SceneLoader : MonoBehaviour
 
     }
 
+
+    public void LoadPreviousScene()
+    {
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        int prevIndex = currentIndex - 1;
+
+        if (prevIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            // Get full path (like "Assets/Scenes/Level2.unity")
+            string prevScenePath = SceneUtility.GetScenePathByBuildIndex(prevIndex);
+
+            // Extract just the scene name ("Level2")
+            string prevSceneName = Path.GetFileNameWithoutExtension(prevScenePath);
+
+            Debug.Log("Next scene name is: " + prevSceneName);
+            LoadScene(prevSceneName);
+        }
+
+    }
+
     private IEnumerator LoadSceneAsync(string sceneName)
     {
         // Fade Out to black

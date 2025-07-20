@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadNextLevel : MonoBehaviour
+public class LoadPreviousLevel : MonoBehaviour
 {
 
     private bool wasLoading = false; // To prevent multiple triggers
@@ -11,14 +11,10 @@ public class LoadNextLevel : MonoBehaviour
         if (collision.CompareTag("Player") && !wasLoading)
         {
             wasLoading = true;
-
-            // Save the player's current position
-            GameManager.instance.lastPlayerPosition = collision.transform.position;
-            GameManager.instance.lastSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-
             // Load the next level
             AudioManager.Instance.PlaySFX("Click");
-            SceneLoader.Instance.LoadNextScene();
+            //SceneLoader.Instance.LoadPreviousScene();
+            SceneLoader.Instance.LoadScene(GameManager.instance.lastSceneName);
         }
     }
 }

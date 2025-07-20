@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
 
+    public Vector3 lastPlayerPosition; // Stores the player's position
+    public string lastSceneName;
+
     void Awake()
     {
         // Ensure there's only one GameManager instance

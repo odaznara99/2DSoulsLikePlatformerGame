@@ -109,6 +109,19 @@ public class PlayerControllerVersion2 : MonoBehaviour
     [SerializeField] private float lastRollingTimestamp = 0.0f; // Last time player rolled
     [SerializeField] private float lastShieldingTimestamp = 0.0f; // Last time player shielded
 
+    public static PlayerControllerVersion2 Instance;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // Already exists, kill the duplicate
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // Survive scene changes
+    }
     // === Unity Methods ===
     void Start()
     {
