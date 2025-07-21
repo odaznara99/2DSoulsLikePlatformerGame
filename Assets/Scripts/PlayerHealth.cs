@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
     private Animator        playerAnimator; //Reference to player animator
     private GameManager     gameManager; //Reference to GameManager script
     public  float             maxHealth = 100f; // The maximum health the player can have
-    public  float             currentHealth;  // The player's current health
+    public  float             currentHealth = 0;  // The player's current health
     public float shieldDamageReduction = 0.90f;
     public float shieldKnockForce = 3f; // Force applied to the enemy when parrying
     public float hazardDamage = 25; // Damage taken from hazards
@@ -29,14 +29,69 @@ public class PlayerHealth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Debug.Log("PlayerHealth script started.");
         // Initialize the player's health to the maximum at the start
-        currentHealth = maxHealth;
-        UpdateHealthUI(); // If you have a UI to display health, update it here
+        if (currentHealth == 0)
+            currentHealth = maxHealth;
 
         player          = this.GetComponent<PlayerControllerVersion2>();
         playerAnimator  = this.GetComponent<Animator>();
         gameManager     = GameManager.instance; // Get the GameManager instance
-        worldCanvas     = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
+        
+        
+        UpdateHealthUI(); // If you have a UI to display health, update it here
+
+    }
+
+    GameObject FindingChildObjects(string childTag) {
+
+        Transform parentTransform = GameObject.Find("ScreenCanvas").transform;
+
+        // Call the recursive helper function
+        return FindChildWithTagRecursive(parentTransform, childTag);
+
+    }
+
+    GameObject FindChildWithTagRecursive(Transform parent, string tag)
+    {
+        // Check if the current parent has the tag
+        if (parent.CompareTag(tag))
+        {
+            return parent.gameObject;
+        }
+
+        // Recursively check all children
+        foreach (Transform child in parent)
+        {
+            GameObject result = FindChildWithTagRecursive(child, tag);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        // Return null if no match is found
+        return null;
+    }
+
+    private void Update()
+    {
+        if (worldCanvas == null)
+        {
+            worldCanvas = GameObject.FindGameObjectWithTag("WorldSpaceCanvas").GetComponent<Transform>();
+        }
+
+        if (healthBar == null)
+        {
+            healthBar = FindingChildObjects("HealthBar").GetComponent<UnityEngine.UI.Image>();
+            healthText = FindingChildObjects("HealthText").GetComponent<Text>();
+        }
+
+        if (healthText.text == "0/" + maxHealth && !gameManager.IsGameOver())
+        {
+            UpdateHealthUI(); // Update the health UI if it hasn't been set yet
+        }
+
     }
 
     // Method to handle taking damage
@@ -148,18 +203,25 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player died!");
         player.OnDead();
         // Optionally, you can trigger a death screen, restart the level, or respawn the player.
-        gameManager.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
+        GameManager.instance.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
     }
 
     // Optional: Method to update the health UI
     private void UpdateHealthUI()
     {
+        if (healthBar == null) { 
+            Debug.LogWarning("Health bar still not assigned! Trying to find...");
+            healthBar = FindingChildObjects("HealthBar").GetComponent<UnityEngine.UI.Image>();
+            healthText = FindingChildObjects("HealthText").GetComponent<Text>();
+            UpdateHealthUI(); // Retry updating the UI after finding the health bar
+            return;
+        }
+
         // Implement this method to update the player's health bar or any other UI element that displays health
         // For example, if using Unity UI:
         healthBar.fillAmount = (float)currentHealth / maxHealth;
-        Debug.Log("Fill Amount: "+(float)currentHealth / maxHealth);
-
         healthText.text = currentHealth + "/" + maxHealth;
+        //Debug.Log("Update Health UI: "+ healthText.text);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

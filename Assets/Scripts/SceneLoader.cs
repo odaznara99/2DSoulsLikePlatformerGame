@@ -63,6 +63,14 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
+        if (sceneName == "StartMenu")
+        {
+            if (PlayerControllerVersion2.Instance != null)
+            {
+                Destroy(PlayerControllerVersion2.Instance.gameObject);
+            }
+        }
+
         StartCoroutine(LoadSceneAsync(sceneName));
         //AudioManager.Instance.PlayMusic("MedievalOpener");
         AudioManager.Instance.PlayMusic("Ballad");
@@ -108,6 +116,12 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator LoadSceneAsync(string sceneName)
     {
+        if (sceneName == null)
+        {
+            Debug.LogError("Scene name is null. Cannot load scene.");
+            yield break;
+        }
+
         // Fade Out to black
         yield return StartCoroutine(Fade(0f, 1f));
 

@@ -111,17 +111,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     public static PlayerControllerVersion2 Instance;
 
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject); // Already exists, kill the duplicate
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject); // Survive scene changes
-    }
     // === Unity Methods ===
     void Start()
     {

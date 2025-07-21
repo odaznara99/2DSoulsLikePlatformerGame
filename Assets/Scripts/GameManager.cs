@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
         playerScore = 0;
 
-
+        FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
     }
 
     // Function to pause the game
@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         //StartCoroutine(DelayFadeInPanel(gameOverScreen, gameOverFadeInSeconds));
         FindObjectOfType<UIScreensManager>().ShowScreenWithFadeIn("Game Over Screen",2f);
         //isGameOver = true;  // Set the game over flag
-        Invoke("SetIsGameOver", 2f); // isGameOver flag after 2 seconds
+        Invoke(nameof(SetIsGameOver), 2f); // isGameOver flag after 2 seconds
         Debug.Log("Game Over!");
     }
 

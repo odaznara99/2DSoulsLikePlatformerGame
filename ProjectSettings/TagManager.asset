@@ -9,6 +9,9 @@ TagManager:
   - DeadZone
   - Ground
   - Gate
+  - HealthBar
+  - HealthText
+  - WorldSpaceCanvas
   layers:
   - Default
   - TransparentFX

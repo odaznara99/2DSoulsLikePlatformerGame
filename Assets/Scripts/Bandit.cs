@@ -84,6 +84,13 @@ public class Bandit : MonoBehaviour
     {
         wasSpawned = true;
     }
+    public bool enableLogging = false; // Toggle for logging
+    private void Log(string logMessage) { 
+        if (enableLogging)
+            Debug.Log(logMessage);
+        else
+            return; // Do nothing if logging is disabled
+    }
 
 
 
@@ -123,7 +130,7 @@ public class Bandit : MonoBehaviour
             player = GameObject.Find("HeroKnight").GetComponent<Transform>();
             playerHealth = player.GetComponent<PlayerHealth>();
             playerScript = player.GetComponent<PlayerControllerVersion2>();
-            Debug.Log("Player not assigned, finding HeroKnight in the scene.");
+            Log("Player not assigned, finding HeroKnight in the scene.");
         }
 
         
@@ -274,12 +281,12 @@ public class Bandit : MonoBehaviour
                 && currentState != EnemyState.Hurt
                 && currentState != EnemyState.Dead)
             {
-                Debug.Log("Enemy: Attacks the player!");
+                Log("Enemy: Attacks the player!");
                 playerHealth.TakeDamage(damage, this.gameObject);
             }
             else
             {
-                Debug.Log("Enemy: Attack was Interrupted!");
+                Log("Enemy: Attack was Interrupted!");
                 //SwitchEnemyState(EnemyState.StopAttack);
             }
             //isAttacking = false;
@@ -293,12 +300,12 @@ public class Bandit : MonoBehaviour
     {
         if (health > 0 && currentState != EnemyState.Dead)
         {
-            Debug.Log("Enemy: Receives " + damageAmount + " damage!");
+            Log("Enemy: Receives " + damageAmount + " damage!");
             StartCoroutine(HurtState(damageAmount));
         }
         else
         {
-            Debug.Log("Enemy is already dead, cannot take damage.");
+            Log("Enemy is already dead, cannot take damage.");
         }
     }
 
@@ -311,7 +318,7 @@ public class Bandit : MonoBehaviour
     {
         if (currentState == EnemyState.Dead)
         {
-            Debug.Log("Enemy is already dead, cannot take damage.");
+            Log("Enemy is already dead, cannot take damage.");
             yield break; // Exit if the enemy is dead
         }
 
@@ -335,10 +342,10 @@ public class Bandit : MonoBehaviour
                     GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
                     ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
                 }
-                //Debug.Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
+                //Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(0.3f);
-                Debug.Log("Hurting Stops");
+                Log("Hurting Stops");
                 m_animator.ResetTrigger("Hurt");
                 SwitchEnemyState(EnemyState.StopHurt); // Switch back to Idle state after hurting
 
@@ -347,7 +354,7 @@ public class Bandit : MonoBehaviour
         }
         else
         {
-            Debug.Log("Enemy is already dead, cannot take damage.");
+            Log("Enemy is already dead, cannot take damage.");
         }
         yield break;
     }
@@ -359,7 +366,7 @@ public class Bandit : MonoBehaviour
     {
         if (!m_grounded || isKnocked || currentState == EnemyState.Dead)
         {
-            Debug.Log("Cannot jump, not grounded or already knocked or dead.");
+            Log("Cannot jump, not grounded or already knocked or dead.");
             SwitchEnemyState(EnemyState.Idle); // Switch to Idle state if not grounded
             return; // Exit if not grounded or already knocked or dead
         }
@@ -370,7 +377,7 @@ public class Bandit : MonoBehaviour
         float facingDirection = isFacingRight ? 1f : -1f;
         rb.velocity = new Vector2(jumpHorizontalSpeed * facingDirection, jumpForce);
 
-        Debug.Log("Jump velocity: " + rb.velocity);
+        Log("Jump velocity: " + rb.velocity);
 
         m_groundSensor.Disable(0.2f);
     }
@@ -463,19 +470,19 @@ public class Bandit : MonoBehaviour
     {         // Implement patrol logic here
         // For example, move back and forth between two points or randomly within a defined area
         // This is a placeholder for the patrol logic
-        Debug.Log("Patrolling...");
+        Log("Patrolling...");
     }
 
     void IdleState()
     {
         StopXVelocity();
-        Debug.Log("Idle");
+        Log("Idle");
 
     }
 
     void DeadState()
     {
-        Debug.Log("Enemy died!");
+        Log("Enemy died!");
         m_animator.SetTrigger("Death");
         //EnemyState.Dead = true;
         if (wasSpawned)
@@ -495,13 +502,13 @@ public class Bandit : MonoBehaviour
             && newState != EnemyState.StopHurt
             && newState != EnemyState.Dead)
         {
-            Debug.Log("Enemy is currently hurting, cannot switch to " + newState);
+            Log("Enemy is currently hurting, cannot switch to " + newState);
             return;
         }
 
         if (currentState == EnemyState.Attack && newState == EnemyState.Attack)
         {
-            Debug.Log("Enemy is currently attacking, cannot switch to " + newState);
+            Log("Enemy is currently attacking, cannot switch to " + newState);
             return;
         }
 
