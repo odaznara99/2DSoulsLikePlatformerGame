@@ -203,6 +203,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         //if (currentState == PlayerState.Jumping && newState == PlayerState.Jumping) {
         //    return;
         //}
+        
 
         // Set Cooldown for Shielding when switching from Shielding state to new state
         if (currentState == PlayerState.Shielding 

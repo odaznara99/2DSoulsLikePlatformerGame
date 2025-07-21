@@ -4,8 +4,17 @@ using UnityEngine.UI;
 using System.IO; // Needed for Path methods
 using System.Collections;
 
+public enum SpawnPointType
+{
+    Start,
+    Last,
+    Checkpoint
+}
+
 public class SceneLoader : MonoBehaviour
 {
+
+
     public static SceneLoader Instance;
 
     public GameObject loadingScreen;
@@ -61,7 +70,7 @@ public class SceneLoader : MonoBehaviour
 
 
 
-    public void LoadScene(string sceneName)
+    public void LoadScene(string sceneName, SpawnPointType spawnPoint)
     {
         if (sceneName == "StartMenu")
         {
@@ -69,60 +78,30 @@ public class SceneLoader : MonoBehaviour
             {
                 Destroy(PlayerControllerVersion2.Instance.gameObject);
             }
+
+            if (UIScreensManager.Instance != null)
+            {
+                Destroy(UIScreensManager.Instance.gameObject);
+            }
         }
 
-        StartCoroutine(LoadSceneAsync(sceneName));
+        StartCoroutine(LoadSceneAsync(sceneName, spawnPoint));
         //AudioManager.Instance.PlayMusic("MedievalOpener");
         AudioManager.Instance.PlayMusic("Ballad");
 
         
     }
 
-    public void LoadNextScene() {
-        int currentIndex = SceneManager.GetActiveScene().buildIndex;
-        int nextIndex = currentIndex + 1;
-
-        if (nextIndex < SceneManager.sceneCountInBuildSettings)
-        {
-            // Get full path (like "Assets/Scenes/Level2.unity")
-            string nextScenePath = SceneUtility.GetScenePathByBuildIndex(nextIndex);
-
-            // Extract just the scene name ("Level2")
-            string nextSceneName = Path.GetFileNameWithoutExtension(nextScenePath);
-
-            Debug.Log("Next scene name is: " + nextSceneName);
-            LoadScene(nextSceneName);
-        }
-
-    }
-
-
-    public void LoadPreviousScene()
-    {
-        int currentIndex = SceneManager.GetActiveScene().buildIndex;
-        int prevIndex = currentIndex - 1;
-
-        if (prevIndex < SceneManager.sceneCountInBuildSettings)
-        {
-            // Get full path (like "Assets/Scenes/Level2.unity")
-            string prevScenePath = SceneUtility.GetScenePathByBuildIndex(prevIndex);
-
-            // Extract just the scene name ("Level2")
-            string prevSceneName = Path.GetFileNameWithoutExtension(prevScenePath);
-
-            Debug.Log("Next scene name is: " + prevSceneName);
-            LoadScene(prevSceneName);
-        }
-
-    }
-
-    private IEnumerator LoadSceneAsync(string sceneName)
+    private IEnumerator LoadSceneAsync(string sceneName, SpawnPointType spawnPoint)
     {
         if (sceneName == null)
         {
             Debug.LogError("Scene name is null. Cannot load scene.");
             yield break;
         }
+
+        PlayerHealth.Instance.isInvincible = true;
+        PlayerControllerVersion2.Instance.enabled = false; // Disable player controls during loading
 
         // Fade Out to black
         yield return StartCoroutine(Fade(0f, 1f));
@@ -153,12 +132,32 @@ public class SceneLoader : MonoBehaviour
         // Fade In to clear
         loadingScreen.SetActive(false);
 
-
+        // Scene loaded, it will now show the scene name
         MessageManager.Instance.ShowMessage(sceneName,false,100);
-        PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
-        yield return StartCoroutine(Fade(1f, 0f));
 
-        
+
+        // Position the Player on the Start Point
+        if (spawnPoint == SpawnPointType.Start)
+        {
+            PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
+        } 
+        // Position the Player on the EndPoint
+        else if (spawnPoint == SpawnPointType.Last)
+        {
+            PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToEndSpawn();
+        }
+        // Position the Player on the Checkpoint
+        else if (spawnPoint == SpawnPointType.Checkpoint)
+        {
+            PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
+        }
+
+        PlayerHealth.Instance.isInvincible = true;
+        // Start Fading Out - showing the Scene
+        yield return StartCoroutine(Fade(1f, 0f));
+        PlayerControllerVersion2.Instance.enabled = true; // Disable player controls during loading
+
+
     }
 
     private IEnumerator Fade(float startAlpha, float endAlpha)

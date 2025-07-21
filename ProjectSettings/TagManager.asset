@@ -12,6 +12,9 @@ TagManager:
   - HealthBar
   - HealthText
   - WorldSpaceCanvas
+  - StartPoint
+  - EndPoint
+  - CheckPoint
   layers:
   - Default
   - TransparentFX

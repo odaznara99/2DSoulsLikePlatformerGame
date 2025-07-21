@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
     {
         // Reload the active scene to restart
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        SceneLoader.Instance.LoadScene(SceneManager.GetActiveScene().name);
+        SceneLoader.Instance.LoadScene(SceneManager.GetActiveScene().name,SpawnPointType.Checkpoint);
 
         // Reset game over flag and score
         isGameOver = false;
@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlayMusic("Ballad");
         Time.timeScale = 1f;
         //SceneManager.LoadScene(0);
-        SceneLoader.Instance.LoadScene("StartMenu");
+        SceneLoader.Instance.LoadScene("StartMenu",SpawnPointType.Start);
     }
 
 

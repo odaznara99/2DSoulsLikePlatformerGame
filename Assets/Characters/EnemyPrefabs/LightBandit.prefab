@@ -59,7 +59,7 @@ MonoBehaviour:
   attackPoint: {fileID: 8207164269522517271}
   headPoint: {fileID: 1533785881213562945}
   moveSpeed: 1.5
-  followRange: 18
+  followRange: 5
   attackRange: 0.68
   attackCooldown: 1
   attackTiming: 0.5
@@ -83,6 +83,7 @@ MonoBehaviour:
   jumpForce: 7
   jumpHorizontalSpeed: 5
   jumpCooldown: 5
+  enableLogging: 0
 --- !u!95 &95346456782871180
 Animator:
   serializedVersion: 5

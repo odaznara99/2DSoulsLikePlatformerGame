@@ -3,10 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class PlayerPositionRestorer : MonoBehaviour
 {
+    public Vector3 lastCheckpointPosition; // Store the last checkpoint position
+    [SerializeField] Transform spawnPointStart;
+    [SerializeField] Transform spawnPointEnd;
     private void Start()
     {
 
         TeleportToStartSpawn();
+        lastCheckpointPosition = GameObject.Find("StartSpawnPoint").transform.position;
     }
 
     public void TeleportTo(Vector3 spawnPointVector3)
@@ -15,9 +19,21 @@ public class PlayerPositionRestorer : MonoBehaviour
     }
 
     public void TeleportToStartSpawn() {
-        Transform spawnPointStart = GameObject.Find("StartSpawnPoint").transform;
+        //spawnPointStart = GameObject.Find("StartPoint").transform;
         // If not returning, set a default spawn point (e.g., origin)
-        TeleportTo(spawnPointStart);
+        TeleportTo(new Vector3(-7,-2,0));
+    }
+
+    public void TeleportToEndSpawn()
+    {
+        spawnPointEnd = GameObject.FindGameObjectWithTag("EndPoint").transform;
+        // If not returning, set a default spawn point (e.g., origin)
+        TeleportTo(spawnPointEnd);
+    }
+
+    public void TeleportToCheckpoint()
+    {
+        TeleportTo(lastCheckpointPosition);
     }
 
     public void TeleportTo(Transform spawnPoint)

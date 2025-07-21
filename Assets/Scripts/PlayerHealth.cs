@@ -17,6 +17,7 @@ public class PlayerHealth : MonoBehaviour
     public float shieldKnockForce = 3f; // Force applied to the enemy when parrying
     public float hazardDamage = 25; // Damage taken from hazards
     public float hurtSeconds = 0.2f; // Seconds the player is in HURT state
+    public bool isInvincible = false; // Flag to check if the player is invincible
 
     [Header("Health UI")]
     public UnityEngine.UI.Image healthBar;
@@ -25,6 +26,8 @@ public class PlayerHealth : MonoBehaviour
     [Header("Floating Damage Text")]
     public GameObject floatingTextPrefab;
     public Transform worldCanvas;
+
+    public static PlayerHealth Instance; // Singleton instance
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +44,20 @@ public class PlayerHealth : MonoBehaviour
         
         UpdateHealthUI(); // If you have a UI to display health, update it here
 
+    }
+
+    void Awake()
+    {
+        // Ensure there's only one GameManager instance
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);  // Prevent destruction between scenes
+        }
+        else
+        {
+            Destroy(gameObject);  // Destroy any duplicate Player
+        }
     }
 
     GameObject FindingChildObjects(string childTag) {
@@ -97,6 +114,8 @@ public class PlayerHealth : MonoBehaviour
     // Method to handle taking damage
     public void TakeDamage(float damageAmount, GameObject attacker)
     {
+        if (isInvincible) return;
+
         if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
         {
             if (!player.isParry)

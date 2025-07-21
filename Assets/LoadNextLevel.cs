@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LoadNextLevel : MonoBehaviour
 {
     public string sceneName; // Name of the scene to load
+    public SpawnPointType spawnPointType; // Name of the spawn point to use
 
     private void Start()
     {
@@ -33,7 +34,7 @@ public class LoadNextLevel : MonoBehaviour
     {
         // Load a specific scene by name
         AudioManager.Instance.PlaySFX("Click");
-        SceneLoader.Instance.LoadScene(sceneName);
+        SceneLoader.Instance.LoadScene(sceneName, spawnPointType);
     }
 
     
