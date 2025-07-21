@@ -320,5 +320,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0e2e337de9ef7ff46a24a684d6adac88, type: 3}
   - {fileID: 8300000, guid: cb4adb91fe548b84780d6bf677f3a92e, type: 3}
   - {fileID: 8300000, guid: 0e2e337de9ef7ff46a24a684d6adac88, type: 3}
+  - {fileID: 8300000, guid: 4e0408e8afca0764f9daf21172f2a485, type: 3}
   musicEnabled: 1
   sfxEnabled: 1

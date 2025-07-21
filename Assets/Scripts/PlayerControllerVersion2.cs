@@ -473,6 +473,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
                 // Apply damage to the enemy
                 enemyScript.TakeDamage(attackDamage);
+                if (enemyScript.currentState != EnemyState.Dead)
+                {
+                    AudioManager.Instance.PlaySFX("Attack1");
+                }
+               
 
                 // Apply knockback to the enemy
                 //Vector2 knockDirection = enemy.transform.position - transform.position;
@@ -486,8 +491,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
         // Call one of three attack animations "Attack1", "Attack2", "Attack3"
         playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
         // Play Sounds
-        AudioManager.Instance.PlaySFX("Attack" + currentAttackAnimation);
-        Debug.Log("Attack: " + currentAttackAnimation);
+        AudioManager.Instance.PlaySFX("Attack2");
+        //Debug.Log("Attack: " + currentAttackAnimation);
 
         // If the combo is complete (after the third attack), apply the cooldown
         if (currentAttackAnimation >= 3)

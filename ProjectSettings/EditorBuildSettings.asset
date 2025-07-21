@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Bandit's Hideout.unity
     guid: 01ae10c325d111246953e329716e0a47
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/EndlessForest.unity
     guid: 35b25d620b09583479364b26265da90b
   m_configObjects:
