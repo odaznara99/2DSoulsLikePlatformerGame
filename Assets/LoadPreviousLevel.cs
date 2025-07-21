@@ -25,7 +25,7 @@ public class LoadPreviousLevel : MonoBehaviour
             // Load the next level
             AudioManager.Instance.PlaySFX("Click");
             //SceneLoader.Instance.LoadPreviousScene();
-            SceneLoader.Instance.LoadScene(GameManager.instance.lastSceneName);
+            //SceneLoader.Instance.LoadScene(GameManager.instance.lastSceneName);
         }
     }
 

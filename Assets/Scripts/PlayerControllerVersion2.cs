@@ -133,6 +133,20 @@ public class PlayerControllerVersion2 : MonoBehaviour
         originalRollingSpeed = rollingSpeed;
     }
 
+    void Awake()
+    {
+        // Ensure there's only one GameManager instance
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);  // Prevent destruction between scenes
+        }
+        else
+        {
+            Destroy(gameObject);  // Destroy any duplicate Player
+        }
+    }
+
     void Update()
     {
 

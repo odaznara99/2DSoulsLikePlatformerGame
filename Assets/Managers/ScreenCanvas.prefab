@@ -636,7 +636,7 @@ GameObject:
   - component: {fileID: 255865272341166103}
   - component: {fileID: 2435925533796840621}
   m_Layer: 5
-  m_Name: LowerPanel
+  m_Name: ButtonManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -717,10 +717,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2781ba0e64d6740ab65dc2da15733f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
+  buttonLeft: {fileID: 434000316569886826}
+  buttonRight: {fileID: 7877724515454554077}
   buttonAttack: {fileID: 7423431318014958954}
   buttonBlock: {fileID: 668050180926050776}
   buttonRoll: {fileID: 8761716403373397981}
+  buttonJump: {fileID: 5154922688694934965}
 --- !u!1 &1063989416592460882
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,6 +1682,7 @@ RectTransform:
   - {fileID: 4380397646247666193}
   - {fileID: 7149832431111399899}
   - {fileID: 2540204285299163249}
+  - {fileID: 1543350831423037615}
   m_Father: {fileID: 8653776928235469325}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2281,7 +2284,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1543350831423037615}
   - {fileID: 2474889413787913940}
   m_Father: {fileID: 7967252563194108270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3780,7 +3782,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2540204285299163249}
+    m_TransformParent: {fileID: 7967252563194108270}
     m_Modifications:
     - target: {fileID: 4627248134286893758, guid: 5b9a190608d01944685d0844cac67b8d, type: 3}
       propertyPath: m_Pivot.x
@@ -3848,7 +3850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4627248134286893758, guid: 5b9a190608d01944685d0844cac67b8d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -89.99994
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 4627248134286893758, guid: 5b9a190608d01944685d0844cac67b8d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

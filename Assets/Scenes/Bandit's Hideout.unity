@@ -1431,6 +1431,17 @@ Transform:
   - {fileID: 1188703891}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &679047655 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 529309194878060641, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+  m_PrefabInstance: {fileID: 9192378388258444789}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c2781ba0e64d6740ab65dc2da15733f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &763599561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1562,6 +1573,22 @@ PrefabInstance:
     - target: {fileID: 5165474828711581127, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_Name
       value: NextLevelTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
+      propertyPath: m_Size.x
+      value: 5.062435
+      objectReference: {fileID: 0}
+    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
+      propertyPath: m_Size.y
+      value: 2.1027045
+      objectReference: {fileID: 0}
+    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
+      propertyPath: m_Offset.x
+      value: 2.0312176
+      objectReference: {fileID: 0}
+    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.09205341
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18023,6 +18050,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3619693336465886900, guid: deb9cadae593272428b458aeebd13815, type: 3}
+      propertyPath: uiButtonsManager
+      value: 
+      objectReference: {fileID: 679047655}
     - target: {fileID: 4050465493181609182, guid: deb9cadae593272428b458aeebd13815, type: 3}
       propertyPath: m_Name
       value: GameManager
@@ -18414,10 +18445,6 @@ PrefabInstance:
       objectReference: {fileID: 8041958207723432735}
     - target: {fileID: 169077312639356294, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_Delegates.Array.data[3].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 8041958207723432735}
-    - target: {fileID: 529309194878060641, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: playerController
       value: 
       objectReference: {fileID: 8041958207723432735}
     - target: {fileID: 3678104684269669328, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}

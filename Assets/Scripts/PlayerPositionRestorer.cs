@@ -5,29 +5,19 @@ public class PlayerPositionRestorer : MonoBehaviour
 {
     private void Start()
     {
-        // Check if the player is returning to this scene
-        if (GameManager.instance != null && GameManager.instance.lastSceneName == SceneManager.GetActiveScene().name)
-        {
-            // Restore the player's position
-            //TeleportTo(GameManager.instance.lastPlayerPosition);
 
-            Transform spawnPointStart = GameObject.Find("EndSpawnPoint")?.transform;
-
-            // If not returning, set a default spawn point (e.g., origin)
-            TeleportTo(spawnPointStart);
-        }
-        else
-        {
-            Transform spawnPointStart = GameObject.Find("StartSpawnPoint")?.transform;
-
-            // If not returning, set a default spawn point (e.g., origin)
-            TeleportTo(spawnPointStart);
-        }
+        TeleportToStartSpawn();
     }
 
     public void TeleportTo(Vector3 spawnPointVector3)
     {
         transform.position = spawnPointVector3;
+    }
+
+    public void TeleportToStartSpawn() {
+        Transform spawnPointStart = GameObject.Find("StartSpawnPoint").transform;
+        // If not returning, set a default spawn point (e.g., origin)
+        TeleportTo(spawnPointStart);
     }
 
     public void TeleportTo(Transform spawnPoint)

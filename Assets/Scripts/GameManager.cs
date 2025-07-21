@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
 
-    public Vector3 lastPlayerPosition; // Stores the player's position
+    //public Vector3 lastPlayerPosition; // Stores the player's position
     public string lastSceneName;
 
     void Awake()
@@ -82,6 +82,8 @@ public class GameManager : MonoBehaviour
         playerScore = 0;
 
         FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
+
+        //PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
     }
 
     // Function to pause the game

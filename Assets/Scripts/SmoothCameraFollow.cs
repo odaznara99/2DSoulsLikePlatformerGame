@@ -14,6 +14,16 @@ public class SmoothCameraFollow : MonoBehaviour
 
     private Vector3 velocity = Vector3.zero;
 
+    private void Update()
+    {
+        if (!target)
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+            targetRigidbody = target.GetComponent<Rigidbody2D>();
+            targetHeroKnight = target.GetComponent<PlayerControllerVersion2>();
+        }
+    }
+
     void FixedUpdate()
     {
         if (target == null || targetRigidbody == null || targetHeroKnight.currentState==PlayerState.Dead) return;

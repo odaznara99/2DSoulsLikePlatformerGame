@@ -17,7 +17,7 @@ public class LoadNextLevel : MonoBehaviour
 
     private void Enable()
     {
-        this.gameObject.SetActive(true); // Enable the object after the delay
+            this.gameObject.SetActive(true); // Enable the object after the delay
     }
 
     private bool isPlayerNearby = false;
@@ -63,7 +63,8 @@ public class LoadNextLevel : MonoBehaviour
             {
                 OnButtonClick();
             }
-        } else
+        } 
+        else
         {
             locationButton.gameObject.SetActive(false); // Hide the button when player is not nearby
         }

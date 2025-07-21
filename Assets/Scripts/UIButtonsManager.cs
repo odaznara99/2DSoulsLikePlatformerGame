@@ -9,7 +9,11 @@ using UnityEngine.UIElements;
 public class UIButtonsManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private PlayerControllerVersion2 playerController;
+    private PlayerControllerVersion2 playerController() {
+        return GameObject.Find("HeroKnight").GetComponent<PlayerControllerVersion2>();
+    }
+
+    [SerializeField]private PlayerControllerVersion2 m_playerController = null;
     public GameObject buttonLeft;
     public GameObject buttonRight;
     public GameObject buttonAttack;
@@ -20,55 +24,44 @@ public class UIButtonsManager : MonoBehaviour
     // Update is called once per frame  
     void Update()
     {
-        if (playerController == null || playerController.Equals(null))
+        if (!m_playerController || m_playerController.Equals(null) || m_playerController == null)
         {
-            playerController = FindFirstObjectByType<PlayerControllerVersion2>();
-            
-            if (playerController != null)
-            {
-                SetEventTrigger();
-            }
+            //m_playerController = playerController();
+            ResetEventTrigger();
         }
-    }
 
-    private void Awake()
-    {
-        //playerController = FindFirstObjectByType<PlayerControllerVersion2>();
-        SetEventTrigger();
     }
 
     private void Start()
     {
-        //playerController = FindFirstObjectByType<PlayerControllerVersion2>();
-        SetEventTrigger();
+        //playerController() = FindFirstObjectByType<PlayerControllerVersion2>();
+        //m_playerController = playerController();
+        ResetEventTrigger();
     }
-
-    private void SetEventTrigger()
+    public void ResetEventTrigger()
     {
-        if (playerController == null || playerController.Equals(null))
-        {
-            Debug.LogWarning("PlayerController not found or inactive. Attempting to find it again.");
-            playerController = FindFirstObjectByType<PlayerControllerVersion2>();
-        }
-
+        m_playerController = playerController();
         // Auto-assign event triggers for the buttons
-        AddEventTrigger(buttonLeft, EventTriggerType.PointerEnter, playerController.OnMoveLeft);
-        AddEventTrigger(buttonLeft, EventTriggerType.PointerExit, playerController.OnStop);
-        AddEventTrigger(buttonLeft, EventTriggerType.PointerUp, playerController.OnMoveLeft);
-        AddEventTrigger(buttonLeft, EventTriggerType.PointerDown, playerController.OnStop);
+        AddEventTrigger(buttonLeft, EventTriggerType.PointerEnter, m_playerController.OnMoveLeft);
+        AddEventTrigger(buttonLeft, EventTriggerType.PointerExit, m_playerController.OnStop);
+        AddEventTrigger(buttonLeft, EventTriggerType.PointerUp, m_playerController.OnMoveLeft);
+        AddEventTrigger(buttonLeft, EventTriggerType.PointerDown, m_playerController.OnStop);
 
-        AddEventTrigger(buttonRight, EventTriggerType.PointerEnter, playerController.OnMoveRight);
-        AddEventTrigger(buttonRight, EventTriggerType.PointerExit, playerController.OnStop);
-        AddEventTrigger(buttonRight, EventTriggerType.PointerUp, playerController.OnMoveRight);
-        AddEventTrigger(buttonRight, EventTriggerType.PointerDown, playerController.OnStop);
+        AddEventTrigger(buttonRight, EventTriggerType.PointerEnter, m_playerController.OnMoveRight);
+        AddEventTrigger(buttonRight, EventTriggerType.PointerExit, m_playerController.OnStop);
+        AddEventTrigger(buttonRight, EventTriggerType.PointerUp, m_playerController.OnMoveRight);
+        AddEventTrigger(buttonRight, EventTriggerType.PointerDown, m_playerController.OnStop);
 
+        AddEventTrigger(buttonAttack, EventTriggerType.PointerDown, m_playerController.OnHoldAttack);
 
-        AddEventTrigger(buttonAttack, EventTriggerType.PointerDown, playerController.OnHoldAttack);
-        AddEventTrigger(buttonBlock, EventTriggerType.PointerDown, playerController.OnHoldShield);
-        AddEventTrigger(buttonBlock, EventTriggerType.PointerUp, playerController.OnNeutral);
-        AddEventTrigger(buttonBlock, EventTriggerType.PointerExit, playerController.OnNeutral);
-        AddEventTrigger(buttonRoll, EventTriggerType.PointerDown, playerController.OnRoll);
-        AddEventTrigger(buttonJump, EventTriggerType.PointerDown, playerController.OnJump);
+        AddEventTrigger(buttonBlock, EventTriggerType.PointerDown, m_playerController.OnHoldShield);
+        AddEventTrigger(buttonBlock, EventTriggerType.PointerUp, m_playerController.OnNeutral);
+        AddEventTrigger(buttonBlock, EventTriggerType.PointerExit, m_playerController.OnNeutral);
+
+        AddEventTrigger(buttonRoll, EventTriggerType.PointerDown, m_playerController.OnRoll);
+
+        AddEventTrigger(buttonJump, EventTriggerType.PointerDown, m_playerController.OnJump);
+
     }
 
     private void AddEventTrigger(GameObject button, EventTriggerType eventType, UnityEngine.Events.UnityAction action)

@@ -74,6 +74,8 @@ public class SceneLoader : MonoBehaviour
         StartCoroutine(LoadSceneAsync(sceneName));
         //AudioManager.Instance.PlayMusic("MedievalOpener");
         AudioManager.Instance.PlayMusic("Ballad");
+
+        
     }
 
     public void LoadNextScene() {
@@ -153,6 +155,7 @@ public class SceneLoader : MonoBehaviour
 
 
         MessageManager.Instance.ShowMessage(sceneName,false,100);
+        PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
         yield return StartCoroutine(Fade(1f, 0f));
 
         
