@@ -624,6 +624,7 @@ MonoBehaviour:
   shieldKnockForce: 3
   hazardDamage: 25
   hurtSeconds: 0.2
+  isInvincible: 0
   healthBar: {fileID: 0}
   healthText: {fileID: 0}
   floatingTextPrefab: {fileID: 3106159360136694730, guid: e15316900ce917949b022d6f521c60b2, type: 3}
@@ -641,7 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enabledDebugLog: 0
-  enabledKeyboardInput: 0
+  enabledKeyboardInput: 1
   m_noBlood: 1
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
   currentState: 0
@@ -876,3 +877,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ed128a3209975140bcb0ebb417b103b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastCheckpointPosition: {x: 0, y: 0, z: 0}
+  spawnPointStart: {fileID: 0}
+  spawnPointEnd: {fileID: 0}
