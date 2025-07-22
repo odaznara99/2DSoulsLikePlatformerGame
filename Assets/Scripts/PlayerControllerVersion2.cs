@@ -497,7 +497,21 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 // Apply knockback to the enemy
                 //Vector2 knockDirection = enemy.transform.position - transform.position;
                 //enemyScript.ApplyKnockback(knockDirection,playerKnockbackForce);
+            } 
+            else if (enemy.CompareTag("Boss"))
+            {
+                BossAI bossScript = enemy.GetComponent<BossAI>();
+
+                // Apply damage to the boss
+                bossScript.TakeDamage(attackDamage);
+
+                if (!bossScript.IsDead())
+                {
+                    AudioManager.Instance.PlaySFX("Attack1");
+                }
             }
+
+
         }
 
         //Variable for Current Attack Animation

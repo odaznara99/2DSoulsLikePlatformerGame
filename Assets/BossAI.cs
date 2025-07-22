@@ -6,6 +6,13 @@ public class BossAI : MonoBehaviour
     public Transform player;
     public Animator animator;
 
+    [Header("Boss Health")]
+    [SerializeField] private float maxHealth = 300f;
+    public float currentHealth;
+    [SerializeField] private GameObject floatingTextPrefab;
+    [SerializeField] private Transform textSpawnPoint;
+    [SerializeField] private Transform worldCanvas;
+
     [Header("Detection")]
     public float followRange = 8f;
     public float attackRange = 2f;
@@ -44,6 +51,8 @@ public class BossAI : MonoBehaviour
             animator = GetComponent<Animator>();
 
         currentPatrolTarget = rightPatrolPoint;
+        currentHealth = maxHealth;
+        worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
     }
 
     void Update()
@@ -89,7 +98,7 @@ public class BossAI : MonoBehaviour
             patrolPauseTimer = Mathf.Max(patrolPauseTimer, 0f);
 
             rb.velocity = new Vector2(0f, rb.velocity.y);
-            //animator.SetBool("isMoving", false);
+            animator.SetBool("isMoving", false);
 
             if (patrolPauseTimer <= 0f)
             {
@@ -107,7 +116,7 @@ public class BossAI : MonoBehaviour
             hasArrivedAtPatrolPoint = true;
             patrolPauseTimer = patrolPauseDuration;
             rb.velocity = new Vector2(0f, rb.velocity.y);
-            //animator.SetBool("isMoving", false);
+            animator.SetBool("isMoving", false);
             return;
         }
 
@@ -120,8 +129,15 @@ public class BossAI : MonoBehaviour
 
     private void Move(float dir)
     {
+        if (animator.GetBool("IsHurting"))
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+            animator.SetBool("isMoving", false);
+            return;
+        }
+
         rb.velocity = new Vector2(dir * moveSpeed, rb.velocity.y);
-        //animator.SetBool("isMoving", true);
+        animator.SetBool("isMoving", true);
 
         // Flip
         if ((dir > 0 && !facingRight) || (dir < 0 && facingRight))
@@ -166,6 +182,65 @@ public class BossAI : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float damageAmount)
+    {
+        if (IsDead()) return;
+
+        if (isAttacking) return;
+
+        currentHealth -= damageAmount;
+
+        // Optional: Show floating damage text
+        if (floatingTextPrefab && worldCanvas)
+        {
+            GameObject ft = Instantiate(floatingTextPrefab, textSpawnPoint.position, Quaternion.identity, worldCanvas.transform);
+            ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
+        }
+
+        // Optional: Trigger Hurt animation
+        if (animator) 
+        {
+            animator.SetTrigger("Hurt");
+            animator.SetBool("IsHurting", true);
+
+        };
+
+        if (IsDead())
+        {
+            Die();
+        }
+    }
+
+    public void EndHurtAnimation()
+    {
+        if (animator)
+        {
+            animator.SetBool("IsHurting", false);
+        }
+    }
+
+    public bool IsDead()
+    {
+        return currentHealth <= 0;
+    }
+
+    private void Die()
+    {
+        Debug.Log("Boss has died!");
+        if (animator) animator.SetTrigger("Death");
+
+        // Disable AI or controls
+        this.enabled = false;
+
+        // Disable collider or damage dealing
+        //Collider2D col = GetComponent<Collider2D>();
+        //if (col) col.enabled = false;
+
+        // Optional: Destroy after delay
+        Destroy(gameObject, 3f);
+    }
+
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -192,10 +267,4 @@ public class BossAI : MonoBehaviour
         }
     }
 
-    // Optional: Call this to apply damage even during attack
-    public void TakeDamage(int amount)
-    {
-        // Add your damage logic here (e.g., reduce HP, play flinch animation, etc.)
-        Debug.Log("Boss took damage: " + amount);
-    }
 }

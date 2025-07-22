@@ -27937,6 +27937,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4634241829490386981, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
+      propertyPath: worldCanvas
+      value: 
+      objectReference: {fileID: 1073447530}
+    - target: {fileID: 4634241829490386981, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
       propertyPath: leftPatrolPoint
       value: 
       objectReference: {fileID: 247699798}

@@ -269,6 +269,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   animator: {fileID: 0}
+  maxHealth: 500
+  currentHealth: 500
+  floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
+  textSpawnPoint: {fileID: 3102984410289515296}
+  worldCanvas: {fileID: 0}
   followRange: 8
   attackRange: 2
   playerLayer:
@@ -282,7 +287,7 @@ MonoBehaviour:
   - Attack1
   - Attack2
   - Attack3
-  attackCooldown: 2
+  attackCooldown: 3.2
   attackHitRange: 1.5
   patrolPauseDuration: 3
   patrolPauseTimer: 0
