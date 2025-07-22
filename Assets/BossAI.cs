@@ -162,7 +162,7 @@ public class BossAI : MonoBehaviour
 
         if (hit != null)
         {
-            PlayerHealth.Instance.TakeDamage(attackDamage,this.gameObject);
+            PlayerHealth.Instance.TakeDamage(attackDamage,this.gameObject,3f,3f);
         }
     }
 

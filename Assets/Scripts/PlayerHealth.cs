@@ -1,6 +1,7 @@
 //using Microsoft.Unity.VisualStudio.Editor;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AdaptivePerformance.VisualScripting;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class PlayerHealth : MonoBehaviour
     private PlayerControllerVersion2      player; //Reference to player script
     private Animator        playerAnimator; //Reference to player animator
     private GameManager     gameManager; //Reference to GameManager script
+    private Rigidbody2D     rb; // Reference to the player's Rigidbody2D
     public  float             maxHealth = 100f; // The maximum health the player can have
     public  float             currentHealth = 0;  // The player's current health
     public float shieldDamageReduction = 0.90f;
@@ -39,6 +41,7 @@ public class PlayerHealth : MonoBehaviour
 
         player          = this.GetComponent<PlayerControllerVersion2>();
         playerAnimator  = this.GetComponent<Animator>();
+        rb              = this.GetComponent<Rigidbody2D>();
         gameManager     = GameManager.instance; // Get the GameManager instance
         
         
@@ -112,7 +115,7 @@ public class PlayerHealth : MonoBehaviour
     }
 
     // Method to handle taking damage
-    public void TakeDamage(float damageAmount, GameObject attacker)
+    public void TakeDamage(float damageAmount, GameObject attacker, float knockBackX =1f, float knockBackY = 1f)
     {
         Debug.Log("Player was attacked by " + attacker);
         if (isInvincible) return;
@@ -155,6 +158,9 @@ public class PlayerHealth : MonoBehaviour
                     {
                         player.OnHurt(); ; // Switch to the Hurting state
                         currentHealth -= damageAmount;
+
+                        // Apply knockback if attacker is not null
+                        KnockBack(attacker, knockBackX, knockBackY); // Knockback force can be adjusted
                         if (floatingTextPrefab)
                         {
                             GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
@@ -178,6 +184,19 @@ public class PlayerHealth : MonoBehaviour
                 
                 Debug.Log("Player parry the attack! No Damage Taken!");
             }
+        }
+    }
+
+    void KnockBack(GameObject attacker, float knockbackForceX =0, float knockbackForceY=0) {
+
+        // Apply Knockback
+        if (attacker != null)
+        {
+            Vector2 knockDirection = (transform.position - attacker.transform.position).normalized;
+            Vector2 knockback = new Vector2(knockDirection.x * knockbackForceX, knockbackForceY);
+
+            rb.velocity = Vector2.zero; // Reset current velocity
+            rb.AddForce(knockback, ForceMode2D.Impulse);
         }
     }
 
