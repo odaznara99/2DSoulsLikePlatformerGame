@@ -124,21 +124,20 @@ public class Bandit : MonoBehaviour
     void Update()
     {
 
+        //Reference to the AttackPoint if not assigned
+        if (attackPoint == null)
+        {
+            attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
+        }
+
         //Reference to the Player if not assigned
         if (player == null)
         {
             player = GameObject.Find("HeroKnight").GetComponent<Transform>();
             playerHealth = player.GetComponent<PlayerHealth>();
             playerScript = player.GetComponent<PlayerControllerVersion2>();
-            Log("Player not assigned, finding HeroKnight in the scene.");
-        }
-
-        
-
-        //Reference to the AttackPoint if not assigned
-        if (attackPoint == null)
-        {
-            attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
+            Debug.LogWarning("Player not found, still finding HeroKnight in the scene.");
+            return;
         }
 
         // Calculate the distance between the enemy and the player

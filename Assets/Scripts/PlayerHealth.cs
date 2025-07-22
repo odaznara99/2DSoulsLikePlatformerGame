@@ -114,6 +114,7 @@ public class PlayerHealth : MonoBehaviour
     // Method to handle taking damage
     public void TakeDamage(float damageAmount, GameObject attacker)
     {
+        Debug.Log("Player was attacked by " + attacker);
         if (isInvincible) return;
 
         if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
@@ -183,19 +184,22 @@ public class PlayerHealth : MonoBehaviour
     // Method to handle parry success
     void ParrySuccess(GameObject enemy)
     {
-        Bandit ec = enemy.GetComponent<Bandit>();
-        Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
-        if (rb != null)
+        if (enemy.CompareTag("Enemy"))
         {
-            Vector2 knockDirection = (enemy.transform.position - transform.position).normalized;
-            ec.ApplyKnockback(knockDirection, shieldKnockForce); // Apply knockback to the enemy
-        }
+            Bandit ec = enemy.GetComponent<Bandit>();
+            Rigidbody2D rb = enemy.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                Vector2 knockDirection = (enemy.transform.position - transform.position).normalized;
+                ec.ApplyKnockback(knockDirection, shieldKnockForce); // Apply knockback to the enemy
+            }
 
-        // Optional: stun, animation, etc.
-        
-        if (ec != null)
-        {
-            ec.SwitchEnemyState(EnemyState.Hurt,1);
+            // Optional: stun, animation, etc.
+
+            if (ec != null)
+            {
+                ec.SwitchEnemyState(EnemyState.Hurt, 1);
+            }
         }
     }
 
@@ -214,6 +218,10 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player healed " + healAmount + " points. Current health: " + currentHealth);
 
         UpdateHealthUI(); // Update the UI to reflect the health change
+    }
+
+    public void ResetHealth() { 
+        Heal((int)maxHealth); // Reset health to max health
     }
 
     // Method called when the player's health reaches zero

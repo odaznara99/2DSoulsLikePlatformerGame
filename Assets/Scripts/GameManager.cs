@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     //public Vector3 lastPlayerPosition; // Stores the player's position
     public string lastSceneName;
 
+    [Header("Prefabs")]
+    public GameObject playerPrefab; // Reference to the player prefab
+
     void Awake()
     {
         // Ensure there's only one GameManager instance
@@ -74,6 +77,8 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         // Reload the active scene to restart
+        //Destroy(PlayerControllerVersion2.Instance); // Destroy the current player instance
+        //Instantiate(playerPrefab, Vector3.zero, Quaternion.identity); // Instantiate a new player
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         SceneLoader.Instance.LoadScene(SceneManager.GetActiveScene().name,SpawnPointType.Checkpoint);
 

@@ -60,6 +60,10 @@ public class UIScreensManager : MonoBehaviour
 
     public void ShowScreen(string name)
     {
+        try
+        {
+
+        
         if (screenDict.TryGetValue(name, out GameObject target))
         {
             target.SetActive(true);
@@ -67,6 +71,13 @@ public class UIScreensManager : MonoBehaviour
         else
         {
             Debug.LogError($"Screen {name} not found!");
+        }
+
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError($"Screen {name} not found!");
+            throw;
         }
     }
 

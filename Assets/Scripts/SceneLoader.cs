@@ -100,8 +100,10 @@ public class SceneLoader : MonoBehaviour
             yield break;
         }
 
-        PlayerHealth.Instance.isInvincible = true;
-        PlayerControllerVersion2.Instance.enabled = false; // Disable player controls during loading
+        if (PlayerControllerVersion2.Instance != null) { 
+            PlayerHealth.Instance.isInvincible = true;
+            PlayerControllerVersion2.Instance.enabled = false; // Disable player controls during loading
+        }
 
         // Fade Out to black
         yield return StartCoroutine(Fade(0f, 1f));
@@ -135,28 +137,33 @@ public class SceneLoader : MonoBehaviour
         // Scene loaded, it will now show the scene name
         MessageManager.Instance.ShowMessage(sceneName,false,100);
 
+        if (PlayerControllerVersion2.Instance != null)
+        {
+            // Position the Player on the Start Point
+            if (spawnPoint == SpawnPointType.Start)
+            {
+                PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
+            }
+            // Position the Player on the EndPoint
+            else if (spawnPoint == SpawnPointType.Last)
+            {
+                PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToEndSpawn();
+            }
+            // Position the Player on the Checkpoint
+            else if (spawnPoint == SpawnPointType.Checkpoint)
+            {
+                PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
+            }
 
-        // Position the Player on the Start Point
-        if (spawnPoint == SpawnPointType.Start)
-        {
-            PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
-        } 
-        // Position the Player on the EndPoint
-        else if (spawnPoint == SpawnPointType.Last)
-        {
-            PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToEndSpawn();
+            PlayerHealth.Instance.isInvincible = true;
         }
-        // Position the Player on the Checkpoint
-        else if (spawnPoint == SpawnPointType.Checkpoint)
-        {
-            PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
-        }
-
-        PlayerHealth.Instance.isInvincible = true;
         // Start Fading Out - showing the Scene
         yield return StartCoroutine(Fade(1f, 0f));
-        PlayerControllerVersion2.Instance.enabled = true; // Disable player controls during loading
 
+        if (PlayerControllerVersion2.Instance != null)
+        {
+            PlayerControllerVersion2.Instance.enabled = true; // Disable player controls during loading
+        }
 
     }
 
