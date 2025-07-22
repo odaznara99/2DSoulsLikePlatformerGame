@@ -129,12 +129,13 @@ public class PlayerHealth : MonoBehaviour
                 if (player.currentState == PlayerState.Shielding)
                 {
                     playerAnimator.SetTrigger("Block");
-                    currentHealth -= 2;
+                    
                     damageAmount = damageAmount - (damageAmount * shieldDamageReduction);
+                    currentHealth -= damageAmount;
                     if (floatingTextPrefab)
                     {
                         GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
-                        ft.GetComponent<FloatingText>().SetText("-" + 2.ToString());
+                        ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
                     }
                     AudioManager.Instance.PlaySFX("Block");
                     Debug.Log("Shielded an attack! Took less damage. Current health: " + currentHealth);
