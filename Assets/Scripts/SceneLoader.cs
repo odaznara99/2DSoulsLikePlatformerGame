@@ -155,7 +155,7 @@ public class SceneLoader : MonoBehaviour
                 PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
             }
 
-            PlayerHealth.Instance.isInvincible = true;
+            
         }
         // Start Fading Out - showing the Scene
         yield return StartCoroutine(Fade(1f, 0f));
@@ -163,6 +163,8 @@ public class SceneLoader : MonoBehaviour
         if (PlayerControllerVersion2.Instance != null)
         {
             PlayerControllerVersion2.Instance.enabled = true; // Disable player controls during loading
+            PlayerControllerVersion2.Instance.ResetState(); // Reset State
+            PlayerHealth.Instance.isInvincible = false;
         }
 
     }

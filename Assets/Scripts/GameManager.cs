@@ -85,6 +85,8 @@ public class GameManager : MonoBehaviour
         // Reset game over flag and score
         isGameOver = false;
         playerScore = 0;
+        PlayerHealth.Instance.ResetHealth(); // Reset player health
+        
 
         FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
 

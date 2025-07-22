@@ -197,8 +197,23 @@ public class PlayerControllerVersion2 : MonoBehaviour
         movementSpeed = newMoveSpeed;
     }
 
+    public void ResetState()
+    {
+        // Interrupt or STOP the currentState Coroutine
+        if (currentStateCoroutine != null)
+            StopCoroutine(currentStateCoroutine);
+
+        DisplayLog("Reset to Neutral State");
+        // Replace the currentState to our newState
+        currentState = PlayerState.Neutral;
+
+        playerAnimator.SetTrigger("Revive");
+
+
+    }
+
     // == Method/Function to change a player state
-    private void SwitchPlayerState(PlayerState newState)
+    private void SwitchPlayerState(PlayerState newState, GameObject switcher)
     {
         //if (currentState == PlayerState.Jumping && newState == PlayerState.Jumping) {
         //    return;
@@ -289,7 +304,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 case PlayerState.ForceInterupt:
                     // Force Interupt, return to Neutral State
                     DisplayLog("Force Interupted, returning to Neutral State");
-                    SwitchPlayerState(PlayerState.Neutral);
+                    SwitchPlayerState(PlayerState.Neutral,gameObject);
                     break;
                 case PlayerState.Dead:
                     // Force Interupt, return to Neutral State
@@ -363,7 +378,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         else if (!isGrounded && isWallDetected)
         {
             // If not grounded and there is a Wall, then Wall Jump instead.
-            SwitchPlayerState(PlayerState.WallJumping);
+            SwitchPlayerState(PlayerState.WallJumping, gameObject);
         }
 
         // Wait until we start falling
@@ -371,7 +386,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             yield return null;
         }
-        SwitchPlayerState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral, gameObject);
     }
     IEnumerator DoWallSliding()
     {
@@ -384,7 +399,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
         //playerAnimator.SetBool("WallSlide", false);
-        SwitchPlayerState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral, gameObject);
 
     }
     IEnumerator DoWallJumping()
@@ -399,7 +414,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             yield return null;
         }
-        SwitchPlayerState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral, gameObject);
 
     }
     IEnumerator DoRolling()
@@ -417,7 +432,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             yield break; // If rolling is on cooldown, then stop the coroutine
         }
 
-        SwitchPlayerState(PlayerState.ForceInterupt);
+        SwitchPlayerState(PlayerState.ForceInterupt, gameObject);
         upperBodyCollider.enabled = false;
         playerAnimator.SetTrigger("Roll");
         rb.velocity = new Vector2(facingDirection * rollingSpeed, rb.velocity.y);
@@ -434,7 +449,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         upperBodyCollider.enabled = true;
         lastRollingTimestamp = rollingCooldown; // Set the cooldown for rolling
         SwitchXVelocityState(XVelocityState.Normal);
-        SwitchPlayerState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral, gameObject);
     }
     IEnumerator DoContinuousAttack()
     {
@@ -444,7 +459,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchXVelocityState(XVelocityState.Slow);
         DoAttacking();
         yield return new WaitForSeconds(attackIntervalTime);
-        SwitchPlayerState(PlayerState.Neutral);
+        SwitchPlayerState(PlayerState.Neutral, gameObject);
 
     }
     private void DoAttacking()
@@ -516,7 +531,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         yield return new WaitForSeconds(hurtSeconds);
 
-        SwitchPlayerState(PlayerState.ForceInterupt);
+        SwitchPlayerState(PlayerState.ForceInterupt, gameObject);
     }
 
     IEnumerator DoShielding()
@@ -551,14 +566,14 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public void OnMoveRight() => SetFloatInputX(1);              // PointerDown, PointerEnter
     public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
     public void OnStop() => SetFloatInputX(0);
-    public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral);   // PointerExit, PointerUp of Any Control Buttons
+    public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral, gameObject);   // PointerExit, PointerUp of Any Control Buttons
     public void OnJump()
     {
 
         if (currentDoubleJumpCount < maxDoubleJumpCount && currentXVelocityState != XVelocityState.Rolling)
         {
 
-            SwitchPlayerState(PlayerState.Jumping);
+            SwitchPlayerState(PlayerState.Jumping, gameObject);
             if (currentDoubleJumpCount < maxDoubleJumpCount)
             {
                 currentDoubleJumpCount++; // Increment the double jump count
@@ -571,7 +586,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         else if (currentState == PlayerState.WallSliding && isWallDetected)
         {
             // If player is wall sliding, then wall jump instead
-            SwitchPlayerState(PlayerState.WallJumping);
+            SwitchPlayerState(PlayerState.WallJumping, gameObject);
         }
         else
         {
@@ -584,12 +599,12 @@ public class PlayerControllerVersion2 : MonoBehaviour
             DisplayLog("Already Attacking, cannot attack again!");
             return; // If already attacking, then do nothing
         }
-        SwitchPlayerState(PlayerState.Attacking); 
+        SwitchPlayerState(PlayerState.Attacking, gameObject); 
     }    
     public void OnRoll() => SwitchXVelocityState(XVelocityState.Rolling);  // PointerDown, PointerEnter
-    public void OnHoldShield() => SwitchPlayerState(PlayerState.Shielding);     // PointerDown, PointerEnter
-    public void OnHurt() => SwitchPlayerState(PlayerState.Hurting);
-    public void OnDead() => SwitchPlayerState(PlayerState.Dead);
+    public void OnHoldShield() => SwitchPlayerState(PlayerState.Shielding, gameObject);     // PointerDown, PointerEnter
+    public void OnHurt() => SwitchPlayerState(PlayerState.Hurting, gameObject);
+    public void OnDead() => SwitchPlayerState(PlayerState.Dead, gameObject);
 
     void UpdateCooldownTimers()
     {
@@ -666,17 +681,17 @@ public class PlayerControllerVersion2 : MonoBehaviour
             {
                 if (inputX == 1 && facingDirection == 1)
                 {
-                    SwitchPlayerState(PlayerState.WallSliding);
+                    SwitchPlayerState(PlayerState.WallSliding, gameObject);
                 }
                 else if (inputX == -1 && facingDirection == -1)
                 {
-                    SwitchPlayerState(PlayerState.WallSliding);
+                    SwitchPlayerState(PlayerState.WallSliding, gameObject);
                 } 
                 else
                 {
                     // If player is not moving, then stop the wall sliding
                     playerAnimator.SetTrigger("Jump");
-                    SwitchPlayerState(PlayerState.Neutral);
+                    SwitchPlayerState(PlayerState.Neutral, gameObject);
 
                 }
             }

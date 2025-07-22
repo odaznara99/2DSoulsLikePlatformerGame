@@ -16,6 +16,7 @@ TagManager:
   - EndPoint
   - CheckPoint
   - Boss
+  - Breakable
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Enemy
   - Ground
   - Boss
-  - 
+  - Breakable
   - 
   - 
   - 
