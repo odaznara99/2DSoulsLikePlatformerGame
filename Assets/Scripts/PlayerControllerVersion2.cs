@@ -637,6 +637,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         playerAnimator.SetFloat("AirSpeedY", rb.velocity.y);
         playerAnimator.SetBool("WallSlide", currentState == PlayerState.WallSliding);
         playerAnimator.SetBool("IdleBlock", currentState == PlayerState.Shielding);
+        playerAnimator.SetBool("stillRolling", currentXVelocityState == XVelocityState.Rolling);
 
         if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {
