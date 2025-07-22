@@ -28304,22 +28304,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 3.88
       objectReference: {fileID: 0}
-    - target: {fileID: 2566008451990348206, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2566008451990348206, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1031134899
-      objectReference: {fileID: 0}
-    - target: {fileID: 3162112555540951446, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3162112555540951446, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1031134899
-      objectReference: {fileID: 0}
     - target: {fileID: 6882211167080817599, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_Name
       value: LeverSystem

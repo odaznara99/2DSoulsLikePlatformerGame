@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class LeverGateController : MonoBehaviour
 {
@@ -16,10 +18,14 @@ public class LeverGateController : MonoBehaviour
 
     private bool isPlayerNearby = false;
 
+    public Button leverButton; // Reference to the UI Button
+
     void Start()
     {
         if (gate != null)
             initialGatePosition = gate.transform.position;
+
+        leverButton.onClick.AddListener(OnButtonClick);
     }
 
     bool canToggleGate()
@@ -37,10 +43,24 @@ public class LeverGateController : MonoBehaviour
 
     void Update()
     {
-        if (canToggleGate() && Input.GetKeyDown(KeyCode.E))
+        if (canToggleGate())
         {
-            ToggleGate();
+            leverButton.gameObject.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.E)) {
+                ToggleGate();
+            }
         }
+        else
+        {
+            leverButton.gameObject.SetActive(false);
+        }
+    }
+
+    void OnButtonClick() {
+        ToggleGate();
+        leverButton.gameObject.SetActive(false);
+
     }
 
     void ToggleGate()
