@@ -44,13 +44,13 @@ public class UIButtonsManager : MonoBehaviour
         // Auto-assign event triggers for the buttons
         AddEventTrigger(buttonLeft, EventTriggerType.PointerEnter, m_playerController.OnMoveLeft);
         AddEventTrigger(buttonLeft, EventTriggerType.PointerExit, m_playerController.OnStop);
-        AddEventTrigger(buttonLeft, EventTriggerType.PointerUp, m_playerController.OnMoveLeft);
-        AddEventTrigger(buttonLeft, EventTriggerType.PointerDown, m_playerController.OnStop);
+        AddEventTrigger(buttonLeft, EventTriggerType.PointerUp, m_playerController.OnStop);
+        AddEventTrigger(buttonLeft, EventTriggerType.PointerDown, m_playerController.OnMoveLeft);
 
         AddEventTrigger(buttonRight, EventTriggerType.PointerEnter, m_playerController.OnMoveRight);
         AddEventTrigger(buttonRight, EventTriggerType.PointerExit, m_playerController.OnStop);
-        AddEventTrigger(buttonRight, EventTriggerType.PointerUp, m_playerController.OnMoveRight);
-        AddEventTrigger(buttonRight, EventTriggerType.PointerDown, m_playerController.OnStop);
+        AddEventTrigger(buttonRight, EventTriggerType.PointerUp, m_playerController.OnStop);
+        AddEventTrigger(buttonRight, EventTriggerType.PointerDown, m_playerController.OnMoveRight);
 
         AddEventTrigger(buttonAttack, EventTriggerType.PointerDown, m_playerController.OnHoldAttack);
 
