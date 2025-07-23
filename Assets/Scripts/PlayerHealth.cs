@@ -110,11 +110,17 @@ public class PlayerHealth : MonoBehaviour
 
     }
 
+    public bool IsDead() { 
+        return currentHealth <= 0; // Check if the player is dead
+    }
+
     // Method to handle taking damage
     public void TakeDamage(float damageAmount, GameObject attacker, float knockBackX =1f, float knockBackY = 1f)
     {
         Debug.Log("Player was attacked by " + attacker);
         if (isInvincible) return;
+
+        if (IsDead()) return;
 
         if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
         {
@@ -149,6 +155,7 @@ public class PlayerHealth : MonoBehaviour
                             ft.GetComponent<FloatingText>().SetText("-" +damageAmount.ToString());
                         }
                         Die(); // If damage exceeds current health, call Die method
+                        return;
                     }
                     // Direct Hit to the Player
                     else 
@@ -161,7 +168,7 @@ public class PlayerHealth : MonoBehaviour
                         if (floatingTextPrefab)
                         {
                             GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
-                            ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
+                            ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
                         }
                         //Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
                     }
@@ -181,6 +188,12 @@ public class PlayerHealth : MonoBehaviour
                 
                 Debug.Log("Player parry the attack! No Damage Taken!");
             }
+        }
+
+        if (IsDead())
+        {
+            currentHealth = 0; // Ensure health doesn't go below zero
+            Die(); // Call the Die method if health reaches zero
         }
     }
 

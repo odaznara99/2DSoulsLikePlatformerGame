@@ -15,7 +15,7 @@ namespace Cainos.LucidEditor
         protected virtual void OnEnable()
         {
             hideMonoScript = target.GetType().IsDefined(typeof(HideMonoScriptAttribute), true);
-            //disableEditor = target.GetType().IsDefined(typeof(DisableLucidEditorAttribute), true);
+            //disableEditor = playerTarget.GetType().IsDefined(typeof(DisableLucidEditorAttribute), true);
         }
 
         public override void OnInspectorGUI()

@@ -96,7 +96,6 @@ GameObject:
   - component: {fileID: 5655958522134622661}
   - component: {fileID: 3425598993956487543}
   - component: {fileID: 4634241829490386981}
-  - component: {fileID: 6638056412643592011}
   m_Layer: 8
   m_Name: Dragon Lord
   m_TagString: Boss
@@ -269,12 +268,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   animator: {fileID: 0}
-  maxHealth: 500
-  currentHealth: 500
+  maxHealth: 1000
+  currentHealth: 1000
   floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
   textSpawnPoint: {fileID: 3102984410289515296}
   worldCanvas: {fileID: 0}
-  followRange: 8
+  followRangeScript: {fileID: 0}
   attackRange: 2
   playerLayer:
     serializedVersion: 2
@@ -293,48 +292,5 @@ MonoBehaviour:
   patrolPauseTimer: 0
   currentPatrolTarget: {fileID: 0}
   hasArrivedAtPatrolPoint: 0
---- !u!61 &6638056412643592011
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8730388020545806281}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.2666667, y: 1.7}
-    newSize: {x: 1.2666667, y: 1.7}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 9, y: 1.86}
-  m_EdgeRadius: 0
+  chaseDuration: 3
+  restDuration: 1.5

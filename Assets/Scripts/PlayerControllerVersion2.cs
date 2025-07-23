@@ -652,6 +652,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         playerAnimator.SetBool("WallSlide", currentState == PlayerState.WallSliding);
         playerAnimator.SetBool("IdleBlock", currentState == PlayerState.Shielding);
         playerAnimator.SetBool("stillRolling", currentXVelocityState == XVelocityState.Rolling);
+        playerAnimator.SetBool("IsAlive", currentState != PlayerState.Dead);
 
         if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {

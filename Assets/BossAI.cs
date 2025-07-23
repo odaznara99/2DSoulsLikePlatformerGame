@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BossAI : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class BossAI : MonoBehaviour
     [SerializeField] private Transform worldCanvas;
 
     [Header("Detection")]
-    public float followRange = 8f;
+    public BossFollowRangeTrigger followRangeScript;
     public float attackRange = 2f;
     public LayerMask playerLayer;
 
@@ -30,7 +30,6 @@ public class BossAI : MonoBehaviour
     [SerializeField] private float attackHitRange = 1.5f;
 
     private Rigidbody2D rb;
-    private bool playerInArea = false;
     private bool isAttacking = false;
     private bool facingRight = true;
     private float lastAttackTime = -999f;
@@ -42,6 +41,16 @@ public class BossAI : MonoBehaviour
     [SerializeField] private float patrolPauseTimer = 0f;
     [SerializeField] private Transform currentPatrolTarget;
     [SerializeField] private bool hasArrivedAtPatrolPoint = false;
+
+
+    [Header("Chase Break Settings")]
+    [SerializeField] private float chaseDuration = 3f;       // how long to chase before stopping
+    [SerializeField] private float restDuration = 1.5f;       // how long to rest before chasing again
+
+    private float chaseTimer = 0f;
+    private float restTimer = 0f;
+    private bool isResting = false;
+
 
 
     void Start()
@@ -57,6 +66,10 @@ public class BossAI : MonoBehaviour
 
     void Update()
     {
+        if (!player)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+        }
 
         animator.SetFloat("XVelocity", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("YVelocity", rb.velocity.y);
@@ -64,8 +77,24 @@ public class BossAI : MonoBehaviour
         if (isAttacking)
             return;
 
+        // Handle Resting State
+        if (isResting)
+        {
+            restTimer -= Time.deltaTime;
+            if (restTimer <= 0f)
+            {
+                isResting = false;
+                chaseTimer = 0f;
+            }
 
-        if (playerInArea && player != null)
+            rb.velocity = Vector2.zero;
+            animator.SetBool("isMoving", false);
+            return; // Skip follow/attack/patrol while resting
+        }
+
+
+
+        if (followRangeScript.IsPlayerInArea && player != null)
         {
             float dist = Vector2.Distance(transform.position, player.position);
 
@@ -86,6 +115,24 @@ public class BossAI : MonoBehaviour
 
     private void FollowPlayer()
     {
+        if (player == null) return;
+
+        chaseTimer += Time.deltaTime;
+
+        float distance = Vector2.Distance(transform.position, player.position);
+
+        // If chase too long and still not in attack range → rest
+        if (chaseTimer >= chaseDuration && distance > attackRange)
+        {
+            isResting = true;
+            restTimer = restDuration;
+            rb.velocity = Vector2.zero;
+            animator.SetBool("isMoving", false);
+            animator.SetTrigger("Taunt");
+            return;
+        }
+
+        // Otherwise, keep chasing
         Vector2 direction = (player.position - transform.position).normalized;
         Move(direction.x);
     }
@@ -194,7 +241,7 @@ public class BossAI : MonoBehaviour
         if (floatingTextPrefab && worldCanvas)
         {
             GameObject ft = Instantiate(floatingTextPrefab, textSpawnPoint.position, Quaternion.identity, worldCanvas.transform);
-            ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
+            ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
         }
 
         // Optional: Trigger Hurt animation
@@ -245,26 +292,6 @@ public class BossAI : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackHitRange);
-    }
-
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (((1 << collision.gameObject.layer) & playerLayer) != 0)
-        {
-            playerInArea = true;
-            player = collision.transform;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.transform == player)
-        {
-            playerInArea = false;
-            player = null;
-        }
     }
 
 }

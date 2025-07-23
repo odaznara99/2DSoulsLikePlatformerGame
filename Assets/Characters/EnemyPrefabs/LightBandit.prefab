@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 61368513597639598}
   m_Layer: 6
   m_Name: GroundSensor
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

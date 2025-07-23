@@ -122,8 +122,8 @@ MonoBehaviour:
   offset: {x: 0, y: 0.8, z: 0}
   fallLookAhead: -1
   lookAheadVelocity: -0.5
-  minX: -5
-  maxX: 45
+  minX: -7
+  maxX: 27
 --- !u!114 &3739670623712119169
 MonoBehaviour:
   m_ObjectHideFlags: 0

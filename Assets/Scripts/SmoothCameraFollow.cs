@@ -1,10 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SmoothCameraFollow : MonoBehaviour
 {
-    public Transform target;
-    public Rigidbody2D targetRigidbody;  // Assign the player's Rigidbody2D
-    public PlayerControllerVersion2 targetHeroKnight; // Reference to the PlayerController script for additional checks
+    [Header("References")]
+    public Transform playerTarget;
+    public Transform bossTarget;
+    private Rigidbody2D playerRigidbody;  // Assign the player's Rigidbody2D
+    private PlayerControllerVersion2 playerController; // Reference to the PlayerController script for additional checks
+
+    public bool followBothTargets = false; // Toggle this during boss fight
+
+    [Header("Camera Settings")]
     public float smoothTime = 0.3f;
     public Vector3 offset = new Vector3(0f, 1.5f, -10f);
     public float fallLookAhead = -2f;  // How much to look down when falling
@@ -16,31 +22,63 @@ public class SmoothCameraFollow : MonoBehaviour
 
     private void Update()
     {
-        if (!target)
+        if (!playerTarget)
         {
-            target = GameObject.FindGameObjectWithTag("Player").transform;
-            targetRigidbody = target.GetComponent<Rigidbody2D>();
-            targetHeroKnight = target.GetComponent<PlayerControllerVersion2>();
+            playerTarget = GameObject.FindGameObjectWithTag("Player").transform;
+            playerRigidbody = playerTarget.GetComponent<Rigidbody2D>();
+            playerController = playerTarget.GetComponent<PlayerControllerVersion2>();
         }
     }
 
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
-        if (target == null || targetRigidbody == null || targetHeroKnight.currentState==PlayerState.Dead) return;
+        if (playerTarget == null || playerRigidbody == null || playerController.currentState==PlayerState.Dead) return;
 
         Vector3 dynamicOffset = offset;
 
         // If falling, shift the camera downward slightly
-        if (targetRigidbody.velocity.y < lookAheadVelocity & !targetHeroKnight.isGrounded)
+        if (playerRigidbody.velocity.y < lookAheadVelocity & !playerController.isGrounded)
         {
             dynamicOffset.y += fallLookAhead; // Looks down
         }
 
-        Vector3 desiredPosition = target.position + dynamicOffset;
+        Vector3 desiredPosition = playerTarget.position + dynamicOffset;
         desiredPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX); // Clamp X axis
         Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
 
         // Only update x and y to keep the Z constant (2D camera)
+        transform.position = new Vector3(smoothedPosition.x, smoothedPosition.y, transform.position.z);
+    }*/
+    void FixedUpdate()
+    {
+        if (!playerTarget || !playerRigidbody || playerController == null) return;
+
+        Vector3 dynamicOffset = offset;
+
+        if (!followBothTargets && playerRigidbody.velocity.y < lookAheadVelocity && !playerController.isGrounded)
+        {
+            dynamicOffset.y += fallLookAhead;
+        }
+
+        Vector3 targetPosition;
+
+        if (followBothTargets && bossTarget != null)
+        {
+            // 📌 Center between Player and Boss
+            Vector3 midpoint = (playerTarget.position + bossTarget.position) / 2f;
+            targetPosition = midpoint + dynamicOffset;
+        }
+        else
+        {
+            // 👤 Follow just the player
+            targetPosition = playerTarget.position + dynamicOffset;
+        }
+
+        // Clamp X axis
+        targetPosition.x = Mathf.Clamp(targetPosition.x, minX, maxX);
+
+        // Smoothly move
+        Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
         transform.position = new Vector3(smoothedPosition.x, smoothedPosition.y, transform.position.z);
     }
 
@@ -53,5 +91,11 @@ public class SmoothCameraFollow : MonoBehaviour
     public void SetMaxCameraBounds(float maxX)
     {
         this.maxX = maxX;
+    }
+
+    // Call this when entering or exiting boss area:
+    public void SetFollowBothTargets(bool enabled)
+    {
+        followBothTargets = enabled;
     }
 }

@@ -339,7 +339,7 @@ public class Bandit : MonoBehaviour
                 if (floatingTextPrefab)
                 {
                     GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
-                    ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
+                    ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
                 }
                 //Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
                 //Duration when the Enemy will be on Hurt State

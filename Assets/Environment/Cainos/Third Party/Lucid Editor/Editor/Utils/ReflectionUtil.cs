@@ -230,16 +230,16 @@ namespace Cainos.LucidEditor
             return type.GetMembers(bindingAttr).Concat(GetAllMembersIncludingInherited(type.BaseType));
         }
 
-        // public static MethodInfo[] GetAllMethods(object target, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        // public static MethodInfo[] GetAllMethods(object playerTarget, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         // {
-        //     if (cacheAllMethods.ContainsKey((target, bindingAttr)))
+        //     if (cacheAllMethods.ContainsKey((playerTarget, bindingAttr)))
         //     {
-        //         return cacheAllMethods[(target, bindingAttr)];
+        //         return cacheAllMethods[(playerTarget, bindingAttr)];
         //     }
         //     else
         //     {
-        //         MethodInfo[] methodInfos = target.GetType().GetMethods(bindingAttr);
-        //         cacheAllMethods.Add((target, bindingAttr), methodInfos);
+        //         MethodInfo[] methodInfos = playerTarget.GetType().GetMethods(bindingAttr);
+        //         cacheAllMethods.Add((playerTarget, bindingAttr), methodInfos);
         //         return methodInfos;
         //     }
         // }

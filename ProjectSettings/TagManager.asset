@@ -17,6 +17,7 @@ TagManager:
   - CheckPoint
   - Boss
   - Breakable
+  - ZoneCamera
   layers:
   - Default
   - TransparentFX
