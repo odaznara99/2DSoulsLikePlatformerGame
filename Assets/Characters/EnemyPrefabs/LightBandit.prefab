@@ -63,8 +63,10 @@ MonoBehaviour:
   attackRange: 0.68
   attackCooldown: 1
   attackTiming: 0.5
-  health: 100
   damage: 40
+  maxHealth: 100
+  currentHealth: 100
+  healthBarPrefab: {fileID: 5642192281324820, guid: 9e4ec08b4ec92bc479a6bc8d76622f0e, type: 3}
   floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
   worldCanvas: {fileID: 0}
   player: {fileID: 0}

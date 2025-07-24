@@ -41,8 +41,14 @@ public class Bandit : MonoBehaviour
     public float attackRange = 1.5f; // Range in which the enemy attacks the player    
     public float attackCooldown = 1f; // Time between attacks
     public float attackTiming = 0.5f; // Timing the end of Attack Animation
-    public float health = 100; // Health of the enemy
+    
     public float damage = 10; // Damage dealt to the player
+
+    [Header("Health")]
+    [SerializeField] private float maxHealth = 100f;
+    public float currentHealth = 100f; // Health of the enemy
+    [SerializeField] private GameObject healthBarPrefab;
+    private FloatingHealthbar healthBarUI;
 
     [Header("Floating Damage Text")]
     public GameObject floatingTextPrefab;
@@ -50,7 +56,7 @@ public class Bandit : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform player; // Reference to the player position
-    [SerializeField] private PlayerHealth playerHealth; // Reference to the player's health script
+    [SerializeField] private PlayerHealth playerHealth; // Reference to the player's currentHealth script
     [SerializeField] private PlayerControllerVersion2 playerScript; // Reference to the player main script
     [SerializeField] private float lastAttackTime = 0f; // Track when the enemy last attacked
     //[SerializeField] private bool        isAttacking = false; // Track if the enemy is currently attacking
@@ -117,6 +123,16 @@ public class Bandit : MonoBehaviour
 
         // Ignore Collision Between Enemy
         Physics2D.IgnoreLayerCollision(6, 6);
+
+        // HEALTH BAR SETUP
+        currentHealth = maxHealth;
+
+        if (healthBarPrefab != null)
+        {
+            GameObject hb = Instantiate(healthBarPrefab, transform.position, Quaternion.identity);
+            healthBarUI = hb.GetComponent<FloatingHealthbar>();
+            healthBarUI.SetTarget(this.transform);
+        }
 
     }
 
@@ -297,7 +313,7 @@ public class Bandit : MonoBehaviour
     // Method to receive damage when attacked by the player
     public void BanditReceiveDamage(int damageAmount)
     {
-        if (health > 0 && currentState != EnemyState.Dead)
+        if (currentHealth > 0 && currentState != EnemyState.Dead)
         {
             Log("Enemy: Receives " + damageAmount + " damage!");
             StartCoroutine(HurtState(damageAmount));
@@ -324,9 +340,15 @@ public class Bandit : MonoBehaviour
         if (currentState != EnemyState.Dead)
         {
             m_animator.SetTrigger("Hurt");
-            health -= damageAmount;
+            currentHealth -= damageAmount;
+            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
-            if (health <= 0)
+            if (healthBarUI != null)
+            {
+                healthBarUI.SetHealth(currentHealth, maxHealth);
+            }
+
+            if (currentHealth <= 0)
             {
                 //Die();
                 SwitchEnemyState(EnemyState.Dead); // Switch to Dead state
@@ -341,7 +363,7 @@ public class Bandit : MonoBehaviour
                     GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
                     ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
                 }
-                //Log("Enemy took " + damageAmount + " damage! Remaining health: " + health);
+                //Log("Enemy took " + damageAmount + " damage! Remaining currentHealth: " + currentHealth);
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(0.3f);
                 Log("Hurting Stops");
@@ -358,7 +380,7 @@ public class Bandit : MonoBehaviour
         yield break;
     }
 
-    // Method to destroy the enemy when its health reaches zero
+    // Method to destroy the enemy when its currentHealth reaches zero
 
     //Method to make the Bandit Jump
     void DoJump()

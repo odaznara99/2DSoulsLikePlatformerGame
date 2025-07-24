@@ -9,8 +9,8 @@ public class PlayerHealth : MonoBehaviour
     private Animator        playerAnimator; //Reference to player animator
     private GameManager     gameManager; //Reference to GameManager script
     private Rigidbody2D     rb; // Reference to the player's Rigidbody2D
-    public  float             maxHealth = 100f; // The maximum health the player can have
-    public  float             currentHealth = 0;  // The player's current health
+    public  float             maxHealth = 100f; // The maximum currentHealth the player can have
+    public  float             currentHealth = 0;  // The player's current currentHealth
     public float shieldDamageReduction = 0.90f;
     public float shieldKnockForce = 3f; // Force applied to the enemy when parrying
     public float hazardDamage = 25; // Damage taken from hazards
@@ -31,7 +31,7 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         //Debug.Log("PlayerHealth script started.");
-        // Initialize the player's health to the maximum at the start
+        // Initialize the player's currentHealth to the maximum at the start
         if (currentHealth == 0)
             currentHealth = maxHealth;
 
@@ -41,7 +41,7 @@ public class PlayerHealth : MonoBehaviour
         gameManager     = GameManager.instance; // Get the GameManager instance
         
         
-        UpdateHealthUI(); // If you have a UI to display health, update it here
+        UpdateHealthUI(); // If you have a UI to display currentHealth, update it here
 
     }
 
@@ -105,7 +105,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (healthText.text == "0/" + maxHealth && !gameManager.IsGameOver())
         {
-            UpdateHealthUI(); // Update the health UI if it hasn't been set yet
+            UpdateHealthUI(); // Update the currentHealth UI if it hasn't been set yet
         }
 
     }
@@ -169,7 +169,7 @@ public class PlayerHealth : MonoBehaviour
                             GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
                             ft.GetComponent<FloatingText>().SetText("-" +damageAmount.ToString());
                         }
-                        Die(); // If damage exceeds current health, call Die method
+                        Die(); // If damage exceeds current currentHealth, call Die method
                         return;
                     }
                     // Direct Hit to the Player
@@ -185,11 +185,11 @@ public class PlayerHealth : MonoBehaviour
                             GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
                             ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
                         }
-                        //Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current health: " + currentHealth);
+                        //Debug.Log("Player: Took direct hit " + damageAmount + " damage. Current currentHealth: " + currentHealth);
                     }
                 }
  
-                UpdateHealthUI(); // Update the UI to reflect the health change
+                UpdateHealthUI(); // Update the UI to reflect the currentHealth change
 
             }
             //Parry Successful No Damage to the Player
@@ -208,8 +208,8 @@ public class PlayerHealth : MonoBehaviour
 
         if (IsDead())
         {
-            currentHealth = 0; // Ensure health doesn't go below zero
-            Die(); // Call the Die method if health reaches zero
+            currentHealth = 0; // Ensure currentHealth doesn't go below zero
+            Die(); // Call the Die method if currentHealth reaches zero
         }
     }
 
@@ -254,7 +254,7 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth += healAmount;
 
-        // Make sure health doesn't exceed the maximum
+        // Make sure currentHealth doesn't exceed the maximum
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
@@ -262,14 +262,14 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("Player healed " + healAmount + " points. Current health: " + currentHealth);
 
-        UpdateHealthUI(); // Update the UI to reflect the health change
+        UpdateHealthUI(); // Update the UI to reflect the currentHealth change
     }
 
     public void ResetHealth() { 
-        Heal((int)maxHealth); // Reset health to max health
+        Heal((int)maxHealth); // Reset currentHealth to max currentHealth
     }
 
-    // Method called when the player's health reaches zero
+    // Method called when the player's currentHealth reaches zero
     private void Die()
     {
         Debug.Log("Player died!");
@@ -278,18 +278,18 @@ public class PlayerHealth : MonoBehaviour
         GameManager.instance.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
     }
 
-    // Optional: Method to update the health UI
+    // Optional: Method to update the currentHealth UI
     private void UpdateHealthUI()
     {
         if (healthBar == null) { 
             Debug.LogWarning("Health bar still not assigned! Trying to find...");
             healthBar = FindingChildObjects("HealthBar").GetComponent<UnityEngine.UI.Image>();
             healthText = FindingChildObjects("HealthText").GetComponent<Text>();
-            UpdateHealthUI(); // Retry updating the UI after finding the health bar
+            UpdateHealthUI(); // Retry updating the UI after finding the currentHealth bar
             return;
         }
 
-        // Implement this method to update the player's health bar or any other UI element that displays health
+        // Implement this method to update the player's currentHealth bar or any other UI element that displays currentHealth
         // For example, if using Unity UI:
         healthBar.fillAmount = (float)currentHealth / maxHealth;
         healthText.text = currentHealth + "/" + maxHealth;
