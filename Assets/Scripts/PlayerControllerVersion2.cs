@@ -435,6 +435,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchPlayerState(PlayerState.ForceInterupt, gameObject);
         upperBodyCollider.enabled = false;
         playerAnimator.SetTrigger("Roll");
+        PlayerHealth.Instance.isInvincible = true; // Set player invincible during rolling
         rb.velocity = new Vector2(facingDirection * rollingSpeed, rb.velocity.y);
         yield return new WaitForSeconds(rollDuration);
 
@@ -446,6 +447,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
 
         // Go back to Normal State and Apply a Cooldown
+        PlayerHealth.Instance.isInvincible = false;
         upperBodyCollider.enabled = true;
         lastRollingTimestamp = rollingCooldown; // Set the cooldown for rolling
         SwitchXVelocityState(XVelocityState.Normal);
@@ -809,6 +811,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
             }
         }
 #endif
+    }
+
+    public bool IsFacingRight()
+    {
+        return facingDirection == 1;
     }
 
 

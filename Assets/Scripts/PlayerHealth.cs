@@ -122,13 +122,28 @@ public class PlayerHealth : MonoBehaviour
 
         if (IsDead()) return;
 
+        // Get direction to attacker (normalized)
+        Vector2 toAttacker = (attacker.transform.position - transform.position).normalized;
+
+        // Get player's facing direction as vector
+        Vector2 playerFacing = player.IsFacingRight() ? Vector2.right : Vector2.left;
+
+        // Dot product: +1 = same direction, -1 = opposite direction
+        float dot = Vector2.Dot(playerFacing, toAttacker);
+
+        // Optional Debug
+        // Debug.Log("Dot Product: " + dot);
+        bool attackerInFront = dot > 0.5f; // roughly in front
+        Debug.Log("Attacker in front: " + attackerInFront);
+
+
         if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
         {
             if (!player.isParry)
             {
 
                 //Shielded the Attack
-                if (player.currentState == PlayerState.Shielding)
+                if (player.currentState == PlayerState.Shielding && attackerInFront)
                 {
                     playerAnimator.SetTrigger("Block");
                     
@@ -136,8 +151,8 @@ public class PlayerHealth : MonoBehaviour
                     currentHealth -= damageAmount;
                     if (floatingTextPrefab)
                     {
-                        GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
-                        ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
+                        GameObject ft2 = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                        ft2.GetComponent<FloatingText>().SetText("BLOCKED");
                     }
                     AudioManager.Instance.PlaySFX("Block");
                     Debug.Log("Shielded an attack! Took less damage. Current health: " + currentHealth);
@@ -185,7 +200,8 @@ public class PlayerHealth : MonoBehaviour
                 if(attacker != null){
                     ParrySuccess(attacker); // Knock the enemy back
                 }
-                
+                GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                ft.GetComponent<FloatingText>().SetText("PARRIED");
                 Debug.Log("Player parry the attack! No Damage Taken!");
             }
         }

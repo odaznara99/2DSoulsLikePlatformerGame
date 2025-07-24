@@ -1156,6 +1156,7 @@ GameObject:
   - component: {fileID: 218244217}
   - component: {fileID: 218244219}
   - component: {fileID: 218244220}
+  - component: {fileID: 218244221}
   m_Layer: 0
   m_Name: BossAreaZoneTrigger
   m_TagString: Untagged
@@ -1235,9 +1236,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fda0ce30c4aa094ba1cdbb49f8da90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  playerInArea: 0
+  player: {fileID: 0}
+--- !u!114 &218244221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218244216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60550e739df9fc842a22dd186a3ef7be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraFollow: {fileID: 2006590828}
+  bossTarget: {fileID: 744868330}
+  revertOnExit: 1
 --- !u!4 &221580636 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4371201966070470695, guid: 8cc938fe21b426a4daedf2f6c7e34c80, type: 3}
@@ -27483,6 +27498,17 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 7892722826777475049, guid: ddd793753777b0d45a75d7f620c381b9, type: 3}
   m_PrefabInstance: {fileID: 6367589360207373156}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2006590828 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8246708954341854765, guid: ddd793753777b0d45a75d7f620c381b9, type: 3}
+  m_PrefabInstance: {fileID: 6367589360207373156}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b511f69275e8e34fa4d0688434ad11b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2027655435 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4049938642775700374, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
@@ -28169,10 +28195,6 @@ PrefabInstance:
       propertyPath: worldCanvas
       value: 
       objectReference: {fileID: 1073447530}
-    - target: {fileID: 4558864163601808935, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.199
-      objectReference: {fileID: 0}
     - target: {fileID: 7721701825642549688, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.81
