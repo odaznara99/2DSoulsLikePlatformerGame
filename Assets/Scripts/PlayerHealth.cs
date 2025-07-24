@@ -197,13 +197,15 @@ public class PlayerHealth : MonoBehaviour
             }
         }
 
-        UpdateHealthUI(); // Update the UI to reflect the currentHealth change
+        
 
         if (IsDead())
         {
             currentHealth = 0; // Ensure currentHealth doesn't go below zero
             Die(); // Call the Die method if currentHealth reaches zero
         }
+
+        UpdateHealthUI(); // Update the UI to reflect the currentHealth change
 
         // Save back to GameManager
         gameManager.playerData.currentHealth = currentHealth;
@@ -270,6 +272,7 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player died!");
         player.OnDead();
+        UpdateHealthUI();
         // Optionally, you can trigger a death screen, restart the level, or respawn the player.
         gameManager.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
     }

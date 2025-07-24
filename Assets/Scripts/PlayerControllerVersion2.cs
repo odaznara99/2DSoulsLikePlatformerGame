@@ -51,7 +51,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     private Rigidbody2D rb;
     private PlayerHealth playerHealth;
     private Sensor_HeroKnight m_groundSensor, m_wallSensorR1, m_wallSensorR2, m_wallSensorL1, m_wallSensorL2;
-    private BoxCollider2D upperBodyCollider;
+    public CapsuleCollider2D upperBodyCollider;
     private int facingDirection = 1;
     private int currentAttackAnimation = 0;
     private float m_delayToIdle = 0.0f;
@@ -117,7 +117,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     {
         playerAnimator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        upperBodyCollider = GetComponent<BoxCollider2D>();
+        //upperBodyCollider = GetComponent<BoxCollider2D>();
         playerHealth = GetComponent<PlayerHealth>();
 
         m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();

@@ -13,6 +13,8 @@ public class BossAI : MonoBehaviour
     [SerializeField] private GameObject floatingTextPrefab;
     [SerializeField] private Transform textSpawnPoint;
     [SerializeField] private Transform worldCanvas;
+    [SerializeField] private BossHealthUI bossHealthUI;
+
 
     [Header("Detection")]
     public BossFollowRangeTrigger followRangeScript;
@@ -67,6 +69,13 @@ public class BossAI : MonoBehaviour
         currentPatrolTarget = rightPatrolPoint;
         currentHealth = maxHealth;
         worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
+
+        if (bossHealthUI != null)
+        {
+            bossHealthUI.SetMaxHealth(maxHealth);
+        }
+
+        //bossHealthUI.SetHealthUIActive(false);
     }
 
     void Update()
@@ -247,6 +256,7 @@ public class BossAI : MonoBehaviour
         if (isAttacking) return;
 
         currentHealth -= damageAmount;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
         // Optional: Show floating damage text
         if (floatingTextPrefab && worldCanvas)
@@ -263,11 +273,18 @@ public class BossAI : MonoBehaviour
 
         };
 
+        if (bossHealthUI != null)
+        {
+            bossHealthUI.SetHealth(currentHealth);
+        }
+
         if (IsDead())
         {
             Die();
         }
     }
+
+
 
     public void EndHurtAnimation()
     {
