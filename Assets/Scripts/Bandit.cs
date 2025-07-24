@@ -134,6 +134,8 @@ public class Bandit : MonoBehaviour
             healthBarUI.SetTarget(this.transform);
         }
 
+        healthBarUI.SetHealth(currentHealth, maxHealth);
+
     }
 
     // Update is called once per frame
@@ -504,6 +506,13 @@ public class Bandit : MonoBehaviour
     void DeadState()
     {
         Log("Enemy died!");
+
+        // Destroy health bar
+        if (healthBarUI != null)
+        {
+            healthBarUI.DestroyBar();
+        }
+
         m_animator.SetTrigger("Death");
         //EnemyState.Dead = true;
         if (wasSpawned)

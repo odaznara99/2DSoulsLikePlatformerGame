@@ -14,7 +14,17 @@ public class FloatingHealthbar : MonoBehaviour
 
     public void SetHealth(float current, float max)
     {
-        slider.value = current / max;
+        float percent = current / max;
+        slider.value = percent;
+
+        if (percent >= 1f)
+        {
+            gameObject.SetActive(false); // Hide if full health
+        }
+        else
+        {
+            gameObject.SetActive(true); // Show if damaged
+        }
     }
 
     void Update()
@@ -22,7 +32,12 @@ public class FloatingHealthbar : MonoBehaviour
         if (target)
         {
             transform.position = target.position + offset;
-            transform.LookAt(Camera.main.transform); // Face camera
+            transform.LookAt(Camera.main.transform);
         }
+    }
+
+    public void DestroyBar()
+    {
+        Destroy(gameObject);
     }
 }
