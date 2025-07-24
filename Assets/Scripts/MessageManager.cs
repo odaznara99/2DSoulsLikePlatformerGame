@@ -23,7 +23,7 @@ public class MessageManager : MonoBehaviour
         }
         else Destroy(gameObject);
 
-        AutoFindUIReferences();
+        //AutoFindUIReferences();
     }
 
     private void Start()

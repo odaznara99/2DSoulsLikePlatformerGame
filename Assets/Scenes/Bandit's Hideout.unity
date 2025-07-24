@@ -1237,7 +1237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInArea: 0
-  player: {fileID: 0}
+  player: {fileID: 4135637085881948554}
 --- !u!114 &218244221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1253,6 +1253,7 @@ MonoBehaviour:
   cameraFollow: {fileID: 2006590828}
   bossTarget: {fileID: 744868330}
   revertOnExit: 1
+  bossHealthUI: {fileID: 9192378388258444791}
 --- !u!4 &221580636 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4371201966070470695, guid: 8cc938fe21b426a4daedf2f6c7e34c80, type: 3}

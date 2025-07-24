@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 
 
 public enum EnemyState
@@ -84,6 +85,10 @@ public class Bandit : MonoBehaviour
     public float jumpCooldown = 5f;
 
     private bool wasSpawned = false;
+
+    [Header("Sound Effects")]
+    public List<string> damageSounds = new List<string>();
+    public List<string> deathSounds = new List<string>();
 
     // Called by spawner after instantiation
     public void SetAsSpawned()
@@ -373,6 +378,7 @@ public class Bandit : MonoBehaviour
                     GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
                     ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
                 }
+                AudioManager.Instance.PlaySFX(damageSounds[Random.Range(0, damageSounds.Count)]); // Play random damage sound
                 //Log("Enemy took " + damageAmount + " damage! Remaining currentHealth: " + currentHealth);
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(0.3f);
@@ -514,6 +520,7 @@ public class Bandit : MonoBehaviour
     void DeadState()
     {
         Log("Enemy died!");
+        AudioManager.Instance.PlaySFX(deathSounds[Random.Range(0, deathSounds.Count)]); // Play random death sound
 
         // Destroy health bar
         if (healthBarUI != null)

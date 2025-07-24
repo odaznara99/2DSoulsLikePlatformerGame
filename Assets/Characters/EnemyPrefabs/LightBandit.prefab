@@ -85,6 +85,16 @@ MonoBehaviour:
   jumpForce: 7
   jumpHorizontalSpeed: 5
   jumpCooldown: 5
+  damageSounds:
+  - grunting_1_alex
+  - grunting_2_alex
+  - grunting_3_alex
+  - grunting_4_alex
+  - grunting_5_alex
+  deathSounds:
+  - death_1_alex
+  - death_2_alex
+  - death_3_alex
   enableLogging: 0
 --- !u!95 &95346456782871180
 Animator:

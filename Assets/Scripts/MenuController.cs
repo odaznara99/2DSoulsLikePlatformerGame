@@ -7,6 +7,7 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.Instance.StopMusic();
         AudioManager.Instance.PlayMusic("Ballad");
     }
     public void NewGame()

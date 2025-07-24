@@ -112,6 +112,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     //public static PlayerControllerVersion2 Instance;
 
+    [Header("Death Sounds List")]
+    public List<string> deathSoundNames = new List<string>();
+    [Header("Damage Sounds List")]
+    public List<string> damageSoundNames = new List<string>();
+
     // === Unity Methods ===
     void Start()
     {
@@ -526,6 +531,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
         playerAnimator.SetBool("noBlood", m_noBlood);
         playerAnimator.SetTrigger("Death");
         playerAnimator.SetBool("IsDead", true);
+
+        AudioManager.Instance.PlaySFX(deathSoundNames[Random.Range(0, deathSoundNames.Count)]);
+
         this.enabled = false;
     }
 
@@ -533,6 +541,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     {
         SwitchXVelocityState(XVelocityState.Stop);
         playerAnimator.SetTrigger("Hurt");
+        AudioManager.Instance.PlaySFX(damageSoundNames[Random.Range(0, damageSoundNames.Count)]);
 
         yield return new WaitForSeconds(hurtSeconds);
 

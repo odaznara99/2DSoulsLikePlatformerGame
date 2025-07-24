@@ -75,6 +75,7 @@ public class SceneLoader : MonoBehaviour
 
         StartCoroutine(LoadSceneAsync(sceneName, spawnPoint));
         //AudioManager.Instance.PlayMusic("MedievalOpener");
+        AudioManager.Instance.StopMusic(); // Stop any currently playing music
         AudioManager.Instance.PlayMusic("Ballad");
 
     }

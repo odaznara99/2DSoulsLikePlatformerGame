@@ -705,6 +705,18 @@ MonoBehaviour:
   shieldingCooldown: 0.3
   lastRollingTimestamp: 0
   lastShieldingTimestamp: 0
+  deathSoundNames:
+  - death_1_ian
+  - death_2_ian
+  - death_3_ian
+  - death_4_ian
+  - death_5_ian
+  damageSoundNames:
+  - damage_1_ian
+  - damage_2_ian
+  - damage_3_ian
+  - damage_4_ian
+  - damage_5_ian
 --- !u!95 &7408353236059228160
 Animator:
   serializedVersion: 5

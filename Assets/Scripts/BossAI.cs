@@ -69,6 +69,7 @@ public class BossAI : MonoBehaviour
         currentPatrolTarget = rightPatrolPoint;
         currentHealth = maxHealth;
         worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
         if (bossHealthUI != null)
         {
@@ -119,7 +120,7 @@ public class BossAI : MonoBehaviour
             }
             else if (dist <= attackRange)
             {
-                Debug.Log("Do nothing.");
+                //Debug.Log("Do nothing.");
 
             }
             else
@@ -136,6 +137,8 @@ public class BossAI : MonoBehaviour
     private void FollowPlayer()
     {
         if (player == null) return;
+
+        if (GetHurtBool()) return;
 
         chaseTimer += Time.deltaTime;
 
@@ -159,6 +162,8 @@ public class BossAI : MonoBehaviour
 
     private void Patrol()
     {
+        if (GetHurtBool()) return;
+
         if (hasArrivedAtPatrolPoint)
         {
             patrolPauseTimer -= Time.deltaTime;
@@ -196,12 +201,7 @@ public class BossAI : MonoBehaviour
 
     private void Move(float dir)
     {
-        if (animator.GetBool("IsHurting"))
-        {
-            rb.velocity = new Vector2(0, rb.velocity.y);
-            animator.SetBool("isMoving", false);
-            return;
-        }
+        if (GetHurtBool()) return;
 
         rb.velocity = new Vector2(dir * moveSpeed, rb.velocity.y);
         animator.SetBool("isMoving", true);
@@ -221,6 +221,8 @@ public class BossAI : MonoBehaviour
 
     private void Attack()
     {
+        if (GetHurtBool()) return;
+
         isAttacking = true;
         rb.velocity = Vector2.zero;
         //animator.SetBool("isMoving", false);
@@ -239,7 +241,12 @@ public class BossAI : MonoBehaviour
         isAttacking = false;
     }
 
-    public void DealDamage()
+    bool GetHurtBool()
+    {
+      return animator.GetBool("IsHurting");
+    }
+
+    public void DealDamage() // this is called via Animation Event at end of attack
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, attackHitRange, playerLayer);
 
@@ -254,6 +261,8 @@ public class BossAI : MonoBehaviour
         if (IsDead()) return;
 
         if (isAttacking) return;
+
+        if (GetHurtBool()) return;
 
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
@@ -286,7 +295,7 @@ public class BossAI : MonoBehaviour
 
 
 
-    public void EndHurtAnimation()
+    public void EndHurtAnimation() // this is called via Animation Event at end of Hurt
     {
         if (animator)
         {

@@ -163,6 +163,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void GoToMainMenu(){
+        AudioManager.Instance.StopMusic();
         AudioManager.Instance.PlayMusic("Ballad");
         Time.timeScale = 1f;
         //SceneManager.LoadScene(0);
