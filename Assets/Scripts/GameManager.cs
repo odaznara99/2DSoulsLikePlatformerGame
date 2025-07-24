@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;  // Singleton instance
+    public PlayerData playerData = new ();
     private bool isGamePaused = false;   // Flag to check if the game is paused
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
@@ -85,9 +86,7 @@ public class GameManager : MonoBehaviour
         // Reset game over flag and score
         isGameOver = false;
         playerScore = 0;
-        PlayerHealth.Instance.ResetHealth(); // Reset player currentHealth
-        
-
+        playerData.currentHealth = playerData.maxHealth; // Reset player health
         FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
 
         //PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();

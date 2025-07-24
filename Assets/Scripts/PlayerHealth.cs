@@ -25,7 +25,7 @@ public class PlayerHealth : MonoBehaviour
     public GameObject floatingTextPrefab;
     public Transform worldCanvas;
 
-    public static PlayerHealth Instance; // Singleton instance
+    //public static PlayerHealth Instance; // Singleton instance
 
     // Start is called before the first frame update
     void Start()
@@ -39,24 +39,15 @@ public class PlayerHealth : MonoBehaviour
         playerAnimator  = this.GetComponent<Animator>();
         rb              = this.GetComponent<Rigidbody2D>();
         gameManager     = GameManager.instance; // Get the GameManager instance
-        
-        
+
+        if (gameManager != null)
+        {
+            currentHealth = gameManager.playerData.currentHealth;
+        }
+
+
         UpdateHealthUI(); // If you have a UI to display currentHealth, update it here
 
-    }
-
-    void Awake()
-    {
-        // Ensure there's only one GameManager instance
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);  // Prevent destruction between scenes
-        }
-        else
-        {
-            Destroy(gameObject);  // Destroy any duplicate Player
-        }
     }
 
     GameObject FindingChildObjects(string childTag) {
@@ -211,6 +202,9 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = 0; // Ensure currentHealth doesn't go below zero
             Die(); // Call the Die method if currentHealth reaches zero
         }
+
+        // Save back to GameManager
+        gameManager.playerData.currentHealth = currentHealth;
     }
 
     void KnockBack(GameObject attacker, float knockbackForceX =0, float knockbackForceY=0) {
@@ -275,7 +269,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player died!");
         player.OnDead();
         // Optionally, you can trigger a death screen, restart the level, or respawn the player.
-        GameManager.instance.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
+        gameManager.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
     }
 
     // Optional: Method to update the currentHealth UI

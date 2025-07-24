@@ -72,24 +72,11 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene(string sceneName, SpawnPointType spawnPoint)
     {
-        if (sceneName == "StartMenu")
-        {
-            if (PlayerControllerVersion2.Instance != null)
-            {
-                Destroy(PlayerControllerVersion2.Instance.gameObject);
-            }
-
-            if (UIScreensManager.Instance != null)
-            {
-                Destroy(UIScreensManager.Instance.gameObject);
-            }
-        }
 
         StartCoroutine(LoadSceneAsync(sceneName, spawnPoint));
         //AudioManager.Instance.PlayMusic("MedievalOpener");
         AudioManager.Instance.PlayMusic("Ballad");
 
-        
     }
 
     private IEnumerator LoadSceneAsync(string sceneName, SpawnPointType spawnPoint)
@@ -100,9 +87,11 @@ public class SceneLoader : MonoBehaviour
             yield break;
         }
 
-        if (PlayerControllerVersion2.Instance != null) { 
-            PlayerHealth.Instance.isInvincible = true;
-            PlayerControllerVersion2.Instance.enabled = false; // Disable player controls during loading
+        PlayerControllerVersion2 playerScript = FindObjectOfType<PlayerControllerVersion2>();
+
+        if (playerScript != null) {
+            playerScript.GetComponent<PlayerHealth>().isInvincible = true;
+            playerScript.enabled = false; // Disable player controls during loading
         }
 
         // Fade Out to black
@@ -137,22 +126,24 @@ public class SceneLoader : MonoBehaviour
         // Scene loaded, it will now show the scene name
         MessageManager.Instance.ShowMessage(sceneName,false,100);
 
-        if (PlayerControllerVersion2.Instance != null)
+        playerScript = FindObjectOfType<PlayerControllerVersion2>();
+
+        if (playerScript != null)
         {
             // Position the Player on the Start Point
             if (spawnPoint == SpawnPointType.Start)
             {
-                PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
+                playerScript.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
             }
             // Position the Player on the EndPoint
             else if (spawnPoint == SpawnPointType.Last)
             {
-                PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToEndSpawn();
+                playerScript.GetComponent<PlayerPositionRestorer>().TeleportToEndSpawn();
             }
             // Position the Player on the Checkpoint
             else if (spawnPoint == SpawnPointType.Checkpoint)
             {
-                PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
+                playerScript.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
             }
 
             
@@ -160,11 +151,11 @@ public class SceneLoader : MonoBehaviour
         // Start Fading Out - showing the Scene
         yield return StartCoroutine(Fade(1f, 0f));
 
-        if (PlayerControllerVersion2.Instance != null)
+        if (playerScript != null)
         {
-            PlayerControllerVersion2.Instance.enabled = true; // Disable player controls during loading
-            PlayerControllerVersion2.Instance.ResetState(); // Reset State
-            PlayerHealth.Instance.isInvincible = false;
+            playerScript.enabled = true; // Disable player controls during loading
+            playerScript.ResetState(); // Reset State
+            playerScript.GetComponent<PlayerHealth>().isInvincible = false;
         }
 
     }

@@ -15,8 +15,6 @@ public class UIScreensManager : MonoBehaviour
 
     private Dictionary<string, GameObject> screenDict;
 
-    public static UIScreensManager Instance;
-
     private void Awake()
     {
         screenDict = new Dictionary<string, GameObject>();
@@ -32,13 +30,6 @@ public class UIScreensManager : MonoBehaviour
                 Debug.LogWarning($"Duplicate screen name: {screen.screenName}");
             }
         }
-
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else Destroy(gameObject);
     }
 
     public void ShowScreenHideOthers(string name)

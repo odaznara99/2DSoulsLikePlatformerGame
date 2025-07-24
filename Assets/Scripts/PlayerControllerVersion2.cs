@@ -49,6 +49,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // === Private Variables === //
     private Animator playerAnimator;
     private Rigidbody2D rb;
+    private PlayerHealth playerHealth;
     private Sensor_HeroKnight m_groundSensor, m_wallSensorR1, m_wallSensorR2, m_wallSensorL1, m_wallSensorL2;
     private BoxCollider2D upperBodyCollider;
     private int facingDirection = 1;
@@ -109,7 +110,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     [SerializeField] private float lastRollingTimestamp = 0.0f; // Last time player rolled
     [SerializeField] private float lastShieldingTimestamp = 0.0f; // Last time player shielded
 
-    public static PlayerControllerVersion2 Instance;
+    //public static PlayerControllerVersion2 Instance;
 
     // === Unity Methods ===
     void Start()
@@ -117,6 +118,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         upperBodyCollider = GetComponent<BoxCollider2D>();
+        playerHealth = GetComponent<PlayerHealth>();
 
         m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
         m_wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor_HeroKnight>();
@@ -131,20 +133,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         originalMovementSpeed = movementSpeed;
         originalRollingSpeed = rollingSpeed;
-    }
-
-    void Awake()
-    {
-        // Ensure there's only one GameManager instance
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);  // Prevent destruction between scenes
-        }
-        else
-        {
-            Destroy(gameObject);  // Destroy any duplicate Player
-        }
     }
 
     void Update()
@@ -435,7 +423,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchPlayerState(PlayerState.ForceInterupt, gameObject);
         upperBodyCollider.enabled = false;
         playerAnimator.SetTrigger("Roll");
-        PlayerHealth.Instance.isInvincible = true; // Set player invincible during rolling
+        playerHealth.isInvincible = true; // Set player invincible during rolling
         rb.velocity = new Vector2(facingDirection * rollingSpeed, rb.velocity.y);
         yield return new WaitForSeconds(rollDuration);
 
@@ -447,7 +435,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
 
         // Go back to Normal State and Apply a Cooldown
-        PlayerHealth.Instance.isInvincible = false;
+        playerHealth.isInvincible = false;
         upperBodyCollider.enabled = true;
         lastRollingTimestamp = rollingCooldown; // Set the cooldown for rolling
         SwitchXVelocityState(XVelocityState.Normal);
@@ -537,6 +525,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         Debug.Log("Player died!");
         playerAnimator.SetBool("noBlood", m_noBlood);
         playerAnimator.SetTrigger("Death");
+        playerAnimator.SetBool("IsDead", true);
         this.enabled = false;
     }
 
@@ -654,7 +643,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
         playerAnimator.SetBool("WallSlide", currentState == PlayerState.WallSliding);
         playerAnimator.SetBool("IdleBlock", currentState == PlayerState.Shielding);
         playerAnimator.SetBool("stillRolling", currentXVelocityState == XVelocityState.Rolling);
-        playerAnimator.SetBool("IsAlive", currentState != PlayerState.Dead);
+        
+        //bool isDead = GetComponent<PlayerHealth>().IsDead();
+        //playerAnimator.SetBool("IsDead", isDead);
 
         if (Mathf.Abs(inputX) > Mathf.Epsilon)
         {
