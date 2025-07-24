@@ -6,6 +6,7 @@ public class BossAI : MonoBehaviour
     public Transform player;
     public Animator animator;
 
+    
     [Header("Boss Health")]
     [SerializeField] private float maxHealth = 300f;
     public float currentHealth;
@@ -28,6 +29,10 @@ public class BossAI : MonoBehaviour
     public string[] attackTriggers = { "Attack1", "Attack2","Attack3" };
     public float attackCooldown = 2f;
     [SerializeField] private float attackHitRange = 1.5f;
+
+    [Header("Explosion Settings")]
+    public GameObject explosionEffects;
+    public BossFollowRangeTrigger explosionRange;
 
     private Rigidbody2D rb;
     private bool isAttacking = false;
@@ -94,13 +99,19 @@ public class BossAI : MonoBehaviour
 
 
 
-        if (followRangeScript.IsPlayerInArea && player != null)
+        if (followRangeScript.IsPlayerInArea && player != null 
+            && player.GetComponent<PlayerHealth>().IsDead() == false)
         {
             float dist = Vector2.Distance(transform.position, player.position);
 
             if (dist <= attackRange && Time.time >= lastAttackTime + attackCooldown)
             {
                 Attack();
+            }
+            else if (dist <= attackRange)
+            {
+                Debug.Log("Do nothing.");
+
             }
             else
             {
@@ -284,7 +295,7 @@ public class BossAI : MonoBehaviour
         //if (col) col.enabled = false;
 
         // Optional: Destroy after delay
-        Destroy(gameObject, 3f);
+        Destroy(gameObject, 20f);
     }
 
 
@@ -294,4 +305,18 @@ public class BossAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackHitRange);
     }
 
+    public void SpawnExplosionEffects()
+    {
+        if (explosionEffects)
+        {
+            Instantiate(explosionEffects, transform.position, Quaternion.identity);
+        }
+
+        if (explosionRange.IsPlayerInArea)
+        {
+                player.GetComponent<PlayerHealth>().TakeDamage(attackDamage, this.gameObject, 3f, 3f);
+            }
+        }
 }
+
+

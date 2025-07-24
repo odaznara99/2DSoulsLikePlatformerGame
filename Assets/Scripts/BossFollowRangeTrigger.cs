@@ -22,7 +22,7 @@ public class BossFollowRangeTrigger : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform == player)
+        if (collision.transform == player && !player.GetComponent<PlayerHealth>().IsDead())
         {
             playerInArea = true;
             player = collision.transform;

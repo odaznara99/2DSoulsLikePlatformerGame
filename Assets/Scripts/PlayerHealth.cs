@@ -180,7 +180,7 @@ public class PlayerHealth : MonoBehaviour
                     }
                 }
  
-                UpdateHealthUI(); // Update the UI to reflect the currentHealth change
+                
 
             }
             //Parry Successful No Damage to the Player
@@ -196,6 +196,8 @@ public class PlayerHealth : MonoBehaviour
                 Debug.Log("Player parry the attack! No Damage Taken!");
             }
         }
+
+        UpdateHealthUI(); // Update the UI to reflect the currentHealth change
 
         if (IsDead())
         {

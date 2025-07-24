@@ -298,8 +298,16 @@ public class Bandit : MonoBehaviour
                 && currentState != EnemyState.Hurt
                 && currentState != EnemyState.Dead)
             {
-                Log("Enemy: Attacks the player!");
-                playerHealth.TakeDamage(damage, this.gameObject);
+                
+
+                // Calculate the distance between the enemy and the player
+                float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+                if (distanceToPlayer <= attackRange) 
+                {
+                    Log("Enemy: Attacks the player!");
+                    playerHealth.TakeDamage(damage, this.gameObject);
+                }
             }
             else
             {
