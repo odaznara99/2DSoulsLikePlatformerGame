@@ -28022,7 +28022,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3102984410289515296, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.31
+      value: -4.61
       objectReference: {fileID: 0}
     - target: {fileID: 3102984410289515296, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
       propertyPath: m_LocalPosition.z
@@ -28056,6 +28056,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3425598993956487543, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
+      propertyPath: m_Size.y
+      value: 1.7331455
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425598993956487543, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
+      propertyPath: m_Offset.y
+      value: 1.0252229
+      objectReference: {fileID: 0}
     - target: {fileID: 4634241829490386981, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
       propertyPath: worldCanvas
       value: 
@@ -28072,6 +28080,10 @@ PrefabInstance:
       propertyPath: followRangeScript
       value: 
       objectReference: {fileID: 218244220}
+    - target: {fileID: 4898123070754235482, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8730388020545806281, guid: c5e5dd362f430664aa2e6d79957de0eb, type: 3}
       propertyPath: m_Name
       value: Dragon Lord

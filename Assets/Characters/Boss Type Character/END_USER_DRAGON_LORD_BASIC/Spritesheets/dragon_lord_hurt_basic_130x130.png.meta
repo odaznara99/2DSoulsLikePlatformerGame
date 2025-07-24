@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -139,12 +139,12 @@ TextureImporter:
       name: dragon_lord_hurt_basic_130x130_0
       rect:
         serializedVersion: 2
-        x: 62
-        y: 4
-        width: 38
-        height: 51
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 0
+        y: 0
+        width: 130
+        height: 130
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -160,12 +160,12 @@ TextureImporter:
       name: dragon_lord_hurt_basic_130x130_1
       rect:
         serializedVersion: 2
-        x: 138
-        y: 5
-        width: 108
-        height: 116
-      alignment: 9
-      pivot: {x: 0.64592403, y: 0.21372344}
+        x: 130
+        y: 0
+        width: 130
+        height: 130
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -181,12 +181,12 @@ TextureImporter:
       name: dragon_lord_hurt_basic_130x130_2
       rect:
         serializedVersion: 2
-        x: 266
-        y: 5
-        width: 107
-        height: 116
-      alignment: 9
-      pivot: {x: 0.59994566, y: 0.19431484}
+        x: 260
+        y: 0
+        width: 130
+        height: 130
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -202,12 +202,12 @@ TextureImporter:
       name: dragon_lord_hurt_basic_130x130_3
       rect:
         serializedVersion: 2
-        x: 395
-        y: 5
-        width: 107
-        height: 116
-      alignment: 9
-      pivot: {x: 0.59994566, y: 0.20887128}
+        x: 390
+        y: 0
+        width: 130
+        height: 130
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -223,12 +223,12 @@ TextureImporter:
       name: dragon_lord_hurt_basic_130x130_4
       rect:
         serializedVersion: 2
-        x: 526
-        y: 4
-        width: 108
-        height: 117
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 520
+        y: 0
+        width: 130
+        height: 130
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -139,12 +139,12 @@ TextureImporter:
       name: dragon_lord_idle_basic_74x74_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 4
-        width: 38
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 74
+        height: 74
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -160,12 +160,12 @@ TextureImporter:
       name: dragon_lord_idle_basic_74x74_1
       rect:
         serializedVersion: 2
-        x: 93
-        y: 4
-        width: 39
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 74
+        y: 0
+        width: 74
+        height: 74
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -181,12 +181,12 @@ TextureImporter:
       name: dragon_lord_idle_basic_74x74_2
       rect:
         serializedVersion: 2
-        x: 167
-        y: 4
-        width: 40
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 148
+        y: 0
+        width: 74
+        height: 74
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -202,12 +202,12 @@ TextureImporter:
       name: dragon_lord_idle_basic_74x74_3
       rect:
         serializedVersion: 2
-        x: 241
-        y: 4
-        width: 39
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 222
+        y: 0
+        width: 74
+        height: 74
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
