@@ -57,6 +57,7 @@ public class BossAI : MonoBehaviour
     private float chaseTimer = 0f;
     private float restTimer = 0f;
     private bool isResting = false;
+    private bool isDead = false;
 
 
 
@@ -81,6 +82,8 @@ public class BossAI : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
         if (!player)
         {
             player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -241,6 +244,11 @@ public class BossAI : MonoBehaviour
         isAttacking = false;
     }
 
+    public void DestroySelf() // Called via Animation Event at end of attack
+    {
+        Destroy(gameObject);
+    }
+
     bool GetHurtBool()
     {
       return animator.GetBool("IsHurting");
@@ -311,7 +319,9 @@ public class BossAI : MonoBehaviour
     private void Die()
     {
         Debug.Log("Boss has died!");
+        rb.velocity = Vector2.zero;
         if (animator) animator.SetTrigger("Death");
+        isDead = true;
 
         // Disable AI or controls
         this.enabled = false;
@@ -321,7 +331,7 @@ public class BossAI : MonoBehaviour
         //if (col) col.enabled = false;
 
         // Optional: Destroy after delay
-        Destroy(gameObject, 20f);
+        //Destroy(gameObject, 20f);
     }
 
 
