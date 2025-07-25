@@ -20,8 +20,8 @@ public class BossZoneCameraTrigger : MonoBehaviour
             cameraFollow.bossTarget = bossTarget;
             cameraFollow.SetFollowBothTargets(true);
             bossHealthUI.SetHealthUIActive(true); // Show boss health UI
-            AudioManager.Instance.StopMusic();
-            AudioManager.Instance.PlayMusic("MedievalOpener"); // Play sound when entering boss zone
+            //AudioManager.Instance.StopMusic();
+            //AudioManager.Instance.PlayMusic("MedievalOpener"); // Play sound when entering boss zone
         }
     }
 
@@ -31,8 +31,8 @@ public class BossZoneCameraTrigger : MonoBehaviour
         {
             cameraFollow.SetFollowBothTargets(false);
             bossHealthUI.SetHealthUIActive(false); // Show boss health UI
-            AudioManager.Instance.StopMusic(); // Stop boss music when player exits
-            AudioManager.Instance.PlayMusic("Ballad");
+            //AudioManager.Instance.StopMusic(); // Stop boss music when player exits
+            //AudioManager.Instance.PlayMusic("Ballad");
         }
     }
 }

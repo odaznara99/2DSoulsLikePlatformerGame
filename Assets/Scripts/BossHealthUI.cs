@@ -27,6 +27,7 @@ public class BossHealthUI : MonoBehaviour
 
     public void SetHealthUIActive(bool isActive)
     {
-        uiContainer.SetActive(isActive);
+        
+         uiContainer.SetActive(isActive);
     }
 }
