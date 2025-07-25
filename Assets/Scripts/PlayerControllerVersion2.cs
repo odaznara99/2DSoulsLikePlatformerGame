@@ -708,7 +708,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 else
                 {
                     // If player is not moving, then stop the wall sliding
-                    playerAnimator.SetTrigger("Jump");
+                    //playerAnimator.SetTrigger("Jump");
                     SwitchPlayerState(PlayerState.Neutral, gameObject);
 
                 }
