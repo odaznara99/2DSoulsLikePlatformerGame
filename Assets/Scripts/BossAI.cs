@@ -307,10 +307,11 @@ public class BossAI : MonoBehaviour
 
     public void EndHurtAnimation() // this is called via Animation Event at end of Hurt
     {
-        if (animator)
-        {
+        
+        
+            animator.ResetTrigger("Hurt");
             animator.SetBool("IsHurting", false);
-        }
+        
     }
 
     public bool IsDead()
