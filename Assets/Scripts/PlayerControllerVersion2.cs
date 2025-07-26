@@ -45,6 +45,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     [Header("Player Effects")]
     [SerializeField] GameObject m_slideDust;
+    //[SerializeField] private GameObject[] hitEffectPrefabs;
 
     // === Private Variables === //
     private Animator playerAnimator;
@@ -83,9 +84,10 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     // === Variables for Attack === //
     [Header("Attack Parameters")]
-    public Transform attackPoint;
-    public float attackRadius = 2f;
-    public int attackDamage = 20;
+    [SerializeField] private GameObject attackBoxObject; // The object with BoxCollider2D
+    [SerializeField] private Collider2D attackBoxCollider;
+    //private float attackRadius = 2f;
+    //public int attackDamage = 20;
     public float attackIntervalTime = 0.5f;
     public float playerKnockbackForce = 15f; // Knock back to enemies
 
@@ -130,7 +132,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
         m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
-        attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
+        //attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
 
         // Ignore collisions between Player and Enemies
         Physics2D.IgnoreLayerCollision(3, 6);
@@ -457,7 +459,43 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchPlayerState(PlayerState.Neutral, gameObject);
 
     }
-    private void DoAttacking()
+
+    void PerformAttack() // will be called in Animation Event
+    {
+        // Enable attack box temporarily
+        attackBoxCollider.enabled = true;
+
+        // Optionally disable it after short delay
+        Invoke(nameof(DisableAttackBox), 0.1f); // adjust timing
+    }
+
+    void DisableAttackBox()
+    {
+        attackBoxCollider.enabled = false;
+    }
+
+    private void DoAttacking() {
+
+        // Slow your movement speed during attack
+        SwitchXVelocityState(XVelocityState.Slow);
+
+        //Variable for Current Attack Animation
+        currentAttackAnimation++;
+        // Call one of three attack animations "Attack1", "Attack2", "Attack3"
+        playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
+        // Play Sounds
+        AudioManager.Instance.PlaySFX("Attack2");
+
+        // Reset Animation Count
+        if (currentAttackAnimation >= 3)
+        {
+            // Reset animation
+            currentAttackAnimation = 0;
+            DisplayLog("Combo completed");
+        }
+
+    }
+    /*private void DoAttackingOld()
     {
         
 
@@ -472,10 +510,16 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchXVelocityState(XVelocityState.Slow);
 
         // Find all nearby enemies within the attack range/radius
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackPoint.GetComponent<CircleCollider2D>().radius);
 
         foreach (Collider2D enemy in hitEnemies)
         {
+            // Pick random index
+            int index = Random.Range(0, hitEffectPrefabs.Length);
+
+            // Calculate the closest contact point between your attack and the object
+            Vector2 contactPoint = enemy.ClosestPoint(transform.position);
+
             if (enemy.CompareTag("Enemy"))
             {
                 // Get the enemy script
@@ -483,6 +527,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
                 // Apply damage to the enemy
                 enemyScript.TakeDamage(attackDamage);
+                // Instantiate the randomly chosen effect
+                GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
                 if (enemyScript.currentState != EnemyState.Dead)
                 {
                     AudioManager.Instance.PlaySFX("Attack1");
@@ -499,9 +545,23 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
                 // Apply damage to the boss
                 bossScript.TakeDamage(attackDamage);
+                // Instantiate the randomly chosen effect
+                GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
 
                 if (!bossScript.IsDead())
                 {
+                    AudioManager.Instance.PlaySFX("Attack1");
+                }
+            }
+            else if (enemy.CompareTag("Breakable"))
+            {
+                // If the enemy is a breakable object, then break it
+                BreakableObject breakableObject = enemy.GetComponent<BreakableObject>();
+                if (breakableObject != null)
+                {
+                    breakableObject.TakeHit();
+                    // Instantiate the randomly chosen effect
+                    GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
                     AudioManager.Instance.PlaySFX("Attack1");
                 }
             }
@@ -525,7 +585,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             currentAttackAnimation = 0;
             DisplayLog("Combo completed");
         }
-    }
+    } */
     void DoDying() {
         Debug.Log("Player died!");
         playerAnimator.SetBool("noBlood", m_noBlood);
@@ -756,15 +816,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
         playerAnimator.SetTrigger("Jump");
 
     }
-    private void OnDrawGizmosSelected()
-    {
-        if (attackPoint != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
-        }
-    }
-
 
     void UpdateKeyboardInputs() {
 #if UNITY_EDITOR

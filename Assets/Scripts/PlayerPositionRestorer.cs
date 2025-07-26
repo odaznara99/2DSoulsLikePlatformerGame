@@ -10,7 +10,8 @@ public class PlayerPositionRestorer : MonoBehaviour
     {
 
         TeleportToStartSpawn();
-        lastCheckpointPosition = GameObject.Find("StartSpawnPoint").transform.position;
+        //lastCheckpointPosition = GameObject.Find("StartSpawnPoint").transform.position;
+        lastCheckpointPosition = new Vector3(-7, -2, 0);
     }
 
     public void TeleportTo(Vector3 spawnPointVector3)
