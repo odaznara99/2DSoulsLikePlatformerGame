@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class BossHealthUI : MonoBehaviour
 {
     public Slider healthSlider;
-    public GameObject uiContainer; // The root GameObject to toggle visibility
+    //public GameObject uiContainer; // The root GameObject to toggle visibility
     public BossFollowRangeTrigger followRangeTrigger;
 
     public void SetMaxHealth(float max)
@@ -21,13 +21,15 @@ public class BossHealthUI : MonoBehaviour
 
         if (current <= 0)
         {
-            uiContainer.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
 
     public void SetHealthUIActive(bool isActive)
     {
-        
-         uiContainer.SetActive(isActive);
+        //if (!gameObject)
+            gameObject.SetActive(isActive);
+        //else
+        //    Debug.LogWarning("UI Container is not assigned in BossHealthUI script.");
     }
 }

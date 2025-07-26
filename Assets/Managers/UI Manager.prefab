@@ -105,7 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 3024098753437624815}
-  uiContainer: {fileID: 371363043358013068}
   followRangeTrigger: {fileID: 0}
 --- !u!1 &1633797405064779152
 GameObject:
@@ -1050,7 +1049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2995299327128474779
 RectTransform:
   m_ObjectHideFlags: 0
