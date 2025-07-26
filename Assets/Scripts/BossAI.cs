@@ -299,6 +299,8 @@ public class BossAI : MonoBehaviour
         {
             Die();
         }
+
+        Invoke(nameof(EndHurtAnimation), 0.5f); // Adjust time as needed
     }
 
 

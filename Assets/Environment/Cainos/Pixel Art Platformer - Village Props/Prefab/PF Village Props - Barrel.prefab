@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2018365450437254146}
   - component: {fileID: 1515793881361588757}
   - component: {fileID: 2213089068918022443}
+  - component: {fileID: 654978657593864363}
   m_Layer: 9
   m_Name: PF Village Props - Barrel
   m_TagString: Breakable
@@ -166,3 +167,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &654978657593864363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018365450437254144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa4c353cd988ab4884acee273f4fa8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 3
+  brokenPrefab: {fileID: 2687264295275261211, guid: ccd0044ff2f32ee49b7a2d52ade16bdf, type: 3}
+  debrisForce: 3
+  debrisLifetime: 20

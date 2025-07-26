@@ -446,36 +446,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2018365450437254144, guid: 1509360826d6bb34587310ad4949fdd5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 199546768}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1509360826d6bb34587310ad4949fdd5, type: 3}
---- !u!1 &199546767 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2018365450437254144, guid: 1509360826d6bb34587310ad4949fdd5, type: 3}
-  m_PrefabInstance: {fileID: 199546766}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &199546768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 199546767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fa4c353cd988ab4884acee273f4fa8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitPoints: 3
-  hitVFX: {fileID: 0}
-  hitSound: {fileID: 0}
-  brokenPrefab: {fileID: 2687264295275261211, guid: ccd0044ff2f32ee49b7a2d52ade16bdf, type: 3}
-  breakVFX: {fileID: 0}
-  breakSound: {fileID: 0}
-  debrisForce: 3
-  debrisLifetime: 3
 --- !u!1001 &655846893
 PrefabInstance:
   m_ObjectHideFlags: 0
