@@ -226,6 +226,13 @@ public class BossAI : MonoBehaviour
     {
         if (GetHurtBool()) return;
 
+        // Ensure the boss is facing the player
+        if ((player.position.x > transform.position.x && !facingRight) ||
+            (player.position.x < transform.position.x && facingRight))
+        {
+            Flip();
+        }
+
         isAttacking = true;
         rb.velocity = Vector2.zero;
         //animator.SetBool("isMoving", false);
@@ -321,8 +328,12 @@ public class BossAI : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Boss has died!");
+        //Debug.Log("Boss has died!");
+        // Stop Velocity
         rb.velocity = Vector2.zero;
+        // Show Victory Message
+        MessageManager.Instance.victoryAchievedText.FadeInThenOut();
+        // Play death animation
         if (animator) animator.SetTrigger("Death");
         isDead = true;
 
