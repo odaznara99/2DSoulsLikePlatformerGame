@@ -20,6 +20,21 @@ public class SmoothCameraFollow : MonoBehaviour
 
     private Vector3 velocity = Vector3.zero;
 
+    private void Start()
+    {
+        playerTarget = GameObject.FindGameObjectWithTag("Player").transform;
+        playerRigidbody = playerTarget.GetComponent<Rigidbody2D>();
+        playerController = playerTarget.GetComponent<PlayerControllerVersion2>();
+
+        if (!playerTarget)
+        {
+            Debug.LogError("Player target not found! Ensure the player GameObject has the 'Player' tag.");
+        }
+
+        transform.position = playerTarget.position + offset; // Initial camera position
+
+    }
+
     private void Update()
     {
         if (!playerTarget)

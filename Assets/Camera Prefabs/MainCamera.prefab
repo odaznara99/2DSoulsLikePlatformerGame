@@ -120,7 +120,7 @@ MonoBehaviour:
   bossTarget: {fileID: 0}
   followBothTargets: 0
   smoothTime: 0.3
-  offset: {x: 0, y: 0.8, z: 0}
+  offset: {x: 0, y: 0.8, z: -10}
   fallLookAhead: -1
   lookAheadVelocity: -0.5
   minX: -7
