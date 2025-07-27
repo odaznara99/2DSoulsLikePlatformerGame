@@ -601,6 +601,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     {
         SwitchXVelocityState(XVelocityState.Stop);
         playerAnimator.SetTrigger("Hurt");
+        CameraShake.Instance.Shake();
         AudioManager.Instance.PlaySFX(damageSoundNames[Random.Range(0, damageSoundNames.Count)]);
 
         yield return new WaitForSeconds(hurtSeconds);

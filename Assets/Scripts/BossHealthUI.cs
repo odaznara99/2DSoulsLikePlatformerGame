@@ -6,7 +6,7 @@ public class BossHealthUI : MonoBehaviour
 {
     public Slider healthSlider;
     //public GameObject uiContainer; // The root GameObject to toggle visibility
-    public BossFollowRangeTrigger followRangeTrigger;
+    //public BossFollowRangeTrigger followRangeTrigger;
 
     public void SetMaxHealth(float max)
     {

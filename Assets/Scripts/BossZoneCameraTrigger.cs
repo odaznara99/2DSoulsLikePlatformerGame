@@ -30,7 +30,8 @@ public class BossZoneCameraTrigger : MonoBehaviour
         if (revertOnExit && other.CompareTag("Player") && cameraFollow != null)
         {
             cameraFollow.SetFollowBothTargets(false);
-            bossHealthUI.SetHealthUIActive(false); // Show boss health UI
+            if (bossHealthUI)
+                bossHealthUI.SetHealthUIActive(false); // Show boss health UI
             //AudioManager.Instance.StopMusic(); // Stop boss music when player exits
             //AudioManager.Instance.PlayMusic("Ballad");
         }

@@ -346,6 +346,8 @@ public class BossAI : MonoBehaviour
 
     public void SpawnExplosionEffects()
     {
+        CameraShake.Instance.Shake(0.5f, 0.5f); // Shake the camera for 0.5 seconds with a magnitude of 0.5
+
         if (explosionEffects)
         {
             Instantiate(explosionEffects, transform.position, Quaternion.identity);
@@ -354,8 +356,8 @@ public class BossAI : MonoBehaviour
         if (explosionRange.IsPlayerInArea)
         {
                 player.GetComponent<PlayerHealth>().TakeDamage(attackDamage, this.gameObject, 3f, 3f);
-            }
         }
+    }
 }
 
 
