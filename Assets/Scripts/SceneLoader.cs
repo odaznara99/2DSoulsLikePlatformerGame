@@ -23,7 +23,7 @@ public class SceneLoader : MonoBehaviour
 
     // Variables for Fade In/Out Transition
     public Image fadeImage;
-    public float fadeDuration = 1f;
+    private float fadeDuration = 1f;
 
     // For Loading Dots Animation
     public Text loadingDotsText;  // or TMP_Text if using TextMeshPro
@@ -88,6 +88,8 @@ public class SceneLoader : MonoBehaviour
             yield break;
         }
 
+        // Find current player instance in the Scene
+
         PlayerControllerVersion2 playerScript = FindObjectOfType<PlayerControllerVersion2>();
 
         if (playerScript != null) {
@@ -98,6 +100,7 @@ public class SceneLoader : MonoBehaviour
         // Fade Out to black
         yield return StartCoroutine(Fade(0f, 1f));
 
+        // Loading Screen was Displayed
         loadingScreen.SetActive(true);
 
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
@@ -111,21 +114,16 @@ public class SceneLoader : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(3f); // Optional delay
+        yield return new WaitForSeconds(1f); // Optional delay
 
         progressBar.value = 1f;
         progressText.text = "100%";
 
         op.allowSceneActivation = true;
 
-        // Wait for the next frame before fading in
-        yield return null;
+        yield return new WaitForSeconds(1f); // Optional delay
 
-        // Fade In to clear
-        loadingScreen.SetActive(false);
-
-        // Scene loaded, it will now show the scene name
-        MessageManager.Instance.ShowMessage(sceneName,false,100);
+        // Find the Current Player in the New Scene
 
         playerScript = FindObjectOfType<PlayerControllerVersion2>();
 
@@ -149,15 +147,18 @@ public class SceneLoader : MonoBehaviour
 
             
         }
+
+        // Delay for Camera Follow the Player's New Position
+        yield return new WaitForSeconds(2f);
+
+        // Loading Screen Disabled
+        loadingScreen.SetActive(false);
+
         // Start Fading Out - showing the Scene
         yield return StartCoroutine(Fade(1f, 0f));
 
-        if (playerScript != null)
-        {
-            playerScript.enabled = true; // Disable player controls during loading
-            playerScript.ResetState(); // Reset State
-            playerScript.GetComponent<PlayerHealth>().isInvincible = false;
-        }
+        // Scene loaded, it will now show the scene name
+        MessageManager.Instance.ShowMessage(sceneName, false, 100);
 
     }
 

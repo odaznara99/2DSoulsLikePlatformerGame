@@ -466,15 +466,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 427574703279568379, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.47
+      value: -9.96
       objectReference: {fileID: 0}
     - target: {fileID: 427574703279568379, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 427574703279568379, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.03481901
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 427574703279568379, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_LocalRotation.w
@@ -505,6 +505,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
+      propertyPath: sceneName
+      value: Bandit's Hideout
+      objectReference: {fileID: 0}
+    - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: spawnPointName
       value: End
       objectReference: {fileID: 0}
@@ -526,7 +530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_Size.y
-      value: 2.1027045
+      value: 3.2767591
       objectReference: {fileID: 0}
     - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_Offset.x
@@ -534,7 +538,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_Offset.y
-      value: 0.09205341
+      value: 0.6790805
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8325,18 +8329,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 446834864064731567, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 446834864064731567, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 446834864064731567, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3771800836167934203, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: m_LocalPosition.x
       value: 150.09787
@@ -8377,29 +8369,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4544736309209855722, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: fadeDuration
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216667301036094156, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8633138370344960313, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 8846716236385820720, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: m_Name
       value: SceneLoader
-      objectReference: {fileID: 0}
-    - target: {fileID: 8870084964048491556, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8870084964048491556, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8430,6 +8402,14 @@ PrefabInstance:
       propertyPath: enabledKeyboardInput
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3688760624617468788, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
+      propertyPath: spawnPointEnd
+      value: 
+      objectReference: {fileID: 1317336}
+    - target: {fileID: 3688760624617468788, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
+      propertyPath: spawnPointStart
+      value: 
+      objectReference: {fileID: 168119980}
     - target: {fileID: 7721701825642549688, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -8648,6 +8628,10 @@ PrefabInstance:
     - target: {fileID: 5867558615047676613, guid: ddd793753777b0d45a75d7f620c381b9, type: 3}
       propertyPath: m_Name
       value: MainCamera
+      objectReference: {fileID: 0}
+    - target: {fileID: 8246708954341854765, guid: ddd793753777b0d45a75d7f620c381b9, type: 3}
+      propertyPath: minX
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

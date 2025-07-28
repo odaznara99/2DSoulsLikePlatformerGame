@@ -19,32 +19,18 @@ public class PlayerPositionRestorer : MonoBehaviour
     public void TeleportTo(Vector3 spawnPointVector3)
     {
         transform.position = spawnPointVector3;
+        Camera.main.transform.position = spawnPointVector3 + new Vector3(0,0,-10);
     }
 
     public void TeleportToStartSpawn() {
-        //spawnPointStart = GameObject.Find("StartPoint").transform;
-        // If not returning, set a default spawn point (e.g., origin)
-
-        if (!spawnPointStart)
-            TeleportTo(spawnPointStart);
-        else
-        {
-            Debug.LogWarning("StartPoint Object was not found!");
-            TeleportTo(new Vector3(-7, -2, 0));
-        }
+        spawnPointStart = GameObject.FindGameObjectWithTag("StartPoint").transform;
+        TeleportTo(spawnPointStart);
     }
 
     public void TeleportToEndSpawn()
     {
-        if (!spawnPointEnd)
-            TeleportTo(spawnPointEnd);
-        else
-        {
-            Debug.LogWarning("EndPoint Object was not found!");
-            TeleportTo(new Vector3(-7, -2, 0));
-        }
-        // If not returning, set a default spawn point (e.g., origin)
-        
+        spawnPointEnd = GameObject.FindGameObjectWithTag("EndPoint").transform;
+        TeleportTo(spawnPointEnd);
     }
 
     public void TeleportToCheckpoint()

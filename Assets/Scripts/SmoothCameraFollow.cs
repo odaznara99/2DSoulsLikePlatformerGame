@@ -66,7 +66,7 @@ public class SmoothCameraFollow : MonoBehaviour
     }*/
     void FixedUpdate()
     {
-        if (!playerTarget || !playerRigidbody || playerController == null) return;
+        if (playerTarget == null || playerRigidbody == null || playerController.currentState == PlayerState.Dead) return;
 
         Vector3 dynamicOffset = offset;
 
