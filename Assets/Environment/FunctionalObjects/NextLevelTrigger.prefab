@@ -34,10 +34,10 @@ RectTransform:
   - {fileID: 1809163538194982951}
   m_Father: {fileID: 4268164516346348900}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 602.3611, y: 16.43158}
-  m_SizeDelta: {x: 435.9512, y: 62.8632}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -357.63892, y: 16.43158}
+  m_SizeDelta: {x: 435.95117, y: 62.8632}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8994960030785717850
 CanvasRenderer:
@@ -347,6 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Forest of the Beginnings
+  spawnPointType: 0
   locationButton: {fileID: 384378257348452379}
 --- !u!1 &6268499455493565625
 GameObject:
