@@ -140,6 +140,10 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         originalMovementSpeed = movementSpeed;
         originalRollingSpeed = rollingSpeed;
+
+#if UNITY_EDITOR
+        enabledKeyboardInput = true;
+#endif
     }
 
     void Update()
