@@ -8,10 +8,12 @@ public class PlayerPositionRestorer : MonoBehaviour
     [SerializeField] Transform spawnPointEnd;
     private void Start()
     {
+        spawnPointStart = GameObject.FindGameObjectWithTag("StartPoint").transform;
+        spawnPointEnd   = GameObject.FindGameObjectWithTag("EndPoint").transform;
 
-        TeleportToStartSpawn();
+        //TeleportToStartSpawn();
         //lastCheckpointPosition = GameObject.Find("StartSpawnPoint").transform.position;
-        lastCheckpointPosition = new Vector3(-7, -2, 0);
+        lastCheckpointPosition = transform.position;
     }
 
     public void TeleportTo(Vector3 spawnPointVector3)
@@ -22,14 +24,27 @@ public class PlayerPositionRestorer : MonoBehaviour
     public void TeleportToStartSpawn() {
         //spawnPointStart = GameObject.Find("StartPoint").transform;
         // If not returning, set a default spawn point (e.g., origin)
-        TeleportTo(new Vector3(-7,-2,0));
+
+        if (!spawnPointStart)
+            TeleportTo(spawnPointStart);
+        else
+        {
+            Debug.LogWarning("StartPoint Object was not found!");
+            TeleportTo(new Vector3(-7, -2, 0));
+        }
     }
 
     public void TeleportToEndSpawn()
     {
-        spawnPointEnd = GameObject.FindGameObjectWithTag("EndPoint").transform;
+        if (!spawnPointEnd)
+            TeleportTo(spawnPointEnd);
+        else
+        {
+            Debug.LogWarning("EndPoint Object was not found!");
+            TeleportTo(new Vector3(-7, -2, 0));
+        }
         // If not returning, set a default spawn point (e.g., origin)
-        TeleportTo(spawnPointEnd);
+        
     }
 
     public void TeleportToCheckpoint()
