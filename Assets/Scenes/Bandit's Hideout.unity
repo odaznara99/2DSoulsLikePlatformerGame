@@ -28422,10 +28422,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2131100714}
     m_Modifications:
-    - target: {fileID: 1904081672419660116, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.88
-      objectReference: {fileID: 0}
     - target: {fileID: 6882211167080817599, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_Name
       value: LeverSystem

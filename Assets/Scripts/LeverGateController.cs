@@ -65,6 +65,8 @@ public class LeverGateController : MonoBehaviour
 
     void ToggleGate()
     {
+        AudioManager.Instance.PlaySFX("Lever1");
+
         if (!isGateOpen)
         {
             isGateOpen = true;
@@ -127,6 +129,7 @@ public class LeverGateController : MonoBehaviour
 
         transform.rotation = end;
 
+        AudioManager.Instance.PlaySFX("GateOpening");
         if (isGateOpen)
             StartCoroutine(OpenGate());
         else
