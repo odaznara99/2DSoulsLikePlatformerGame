@@ -346,6 +346,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bdbddb0b916f262469f107ebc4cc66a2, type: 3}
   - {fileID: 8300000, guid: 90a7b2bf4d4416e4088c733472b99b88, type: 3}
   - {fileID: 8300000, guid: 3837b8002fba5bf48bce9d854f9baf2e, type: 3}
+  - {fileID: 8300000, guid: c3e482f1b3eb6f140b7dd29cb14d592d, type: 3}
+  - {fileID: 8300000, guid: b5a0642087b07bd4aaee1674858891c3, type: 3}
+  - {fileID: 8300000, guid: d23111e7f555c194886c54ebaf7bf2e2, type: 3}
+  - {fileID: 8300000, guid: 111ee5e6b44f6984bb2627afc8336bb8, type: 3}
+  - {fileID: 8300000, guid: c9acd8b7211a3f2489268025d3b2d08d, type: 3}
   musicEnabled: 1
   sfxEnabled: 1
 --- !u!1 &8177250080313785346

@@ -75,7 +75,7 @@ public class AttackBox : MonoBehaviour
                 breakableObject.TakeHit();
                 // Instantiate the randomly chosen effect
                 GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
-                AudioManager.Instance.PlaySFX("Attack1");
+                //AudioManager.Instance.PlaySFX("Attack1");
             }
         }
     }

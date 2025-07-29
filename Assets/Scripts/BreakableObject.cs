@@ -4,13 +4,13 @@ public class BreakableObject : MonoBehaviour
 {
     [Header("Hit Settings")]
     [SerializeField] private int hitPoints = 3;
-    //[SerializeField] private GameObject hitVFX;
-    //[SerializeField] private AudioClip hitSound;
+    [SerializeField] private GameObject hitVFX;
+    [SerializeField] private AudioClip hitSound;
 
     [Header("Break Settings")]
     [SerializeField] private GameObject brokenPrefab;
-    //[SerializeField] private GameObject breakVFX;
-    //[SerializeField] private AudioClip breakSound;
+    [SerializeField] private GameObject breakVFX;
+    [SerializeField] private AudioClip breakSound;
     [SerializeField] private float debrisForce = 3f;
     [SerializeField] private float debrisLifetime = 3f;
 
@@ -23,11 +23,15 @@ public class BreakableObject : MonoBehaviour
         hitPoints--;
 
         // 🔥 Play hit feedback
-       /* if (hitVFX != null)
-            Instantiate(hitVFX, transform.position, Quaternion.identity);
+         if (hitVFX != null)
+             Instantiate(hitVFX, transform.position, Quaternion.identity);
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        // Apply Knock Force
+        rb.AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized * debrisForce, ForceMode2D.Impulse);
 
         if (hitSound != null)
-            AudioSource.PlayClipAtPoint(hitSound, transform.position); */
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
 
         if (hitPoints <= 0)
         {
@@ -51,11 +55,12 @@ public class BreakableObject : MonoBehaviour
             Destroy(rb.gameObject, debrisLifetime);
         }
 
-       /* if (breakVFX != null)
+        if (breakVFX != null)
             Instantiate(breakVFX, transform.position, Quaternion.identity);
 
         if (breakSound != null)
-            AudioSource.PlayClipAtPoint(breakSound, transform.position);*/
+            //AudioSource.PlayClipAtPoint(breakSound, transform.position);
+            AudioManager.Instance.PlaySFX("BarrelBreak");
 
         Destroy(gameObject);
     }

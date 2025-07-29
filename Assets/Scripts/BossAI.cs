@@ -294,6 +294,8 @@ public class BossAI : MonoBehaviour
         {
             animator.SetTrigger("Hurt");
             animator.SetBool("IsHurting", true);
+            // Play Hurting Sounds of the Dragon Lord
+            AudioManager.Instance.PlaySFX("DragonHurt");
 
         };
 
@@ -337,6 +339,8 @@ public class BossAI : MonoBehaviour
         MessageManager.Instance.victoryAchievedText.FadeInThenOut();
         // Play death animation
         if (animator) animator.SetTrigger("Death");
+        // Play Dying Sounds
+        AudioManager.Instance.PlaySFX("DragonDie");
         isDead = true;
 
         // Disable AI or controls
@@ -360,7 +364,7 @@ public class BossAI : MonoBehaviour
     public void SpawnExplosionEffects()
     {
         CameraShake.Instance.Shake(0.5f, 0.5f); // Shake the camera for 0.5 seconds with a magnitude of 0.5
-
+        AudioManager.Instance.PlaySFX("Explosion");
         if (explosionEffects)
         {
             Instantiate(explosionEffects, transform.position, Quaternion.identity);
