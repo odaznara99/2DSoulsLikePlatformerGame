@@ -31,7 +31,8 @@ public class BreakableObject : MonoBehaviour
         rb.AddForce(new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized * debrisForce, ForceMode2D.Impulse);
 
         if (hitSound != null)
-            AudioSource.PlayClipAtPoint(hitSound, transform.position);
+            //AudioSource.PlayClipAtPoint(hitSound, transform.position);
+            AudioManager.Instance.PlaySFX(hitSound);
 
         if (hitPoints <= 0)
         {
@@ -60,7 +61,7 @@ public class BreakableObject : MonoBehaviour
 
         if (breakSound != null)
             //AudioSource.PlayClipAtPoint(breakSound, transform.position);
-            AudioManager.Instance.PlaySFX("BarrelBreak");
+            AudioManager.Instance.PlaySFX(breakSound);
 
         Destroy(gameObject);
     }

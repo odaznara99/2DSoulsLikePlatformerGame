@@ -78,6 +78,11 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void PlaySFX(AudioClip audioClip)
+    {
+        sfxSource.PlayOneShot(audioClip);
+    }
+
     private float musicVolume = 1f;
     private float sfxVolume = 1f;
 
