@@ -42,7 +42,7 @@ public class AttackBox : MonoBehaviour
                 // Instantiate the randomly chosen effect
                 GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
 
-                AudioManager.Instance.PlaySFX("Attack1");
+                AudioManager.Instance.PlaySFX("SwordImpact");
             }
 
 
@@ -60,7 +60,8 @@ public class AttackBox : MonoBehaviour
             {
                 // Apply damage to the boss
                 bossScript.TakeDamage(attackDamage);
-                AudioManager.Instance.PlaySFX("Attack1");
+                //AudioManager.Instance.PlaySFX("Attack1");
+                AudioManager.Instance.PlaySFX("SwordImpact");
                 // Instantiate the randomly chosen effect
                 GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
 
