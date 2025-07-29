@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/StartMenu.unity
-    guid: b0c7e939ffb95e54e9fc31ad64b935c3
+    guid: 4a390b02104dc4d43a89db1cc2bafe5e
   - enabled: 1
     path: Assets/Scenes/Forest of the Beginnings.unity
     guid: bd83c6ea2b43d4b429af377dbe540306

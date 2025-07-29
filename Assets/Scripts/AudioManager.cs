@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     public AudioSource musicSource;
     public AudioSource sfxSource;
+    public AudioSource fightMusicSource;
 
     [Header("Audio Clips")]
     public List<AudioClip> musicClips;
@@ -50,6 +51,14 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning($"Music '{clipName}' not found.");
         }
+    }
+
+    public void PlayFightMusic() {   
+        fightMusicSource.Play();
+    }
+
+    public void StopFightMusic() {
+        fightMusicSource.Stop();
     }
 
     public void StopMusic()
@@ -110,6 +119,11 @@ public class AudioManager : MonoBehaviour
         SetSFXVolume(sfxVolume);
         ToggleMusic(musicEnabled);
         ToggleSFX(sfxEnabled);
+    }
+
+    private void Start()
+    {
+        StopFightMusic();
     }
 
 

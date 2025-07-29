@@ -331,6 +331,8 @@ public class BossAI : MonoBehaviour
         //Debug.Log("Boss has died!");
         // Stop Velocity
         rb.velocity = Vector2.zero;
+        // Stop Fight Music
+        AudioManager.Instance.StopFightMusic();
         // Show Victory Message
         MessageManager.Instance.victoryAchievedText.FadeInThenOut();
         // Play death animation
