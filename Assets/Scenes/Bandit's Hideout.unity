@@ -28422,6 +28422,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2131100714}
     m_Modifications:
+    - target: {fileID: 1640648514660061451, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5526621487844814192, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
+      propertyPath: m_text
+      value: (E) INTERACT
+      objectReference: {fileID: 0}
+    - target: {fileID: 5526621487844814192, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
+      propertyPath: m_fontSize
+      value: 85.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5526621487844814192, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6882211167080817599, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_Name
       value: LeverSystem
@@ -28464,6 +28480,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8083465299211957173, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9088070427594987364, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -28684,10 +28704,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2870362846928802232, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: followRangeTrigger
-      value: 
-      objectReference: {fileID: 218244220}
+    - target: {fileID: 371363043358013068, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 643219881383310639, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 643219881383310639, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 643219881383310639, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451182777928872145, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451182777928872145, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3678104684269669328, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -28731,6 +28771,22 @@ PrefabInstance:
     - target: {fileID: 3896838311430431188, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_Name
       value: UI Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4446199030508861742, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4446199030508861742, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4446199030508861742, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 43.794006
+      objectReference: {fileID: 0}
+    - target: {fileID: 4446199030508861742, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -231.72
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
