@@ -41,6 +41,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMusic(string clipName, bool loop = true)
     {
+        musicSource.Stop();
+
         if (musicDict.TryGetValue(clipName, out AudioClip clip))
         {
             musicSource.clip = clip;

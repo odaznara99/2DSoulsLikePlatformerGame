@@ -477,41 +477,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: sceneName
-      value: Graves of the Undead
-      objectReference: {fileID: 0}
-    - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: spawnPointName
-      value: End
-      objectReference: {fileID: 0}
-    - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: spawnPointType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3827900037554122626, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5165474828711581127, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: m_Name
       value: NextLevel
-      objectReference: {fileID: 0}
-    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: m_Size.x
-      value: 5.3998337
-      objectReference: {fileID: 0}
-    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: m_Size.y
-      value: 4.815262
-      objectReference: {fileID: 0}
-    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: m_Offset.x
-      value: 51.66601
-      objectReference: {fileID: 0}
-    - target: {fileID: 7162787604719802790, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
-      propertyPath: m_Offset.y
-      value: 21.566677
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1212,7 +1180,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.4254599, y: 1.4221902}
+  m_Offset: {x: -1.4484768, y: 1.4221902}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1223,7 +1191,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 16.492422, y: 9.881431}
+  m_Size: {x: 22.240295, y: 9.881431}
   m_EdgeRadius: 0
 --- !u!114 &218244220
 MonoBehaviour:
@@ -2550,6 +2518,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8083465299211957173, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9088070427594987364, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -28096,6 +28068,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2122813516710600075, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0073242188
+      objectReference: {fileID: 0}
     - target: {fileID: 3771800836167934203, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: m_LocalPosition.x
       value: 150.09787
@@ -28139,6 +28115,10 @@ PrefabInstance:
     - target: {fileID: 4544736309209855722, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: fadeDuration
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4699738310768715592, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.0024414062
       objectReference: {fileID: 0}
     - target: {fileID: 6216667301036094156, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: m_IsActive
@@ -28422,22 +28402,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2131100714}
     m_Modifications:
-    - target: {fileID: 1640648514660061451, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5526621487844814192, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_text
-      value: (E) INTERACT
-      objectReference: {fileID: 0}
-    - target: {fileID: 5526621487844814192, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_fontSize
-      value: 85.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5526621487844814192, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_fontSizeMax
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 6882211167080817599, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_Name
       value: LeverSystem
@@ -28480,10 +28444,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8083465299211957173, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9088070427594987364, guid: 59d7bababc3b7a74eb0a2bdf2a21d400, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -28704,6 +28664,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 346439046978449944, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3678104684269669328, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -28747,6 +28711,10 @@ PrefabInstance:
     - target: {fileID: 3896838311430431188, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_Name
       value: UI Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5190120716582577570, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00012207031
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

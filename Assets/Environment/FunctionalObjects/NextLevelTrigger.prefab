@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5459496008561196520
 RectTransform:
   m_ObjectHideFlags: 0
@@ -34,10 +34,10 @@ RectTransform:
   - {fileID: 1809163538194982951}
   m_Father: {fileID: 4268164516346348900}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -370.443, y: 16.43158}
-  m_SizeDelta: {x: 499.9714, y: 62.8632}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -370.443, y: 542}
+  m_SizeDelta: {x: 499.9714, y: 62.86319}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8994960030785717850
 CanvasRenderer:
@@ -321,7 +321,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 2.493803, y: 0.9297075}
+  m_Offset: {x: 51.66601, y: 21.566677}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -332,7 +332,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.987606, y: 4.828207}
+  m_Size: {x: 5.3998337, y: 4.815262}
   m_EdgeRadius: 0
 --- !u!114 &2418713047365616471
 MonoBehaviour:
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9816fe074249ff488ea7d75a33d5d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Forest of the Beginnings
+  sceneName: Graves of the Undead
   spawnPointType: 0
   locationButton: {fileID: 384378257348452379}
 --- !u!1 &6268499455493565625

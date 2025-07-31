@@ -299,14 +299,14 @@ public class PlayerHealth : MonoBehaviour
     {
         if (collision.collider.CompareTag("Hazard")) {
 
-            TakeDamage(hazardDamage,null);
+            TakeDamage(hazardDamage,collision.gameObject);
         
         }
 
         if (collision.collider.CompareTag("DeadZone"))
         {
 
-            TakeDamage(currentHealth, null);
+            TakeDamage(currentHealth, collision.gameObject);
             //Die();
 
         }
@@ -318,8 +318,15 @@ public class PlayerHealth : MonoBehaviour
         if (collision.CompareTag("DeadZone"))
         {
 
-            TakeDamage(currentHealth, null);
+            TakeDamage(currentHealth, collision.gameObject);
             //Die();
+
+        }
+
+        if (collision.CompareTag("Hazard"))
+        {
+
+            TakeDamage(hazardDamage, collision.gameObject);
 
         }
     }
