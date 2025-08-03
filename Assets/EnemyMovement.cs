@@ -67,6 +67,7 @@ public class EnemyMovement : MonoBehaviour
         //if (Mathf.Abs(rb.velocity.x) > Mathf.Epsilon)
             //m_animator.SetBool("IsRunning", true);
         m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.velocity.x));
+        m_animator.SetBool("IsGrounded", isGrounded);
     }
 
     private void FixedUpdate()
