@@ -40,4 +40,8 @@ public class FloatingHealthbar : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public void HideBar() {
+        gameObject.SetActive(false);
+    }
 }

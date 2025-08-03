@@ -12,6 +12,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("Floating Healthbar")]
     [SerializeField] private GameObject healthBarPrefab;
     private FloatingHealthbar healthBarUI;
+    [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 1.0f, 0); // Offset for the health bar
 
     [Header("Floating Damage Text")]
     public GameObject floatingTextPrefab;
@@ -36,6 +37,19 @@ public class EnemyHealth : MonoBehaviour
     {
         m_animator = GetComponent<Animator>();
         worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
+
+        // HEALTH BAR UI SETUP
+        currentHealth = maxHealth;
+
+        if (healthBarPrefab != null)
+        {
+            GameObject hb = Instantiate(healthBarPrefab, transform.position, Quaternion.identity);
+            healthBarUI = hb.GetComponent<FloatingHealthbar>();
+            healthBarUI.SetTarget(this.transform);
+        }
+
+        healthBarUI.SetHealth(currentHealth, maxHealth);
+        healthBarUI.offset = healthBarOffset; // Set the offset for the health bar
     }
 
     public void TakeDamage(float damageAmount)
@@ -61,6 +75,11 @@ public class EnemyHealth : MonoBehaviour
            // Trigger Death Animation
            m_animator.SetTrigger("Die");
            m_animator.SetBool("IsDead", true);
+            // Hide or Destroy Health Bar
+            if (healthBarUI != null)
+            {
+                healthBarUI.DestroyBar();
+            }
         }
         else
         {
