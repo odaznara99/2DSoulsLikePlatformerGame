@@ -18,6 +18,7 @@ TagManager:
   - Boss
   - Breakable
   - ZoneCamera
+  - Skeleton
   layers:
   - Default
   - TransparentFX

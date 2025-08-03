@@ -21279,13 +21279,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1635633228}
   - component: {fileID: 1635633227}
-  - component: {fileID: 1635633226}
   - component: {fileID: 1635633225}
   - component: {fileID: 1635633224}
   - component: {fileID: 1635633229}
-  m_Layer: 0
+  - component: {fileID: 1635633230}
+  m_Layer: 6
   m_Name: SkeletonSword
-  m_TagString: Enemy
+  m_TagString: Skeleton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21302,10 +21302,10 @@ CapsuleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1919
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -21352,52 +21352,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1635633226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1635633223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba8b435a8dc3f604e9a13c4acd7081c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  m_bloodSplash: {fileID: 0}
-  attackPoint: {fileID: 0}
-  headPoint: {fileID: 0}
-  moveSpeed: 2
-  followRange: 10
-  attackRange: 1.5
-  attackCooldown: 1
-  attackTiming: 0.5
-  damage: 10
-  maxHealth: 100
-  currentHealth: 100
-  healthBarPrefab: {fileID: 5642192281324820, guid: 9e4ec08b4ec92bc479a6bc8d76622f0e, type: 3}
-  floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
-  worldCanvas: {fileID: 0}
-  player: {fileID: 0}
-  playerHealth: {fileID: 0}
-  playerScript: {fileID: 0}
-  lastAttackTime: 0
-  isFacingRight: 0
-  knockbackResistance: 0
-  knockbackDuration: 0.2
-  groundCheck: {fileID: 0}
-  wallCheck: {fileID: 0}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  checkDistance: 0.2
-  jumpForce: 10
-  jumpHorizontalSpeed: 5
-  jumpCooldown: 5
-  damageSounds: []
-  deathSounds: []
-  enableLogging: 0
 --- !u!212 &1635633227
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21475,7 +21429,7 @@ Animator:
   m_GameObject: {fileID: 1635633223}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c854f8cd39469174ca277d58c446e15b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -21486,6 +21440,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1635633230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635633223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e7bf5ab207b9644da9a105a5c264e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  healthBarPrefab: {fileID: 5642192281324820, guid: 9e4ec08b4ec92bc479a6bc8d76622f0e, type: 3}
+  floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
+  worldCanvas: {fileID: 1073447530}
+  m_bloodSplash: {fileID: 7711369475918572527, guid: 0b4eb258065b8604182f24e63aa7ca3d, type: 3}
+  offset: {x: 0, y: 0.5, z: 0}
+  damageSounds: []
+  deathSounds: []
+  isDead: 0
+  isHurt: 0
 --- !u!1 &1640423872
 GameObject:
   m_ObjectHideFlags: 0

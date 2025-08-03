@@ -48,14 +48,27 @@ public class AttackBox : MonoBehaviour
 
             // Apply knockback to the enemy
             Vector2 knockDirection = other.transform.position - transform.position;
-            enemyScript.ApplyKnockback(knockDirection,2f);
+            enemyScript.ApplyKnockback(knockDirection, 2f);
+        }
+        else if (other.CompareTag("Skeleton"))
+        {
+            EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+
+            if (enemyHealth.isDead == false) { 
+                enemyHealth.TakeDamage(attackDamage);
+                // Instantiate the randomly chosen effect
+                GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
+                // Play Impact Sound
+                AudioManager.Instance.PlaySFX("SwordImpact");
+            }
+
         }
         else if (other.CompareTag("Boss"))
         {
             BossAI bossScript = other.GetComponent<BossAI>();
 
-            
-            
+
+
             if (!bossScript.IsDead())
             {
                 // Apply damage to the boss
