@@ -36,9 +36,14 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         m_animator = GetComponent<Animator>();
+        m_animator.SetBool("IsDead", false);
+        m_animator.SetBool("IsHurting", false);
+        m_animator.ResetTrigger("Hurt");
+        m_animator.ResetTrigger("Die");
+
         worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
 
-        // HEALTH BAR UI SETUP
+        // --<< HEALTH BAR UI SETUP
         currentHealth = maxHealth;
 
         if (healthBarPrefab != null)
@@ -50,6 +55,7 @@ public class EnemyHealth : MonoBehaviour
 
         healthBarUI.SetHealth(currentHealth, maxHealth);
         healthBarUI.offset = healthBarOffset; // Set the offset for the health bar
+        // -->> HEALTH BAR UI SETUP
     }
 
     public void TakeDamage(float damageAmount)

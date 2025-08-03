@@ -1,0 +1,120 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyMovement : MonoBehaviour
+{
+    public string enemyName = "Skeleton"; // Name of the enemy
+    [Header("Patrol Params")]
+    public Transform pointA; // Patrol point A
+    public Transform pointB; // Patrol point B
+    public float patrolSpeed = 2f; // Speed of patrolling
+    [Header("Chase Params")]
+    public float chaseSpeed = 3f; // Speed when chasing the player
+    public float detectionRange = 5f; // Range to detect the player
+    public Transform player; // Reference to the player
+    private Transform currentTarget; // Current patrol target
+    private bool isChasing = false; // Whether the skeleton is chasing the player
+    private Rigidbody2D rb; // Reference to the Rigidbody2D component
+    private Animator m_animator; // Reference to the Animator component
+
+    [Header("Ground Check")]
+    public Transform groundCheck; // A point to check if the enemy is grounded
+    public float groundCheckRadius = 0.2f; // Radius of the ground check
+    public LayerMask groundLayer; // LayerMask to specify what is considered ground
+
+    [Header("Flags")]
+    [SerializeField]private bool isGrounded; // Whether the enemy is grounded
+
+
+    private void Start()
+    {
+        // Start patrolling towards point A
+        currentTarget = pointA;
+
+        // Find the player by tag
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        // Get the Rigidbody2D component
+        rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody2D is missing on the: " + enemyName + "!");
+        }
+
+        // Get the Animator component
+        m_animator = GetComponent<Animator>();
+        if (m_animator == null)
+        {
+            Debug.LogError("Animator is missing on the: " + enemyName + "!");
+        }
+    }
+
+    private void Update()
+    {
+        if (Vector3.Distance(transform.position, player.position) <= detectionRange)
+        {
+            // Start chasing the player
+            isChasing = true;
+        }
+        else
+        {
+            // Return to patrolling if the player is out of range
+            isChasing = false;
+        }
+
+        //Trigger Run Animation
+        //if (Mathf.Abs(rb.velocity.x) > Mathf.Epsilon)
+            //m_animator.SetBool("IsRunning", true);
+        m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.velocity.x));
+    }
+
+    private void FixedUpdate()
+    {
+        // Check if the enemy is grounded
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        if (isChasing)
+        {
+            ChasePlayer();
+        }
+        else
+        {
+            Patrol();
+        }
+    }
+
+    private void Patrol()
+    {
+        if (!isGrounded) return;
+        // Calculate direction to the current patrol target
+        Vector2 direction = (currentTarget.position - transform.position).normalized;
+
+        // Set velocity towards the target
+        rb.velocity = direction * patrolSpeed;
+
+        // Switch target when reaching the current patrol point
+        if (Vector3.Distance(transform.position, currentTarget.position) < 0.5f)
+        {
+            currentTarget = currentTarget == pointA ? pointB : pointA;
+        }
+    }
+
+    private void ChasePlayer()
+    {
+        if (!isGrounded) return;
+
+        // Calculate direction to the player
+        Vector2 direction = (player.position - transform.position).normalized;
+
+        // Set velocity towards the player
+        rb.velocity = new Vector3(direction.x * chaseSpeed, rb.velocity.y);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Draw the detection range in the editor for debugging
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+}
