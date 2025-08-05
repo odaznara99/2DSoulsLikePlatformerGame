@@ -1624,6 +1624,7 @@ GameObject:
   - component: {fileID: 504516077}
   - component: {fileID: 504516076}
   - component: {fileID: 504516075}
+  - component: {fileID: 504516079}
   m_Layer: 5
   m_Name: ButtonNewGame
   m_TagString: Untagged
@@ -1664,6 +1665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonText: {fileID: 1401220991}
+  button: {fileID: 0}
   hoverScale: 1.2
 --- !u!114 &504516076
 MonoBehaviour:
@@ -1721,6 +1723,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 504516079}
+        m_TargetAssemblyTypeName: DisableButton, Assembly-CSharp
+        m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &504516077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1759,6 +1773,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 504516073}
   m_CullTransparentMesh: 1
+--- !u!114 &504516079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504516073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0757ca2043b464f4aa68efeb3a71f59e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &512249673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16318,6 +16344,7 @@ GameObject:
   - component: {fileID: 1459833627}
   - component: {fileID: 1459833626}
   - component: {fileID: 1459833625}
+  - component: {fileID: 1459833629}
   m_Layer: 5
   m_Name: ButtonQuit
   m_TagString: Untagged
@@ -16358,6 +16385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonText: {fileID: 1598941649}
+  button: {fileID: 0}
   hoverScale: 1.2
 --- !u!114 &1459833626
 MonoBehaviour:
@@ -16415,6 +16443,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1459833629}
+        m_TargetAssemblyTypeName: DisableButton, Assembly-CSharp
+        m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1459833627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16453,6 +16493,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1459833623}
   m_CullTransparentMesh: 1
+--- !u!114 &1459833629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459833623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0757ca2043b464f4aa68efeb3a71f59e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1483354070 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3564026850829729314, guid: 72a905bcc22e3e443be6f48bfb173c00, type: 3}
@@ -17093,6 +17145,7 @@ GameObject:
   - component: {fileID: 1664573769}
   - component: {fileID: 1664573768}
   - component: {fileID: 1664573767}
+  - component: {fileID: 1664573771}
   m_Layer: 5
   m_Name: ButtonSettings
   m_TagString: Untagged
@@ -17133,6 +17186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonText: {fileID: 1622744547}
+  button: {fileID: 0}
   hoverScale: 1.2
 --- !u!114 &1664573768
 MonoBehaviour:
@@ -17178,10 +17232,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 742619608}
-        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
-        m_MethodName: Settings
-        m_Mode: 6
+      - m_Target: {fileID: 1664573771}
+        m_TargetAssemblyTypeName: DisableButton, Assembly-CSharp
+        m_MethodName: Disable
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -17228,6 +17282,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664573765}
   m_CullTransparentMesh: 1
+--- !u!114 &1664573771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664573765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0757ca2043b464f4aa68efeb3a71f59e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1682527973
 PrefabInstance:
   m_ObjectHideFlags: 0

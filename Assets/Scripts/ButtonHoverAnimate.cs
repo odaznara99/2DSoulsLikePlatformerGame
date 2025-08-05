@@ -21,15 +21,19 @@ public class ButtonHoverAnimate : MonoBehaviour, IPointerEnterHandler, IPointerE
             return;
         }
 
-        if (buttonText)
+        if (!button)
         {
             Debug.Log("ButtonHoverAnimate: button is not assigned in the inspector.");
             //return;
         }
+        else 
+        {
+            originalScaleButton = button.transform.localScale;
+        }
 
         // Store the original scale of the text
         originalScale = buttonText.transform.localScale;
-        originalScaleButton = button.transform.localScale;
+        
     }
 
     // Called when the mouse pointer enters the button
