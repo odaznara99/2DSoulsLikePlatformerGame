@@ -770,22 +770,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enabledDebugLog: 0
-  enabledKeyboardInput: 1
+  enabledKeyboardInput: 0
   m_noBlood: 1
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
   upperBodyCollider: {fileID: 8000442065729155241}
   currentState: 0
   currentXVelocityState: 0
   inputX: 0
-  jumpForce: 7
-  maxDoubleJumpCount: 2
-  currentDoubleJumpCount: 0
   movementSpeed: 4
   slowMovementSpeed: 1.5
   rollingSpeed: 6
+  jumpForce: 7
+  maxDoubleJumpCount: 2
+  currentDoubleJumpCount: 0
   wallSlidingSpeed: -0.3
   wallJumpForceX: 5
   wallJumpForceY: 6
+  airControlFactor: 0.5
+  groundControlFactor: 1
+  directionChangeSpeed: 5
   attackBoxObject: {fileID: 4028321758023377089}
   attackBoxCollider: {fileID: 5111446264070832831}
   attackIntervalTime: 0.5

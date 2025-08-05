@@ -17428,14 +17428,6 @@ PrefabInstance:
       propertyPath: worldCanvas
       value: 
       objectReference: {fileID: 1073447530}
-    - target: {fileID: 1806744474678443789, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
-      propertyPath: enabledKeyboardInput
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5187144802125260482, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7721701825642549688, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.13

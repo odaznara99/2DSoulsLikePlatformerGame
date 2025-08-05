@@ -66,24 +66,32 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // === Variables for X Velocity === // these variables can override x velocity
     public XVelocityState currentXVelocityState;
     private Coroutine currentXVelocityStateCoroutine;
+    
+
+    [Header("Movement Parameters")]
     [SerializeField] private float inputX;
-
-
-    [Header("Physics Parameters")]
-    // === Variables for Movement Speed === //
-    public float jumpForce = 6.0f; // Force of the jump, Y velocity of player when jumping
-    public int maxDoubleJumpCount = 1; // Maximum number of jumps player can perform (Double Jump)
-    [SerializeField]private int currentDoubleJumpCount = 0;
     public float movementSpeed = 4.0f;
     public float slowMovementSpeed = 1.5f; private float originalMovementSpeed = 4.0f;
     public float rollingSpeed = 5.0f; private float originalRollingSpeed = 5.0f;
+
+    [Header("Jump Settings")]
+    public float jumpForce = 6.0f; // Force of the jump, Y velocity of player when jumping
+    public int maxDoubleJumpCount = 1; // Maximum number of jumps player can perform (Double Jump)
+    [SerializeField]private int currentDoubleJumpCount = 0;
+    
+    [Header("Wall Jump Settings")]
     public float wallSlidingSpeed = -0.3f; // Y velocity of player during wall sliding. Should be negative
     public float wallJumpForceX = 5.0f; // X velocity of player when wall jumping
     public float wallJumpForceY = 6.0f; // Y velocity of player when wall jumping
-    
+
+    [Header("Momentum Settings")]
+    public float airControlFactor = 0.5f; // How much control the player has in the air
+    public float groundControlFactor = 1.0f; // How much control the player has on the ground
+    public float directionChangeSpeed = 5f; // How quickly the player can change direction
+
 
     // === Variables for Attack === //
-    [Header("Attack Parameters")]
+    [Header("Attack Settings")]
     [SerializeField] private GameObject attackBoxObject; // The object with BoxCollider2D
     [SerializeField] private Collider2D attackBoxCollider;
     //private float attackRadius = 2f;
@@ -91,7 +99,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float attackIntervalTime = 0.5f;
     public float playerKnockbackForce = 15f; // Knock back to enemies
 
-    [Header("Detection Triggers")]
+    [Header("Detection Flags")]
     // == Variable for Sensors / Conditions / SubStates
     public bool isGrounded = false; // Sensor to detect if player is on a Ground (Tag)
     public bool isParry = false; // Set to true for split seconds, when player is shielding
@@ -146,19 +154,19 @@ public class PlayerControllerVersion2 : MonoBehaviour
 #endif
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-
-
-        // === Horizontal Movements === // 
-        // === Same logic, but variables was being modified by:
-        // === SetFloatInputX/SetFloatMovementSpeed
         if (currentXVelocityState == XVelocityState.Normal ||
             currentXVelocityState == XVelocityState.Slow ||
             currentXVelocityState == XVelocityState.Stop)
         {
-            rb.velocity = new Vector2(inputX * movementSpeed, rb.velocity.y);
+            UpdateMovement();
         }
+
+    }
+
+    void Update()
+    {
 
         // === Handle Player Detection Triggers === //
         UpdateDetectionTriggers();
@@ -872,6 +880,24 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public bool IsFacingRight()
     {
         return facingDirection == 1;
+    }
+
+    private void UpdateMovement()
+    {
+        // Determine if the player is grounded
+        bool isGrounded = m_groundSensor.State();
+
+        // Calculate the control factor based on whether the player is grounded or in the air
+        float controlFactor = isGrounded ? groundControlFactor : airControlFactor;
+
+        // Calculate the target velocity based on input
+        float targetVelocityX = inputX * movementSpeed;
+
+        // Gradually adjust the player's velocity to the target velocity
+        float newVelocityX = Mathf.Lerp(rb.velocity.x, targetVelocityX, directionChangeSpeed * controlFactor * Time.deltaTime);
+
+        // Apply the new velocity
+        rb.velocity = new Vector2(newVelocityX, rb.velocity.y);
     }
 
 
