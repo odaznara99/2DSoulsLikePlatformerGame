@@ -26,6 +26,7 @@ public class EnemyMovement : MonoBehaviour
     [Header("Flags")]
     [SerializeField]private bool isGrounded; // Whether the enemy is grounded
     [SerializeField]private bool isChasing = false; // Whether the skeleton is chasing the player
+    [SerializeField]private bool isFacingRight = false;
 
     private EnemyHealth enemyHealth; // Reference to the EnemyHealth component
 
@@ -77,6 +78,12 @@ public class EnemyMovement : MonoBehaviour
         // Set Running Parameters in the Animator
         m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.velocity.x));
         m_animator.SetBool("IsGrounded", isGrounded);
+
+        // Flip the sprite based on velocity
+        if (!enemyHealth.isHurt && !enemyHealth.isDead) 
+        {
+            FlipSpriteBasedOnVelocity();
+        }
     }
 
     private void FixedUpdate()
@@ -134,5 +141,29 @@ public class EnemyMovement : MonoBehaviour
         // Draw the detection range in the editor for debugging
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    void FlipSpriteBasedOnVelocity()
+    {
+        // Check the enemy's velocity on the X-axis to determine direction
+        if (rb.velocity.x > 0 && !isFacingRight)
+        {
+            // Moving right but currently facing left, so flip to face right
+            FlipSprite();
+        }
+        else if (rb.velocity.x < 0 && isFacingRight)
+        {
+            // Moving left but currently facing right, so flip to face left
+            FlipSprite();
+        }
+    }
+
+    void FlipSprite()
+    {
+        // Flip the sprite by changing the local scale on the X-axis
+        isFacingRight = !isFacingRight;
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1; // Reverse the scale on X-axis
+        transform.localScale = localScale;
     }
 }
