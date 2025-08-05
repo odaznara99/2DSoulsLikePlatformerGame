@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
     public float detectionRange = 5f; // Range to detect the player
     public Transform player; // Reference to the player
     private Transform currentTarget; // Current patrol target
-    private bool isChasing = false; // Whether the skeleton is chasing the player
+    
     private Rigidbody2D rb; // Reference to the Rigidbody2D component
     private Animator m_animator; // Reference to the Animator component
 
@@ -25,6 +25,9 @@ public class EnemyMovement : MonoBehaviour
 
     [Header("Flags")]
     [SerializeField]private bool isGrounded; // Whether the enemy is grounded
+    [SerializeField]private bool isChasing = false; // Whether the skeleton is chasing the player
+
+    private EnemyHealth enemyHealth; // Reference to the EnemyHealth component
 
 
     private void Start()
@@ -48,10 +51,18 @@ public class EnemyMovement : MonoBehaviour
         {
             Debug.LogError("Animator is missing on the: " + enemyName + "!");
         }
+
+        // Get the EnemyHealth component
+        enemyHealth = GetComponent<EnemyHealth>();
+        if (enemyHealth == null)
+        {
+            Debug.LogError("EnemyHealth is missing on the: " + enemyName + "!");
+        }
     }
 
     private void Update()
     {
+
         if (Vector3.Distance(transform.position, player.position) <= detectionRange)
         {
             // Start chasing the player
@@ -63,9 +74,7 @@ public class EnemyMovement : MonoBehaviour
             isChasing = false;
         }
 
-        //Trigger Run Animation
-        //if (Mathf.Abs(rb.velocity.x) > Mathf.Epsilon)
-            //m_animator.SetBool("IsRunning", true);
+        // Set Running Parameters in the Animator
         m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.velocity.x));
         m_animator.SetBool("IsGrounded", isGrounded);
     }
@@ -87,6 +96,10 @@ public class EnemyMovement : MonoBehaviour
 
     private void Patrol()
     {
+        if (enemyHealth.isDead)
+        {
+            return;
+        } // Don't do anything if the enemy is dead
         if (!isGrounded) return;
         // Calculate direction to the current patrol target
         Vector2 direction = (currentTarget.position - transform.position).normalized;
@@ -103,6 +116,10 @@ public class EnemyMovement : MonoBehaviour
 
     private void ChasePlayer()
     {
+        if (enemyHealth.isDead)
+        {
+            return;
+        } // Don't do anything if the enemy is dead
         if (!isGrounded) return;
 
         // Calculate direction to the player
