@@ -64,6 +64,8 @@ public class MessageManager : MonoBehaviour
 
     public void ShowMessage(string message, bool blink = false, int fontSize = 72)
     {
+        if (message == "StartMenu") return; // Dont show message for start menu
+
         if (levelNameObject == null)
             AutoFindUIReferences();
 
