@@ -103,7 +103,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void Patrol()
     {
-        if (enemyHealth.isDead)
+        if (enemyHealth.isDead || enemyHealth.isHurt)
         {
             return;
         } // Don't do anything if the enemy is dead
@@ -123,7 +123,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if (enemyHealth.isDead)
+        if (enemyHealth.isDead || enemyHealth.isHurt)
         {
             return;
         } // Don't do anything if the enemy is dead
