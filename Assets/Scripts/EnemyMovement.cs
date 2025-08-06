@@ -27,8 +27,15 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField]private bool isGrounded; // Whether the enemy is grounded
     [SerializeField]private bool isChasing = false; // Whether the skeleton is chasing the player
     [SerializeField]private bool isFacingRight = false;
+    public bool isAttacking = false; // Whether the skeleton is currently attacking
 
     private EnemyHealth enemyHealth; // Reference to the EnemyHealth component
+
+    [Header("Attack Settings")]
+    public BoxCollider2D attackBoxTrigger; // Trigger for the attack box
+    public float attackDamage = 20f; // Damage dealt by the attack
+    public float attackRange = 1f; // Range to detect the player
+    public string [] attackAnimationTrigger; // Animation trigger for the attack
 
 
     private void Start()
@@ -63,7 +70,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-
+        
         if (Vector3.Distance(transform.position, player.position) <= detectionRange)
         {
             // Start chasing the player
@@ -73,6 +80,12 @@ public class EnemyMovement : MonoBehaviour
         {
             // Return to patrolling if the player is out of range
             isChasing = false;
+        }
+
+        if (Vector3.Distance(transform.position, player.position) <= attackRange && !isAttacking)
+        {
+            int randomIndex = Random.Range(0, attackAnimationTrigger.Length);
+            m_animator.SetTrigger(attackAnimationTrigger[randomIndex]); // Trigger the attack animation
         }
 
         // Set Running Parameters in the Animator
@@ -103,7 +116,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void Patrol()
     {
-        if (enemyHealth.isDead || enemyHealth.isHurt)
+        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking)
         {
             return;
         } // Don't do anything if the enemy is dead
@@ -123,7 +136,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if (enemyHealth.isDead || enemyHealth.isHurt)
+        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking)
         {
             return;
         } // Don't do anything if the enemy is dead
@@ -139,8 +152,12 @@ public class EnemyMovement : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         // Draw the detection range in the editor for debugging
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        // Draw the attack range in the editor for debugging
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 
     void FlipSpriteBasedOnVelocity()
@@ -165,5 +182,25 @@ public class EnemyMovement : MonoBehaviour
         Vector3 localScale = transform.localScale;
         localScale.x *= -1; // Reverse the scale on X-axis
         transform.localScale = localScale;
+
+        // Flip the attack box trigger as well
+        //Vector3 localScale_attackBox = attackBoxTrigger.transform.localScale;
+        //localScale_attackBox.x *= -1; // Reverse the scale on X-axis
+        //attackBoxTrigger.transform.localScale = localScale_attackBox;
+    }
+
+    void PerformAttack() // will be called in Animation Event
+    {
+        attackBoxTrigger.GetComponent<EnemyAttack>().attackDamage = attackDamage; // Set the attack damage
+        // Enable attack box temporarily
+        attackBoxTrigger.enabled = true;
+
+        // Optionally disable it after short delay
+        Invoke(nameof(DisableAttackBox), 0.1f); // adjust timing
+    }
+
+    void DisableAttackBox()
+    {
+        attackBoxTrigger.enabled = false;
     }
 }
