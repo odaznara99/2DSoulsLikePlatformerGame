@@ -87,7 +87,8 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
         playerScore = 0;
         playerData.currentHealth = playerData.maxHealth; // Reset player health
-        FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
+        //FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
+        FindObjectOfType<UIScreensManager>().HideAllScreens();
 
         //PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
     }
