@@ -122,11 +122,11 @@ public class EnemyMovement : MonoBehaviour
 
     private void Patrol()
     {
-        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking)
+        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || !pointA || !pointB || !isGrounded)
         {
             return;
-        } // Don't do anything if the enemy is dead
-        if (!isGrounded) return;
+        }
+
         // Calculate direction to the current patrol target
         Vector2 direction = (currentTarget.position - transform.position).normalized;
 

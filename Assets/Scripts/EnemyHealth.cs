@@ -43,8 +43,8 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         m_animator = GetComponent<Animator>();
-        m_animator.SetBool("IsDead", false);
-        m_animator.SetBool("IsHurting", false);
+        //m_animator.SetBool("IsDead", false);
+        //m_animator.SetBool("IsHurting", false);
         m_animator.ResetTrigger("Hurt");
         m_animator.ResetTrigger("Die");
 
