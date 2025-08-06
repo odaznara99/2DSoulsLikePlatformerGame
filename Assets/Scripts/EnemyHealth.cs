@@ -26,11 +26,18 @@ public class EnemyHealth : MonoBehaviour
     public List<string> damageSounds = new List<string>();
     public List<string> deathSounds = new List<string>();
 
+    [Header("Knockback Settings")]
+    public float knockbackDuration = 0.5f; // Duration of the knockback effect
+    [Range(0f, 1f)]
+    public float knockbackResistance = 0.1f; // Resistance to knockback (0-1, where 1 is no resistance)
+
     [Header("Flags")]
     public bool isDead = false; // Flag to check if the enemy is dead
     public bool isHurt = false; // Flag to check if the enemy is currently hurt
+    public bool isKnocked = false; // Flag to check if the enemy is knocked back
     //public float hurtDuration = 0.3f; // Duration of the hurt animation
     private Animator m_animator;
+    private Rigidbody2D rb; // Reference to the Rigidbody2D component
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +49,7 @@ public class EnemyHealth : MonoBehaviour
         m_animator.ResetTrigger("Die");
 
         worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
+        rb = GetComponent<Rigidbody2D>();
 
         // --<< HEALTH BAR UI SETUP
         currentHealth = maxHealth;
@@ -113,5 +121,39 @@ public class EnemyHealth : MonoBehaviour
         m_animator.ResetTrigger("Hurt");
         m_animator.SetBool("IsHurting", false);
         isHurt = false;
+    }
+
+
+    public void ApplyKnockback(Vector2 direction, float knockbackForce)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        if (!isKnocked)
+        {
+            StartCoroutine(KnockbackCoroutine(direction, knockbackForce));
+        }
+    }
+
+    IEnumerator KnockbackCoroutine(Vector2 direction, float knockbackForce)
+    {
+        if (isDead)
+        {
+            yield break; // Do not apply knockback if already dead
+        }
+
+        isKnocked = true;
+
+        float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
+
+        rb.velocity = Vector2.zero;
+        rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(knockbackDuration);
+
+        rb.velocity = Vector2.zero;
+        isKnocked = false;
     }
 }

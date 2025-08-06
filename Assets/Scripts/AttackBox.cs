@@ -62,6 +62,10 @@ public class AttackBox : MonoBehaviour
                 AudioManager.Instance.PlaySFX("SwordImpact");
             }
 
+            // Apply knockback to the skeleton
+            Vector2 knockDirection = other.transform.position - transform.position;
+            enemyHealth.ApplyKnockback(knockDirection, 2f);
+
         }
         else if (other.CompareTag("Boss"))
         {

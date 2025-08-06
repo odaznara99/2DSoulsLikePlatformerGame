@@ -24,7 +24,7 @@ public class EnemyMovement : MonoBehaviour
     public LayerMask groundLayer; // LayerMask to specify what is considered ground
 
     [Header("Flags")]
-    [SerializeField]private bool isGrounded; // Whether the enemy is grounded
+    public bool isGrounded; // Whether the enemy is grounded
     [SerializeField]private bool isChasing = false; // Whether the skeleton is chasing the player
     [SerializeField]private bool isFacingRight = false;
     public bool isAttacking = false; // Whether the skeleton is currently attacking
@@ -88,6 +88,7 @@ public class EnemyMovement : MonoBehaviour
 
         if (Vector3.Distance(transform.position, player.position) <= attackRange && !isAttacking)
         {
+            rb.velocity = Vector2.zero; // Stop moving when attacking
             int randomIndex = Random.Range(0, attackAnimationTrigger.Length);
             m_animator.SetTrigger(attackAnimationTrigger[randomIndex]); // Trigger the attack animation
         }
@@ -129,7 +130,7 @@ public class EnemyMovement : MonoBehaviour
         Vector2 direction = (currentTarget.position - transform.position).normalized;
 
         // Set velocity towards the target
-        rb.velocity = direction * patrolSpeed;
+        rb.velocity = new Vector3(direction.x * patrolSpeed, rb.velocity.y);
 
         // Switch target when reaching the current patrol point
         if (Vector3.Distance(transform.position, currentTarget.position) < 0.5f)
