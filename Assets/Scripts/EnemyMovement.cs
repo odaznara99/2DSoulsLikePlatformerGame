@@ -70,7 +70,11 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        
+        if (enemyHealth.isDead)
+        {
+            return;
+        }
+
         if (Vector3.Distance(transform.position, player.position) <= detectionRange)
         {
             // Start chasing the player
