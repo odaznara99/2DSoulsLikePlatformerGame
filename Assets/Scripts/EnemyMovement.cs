@@ -95,6 +95,7 @@ public class EnemyMovement : MonoBehaviour
 
         // Set Running Parameters in the Animator
         m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.velocity.x));
+        m_animator.SetFloat("Velocity_Y", rb.velocity.y);
         m_animator.SetBool("IsGrounded", isGrounded);
 
         // Flip the sprite based on velocity

@@ -2433,7 +2433,7 @@ GameObject:
   m_Layer: 6
   m_Name: GroundCheck
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2446,7 +2446,7 @@ Transform:
   m_GameObject: {fileID: 207318735}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.954, z: 0}
+  m_LocalPosition: {x: 0, y: -0.734, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19101,7 +19101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ded2667767ad42b49b6a5e8170a223d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 5
+  jumpForce: 2.5
 --- !u!1001 &1392342334
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21479,7 +21479,7 @@ Transform:
   m_GameObject: {fileID: 1635633223}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.22, y: 0.785, z: 0}
+  m_LocalPosition: {x: 17.2, y: -3.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -21552,7 +21552,7 @@ MonoBehaviour:
   pointA: {fileID: 1511255833}
   pointB: {fileID: 1000332972}
   patrolSpeed: 2
-  chaseSpeed: 4
+  chaseSpeed: 3
   detectionRange: 4
   player: {fileID: 0}
   groundCheck: {fileID: 207318736}
