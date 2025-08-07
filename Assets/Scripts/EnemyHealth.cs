@@ -123,6 +123,18 @@ public class EnemyHealth : MonoBehaviour
         isHurt = false;
     }
 
+    public void ReviveEnemy() // Call this to revive the enemy
+    {
+        isDead = false;
+        currentHealth = maxHealth;
+        if (healthBarUI != null)
+        {
+            healthBarUI.SetHealth(currentHealth, maxHealth);
+            //healthBarUI.ShowBar();
+        }
+        m_animator.SetBool("IsDead", false);
+    }
+
 
     public void ApplyKnockback(Vector2 direction, float knockbackForce)
     {

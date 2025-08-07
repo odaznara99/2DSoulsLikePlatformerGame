@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 4592532647043217750}
   - component: {fileID: 2360220429187854350}
   - component: {fileID: 5883857450231629254}
-  - component: {fileID: 546437163039083838}
   m_Layer: 6
   m_Name: SkeletonSword
   m_TagString: Skeleton
@@ -237,18 +236,6 @@ MonoBehaviour:
   attackAnimationTrigger:
   - Attack1
   - Attack2
---- !u!114 &546437163039083838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4728877432847727900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a36e49d28a4c7b0499b0fd0bd57f95ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5514890411645902412
 GameObject:
   m_ObjectHideFlags: 0
