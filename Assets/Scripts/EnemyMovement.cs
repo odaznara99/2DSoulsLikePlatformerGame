@@ -168,6 +168,10 @@ public class EnemyMovement : MonoBehaviour
 
     void FlipSpriteBasedOnVelocity()
     {
+        if (isAttacking) 
+        {
+            return;
+        }
         // Check the enemy's velocity on the X-axis to determine direction
         if (rb.velocity.x > 0 && !isFacingRight)
         {
