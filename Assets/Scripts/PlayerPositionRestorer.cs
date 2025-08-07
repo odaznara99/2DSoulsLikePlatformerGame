@@ -11,9 +11,7 @@ public class PlayerPositionRestorer : MonoBehaviour
         spawnPointStart = GameObject.FindGameObjectWithTag("StartPoint").transform;
         spawnPointEnd   = GameObject.FindGameObjectWithTag("EndPoint").transform;
 
-        //TeleportToStartSpawn();
-        //lastCheckpointPosition = GameObject.Find("StartSpawnPoint").transform.position;
-        lastCheckpointPosition = transform.position;
+        //Invoke(nameof(GameManager.instance.SaveCheckPoint), 1f); // Delay to ensure the StartPoint is found
     }
 
     public void TeleportTo(Vector3 spawnPointVector3)
@@ -25,17 +23,19 @@ public class PlayerPositionRestorer : MonoBehaviour
     public void TeleportToStartSpawn() {
         spawnPointStart = GameObject.FindGameObjectWithTag("StartPoint").transform;
         TeleportTo(spawnPointStart);
+        GameManager.instance.SaveCheckPoint();
     }
 
     public void TeleportToEndSpawn()
     {
         spawnPointEnd = GameObject.FindGameObjectWithTag("EndPoint").transform;
         TeleportTo(spawnPointEnd);
+        GameManager.instance.SaveCheckPoint();
     }
 
     public void TeleportToCheckpoint()
     {
-        TeleportTo(lastCheckpointPosition);
+        TeleportTo(GameManager.instance.lastCheckPointSave);
     }
 
     public void TeleportTo(Transform spawnPoint)

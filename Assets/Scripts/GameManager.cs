@@ -7,15 +7,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;  // Singleton instance
     public PlayerData playerData = new ();
+    public Vector3 lastCheckPointSave; // Stores the player's position
     private bool isGamePaused = false;   // Flag to check if the game is paused
     private bool isGameOver = false;     // Flag to check if the game is over
     private int playerScore = 0;         // Player's score
 
     //public Vector3 lastPlayerPosition; // Stores the player's position
     public string lastSceneName;
-
-    [Header("Prefabs")]
-    public GameObject playerPrefab; // Reference to the player prefab
 
     void Awake()
     {
@@ -87,10 +85,9 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
         playerScore = 0;
         playerData.currentHealth = playerData.maxHealth; // Reset player health
-        //FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
+
         FindObjectOfType<UIScreensManager>().HideAllScreens();
 
-        //PlayerControllerVersion2.Instance.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
     }
 
     // Function to pause the game
@@ -169,6 +166,14 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         //SceneManager.LoadScene(0);
         SceneLoader.Instance.LoadScene("StartMenu",SpawnPointType.Start);
+    }
+
+    public void SaveCheckPoint() {
+        lastCheckPointSave = FindObjectOfType<PlayerControllerVersion2>().transform.position; // Save the player's position
+    }
+
+    public Vector3 GetCheckPoint() { 
+        return lastCheckPointSave;
     }
 
 

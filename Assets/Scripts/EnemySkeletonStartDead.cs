@@ -26,7 +26,7 @@ public class EnemySkeletonStartDead : MonoBehaviour
         {
             triggered = true;
             animator.SetTrigger("Recover");
-            Destroy(this);
+            this.enabled = false; // Disable this script after triggering the recovery
         }
     }
 
