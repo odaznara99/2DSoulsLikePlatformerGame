@@ -102,6 +102,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SkeletonSword_Dead
       objectReference: {fileID: 0}
+    - target: {fileID: 5883857450231629254, guid: f41083e532a5a934aa71517d8bebb6de, type: 3}
+      propertyPath: detectionRange
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7888145914789307888, guid: f41083e532a5a934aa71517d8bebb6de, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

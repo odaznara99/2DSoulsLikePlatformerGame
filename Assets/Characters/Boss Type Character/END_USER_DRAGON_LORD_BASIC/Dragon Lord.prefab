@@ -222,7 +222,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 911149bd35aa5a744bf104d300440d27, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -356,6 +356,7 @@ MonoBehaviour:
   floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
   textSpawnPoint: {fileID: 3102984410289515296}
   worldCanvas: {fileID: 0}
+  bossHealthUI: {fileID: 0}
   followRangeScript: {fileID: 0}
   attackRange: 2
   playerLayer:

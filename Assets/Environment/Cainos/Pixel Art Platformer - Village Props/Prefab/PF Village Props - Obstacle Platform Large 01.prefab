@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 5373330553216305744}
   - component: {fileID: 846718474016397756}
   - component: {fileID: 8051236411331080785}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PF Village Props - Obstacle Platform Large 01
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2130810699
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: -1
   m_Sprite: {fileID: -283455303, guid: 7810966f0f690954c87305933cabf2b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
