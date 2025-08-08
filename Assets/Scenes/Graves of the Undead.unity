@@ -91049,10 +91049,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 346439046978449944, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3678104684269669328, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -91096,10 +91092,6 @@ PrefabInstance:
     - target: {fileID: 3896838311430431188, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_Name
       value: UI Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5190120716582577570, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.00024414062
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
