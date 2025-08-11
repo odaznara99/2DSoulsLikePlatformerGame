@@ -175,6 +175,10 @@ public class EnemyMovement : MonoBehaviour
         // Draw the attack range in the editor for debugging
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        // Draw the attack range in the editor for debugging
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 
     void FlipSpriteBasedOnVelocity()

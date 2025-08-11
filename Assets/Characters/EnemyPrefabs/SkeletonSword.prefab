@@ -222,7 +222,7 @@ MonoBehaviour:
   detectionRange: 4
   player: {fileID: 0}
   groundCheck: {fileID: 6848546394731543355}
-  groundCheckRadius: 0.2
+  groundCheckRadius: 0.09
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -435,7 +435,7 @@ Transform:
   m_GameObject: {fileID: 7422166496564532532}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.734, z: 0}
+  m_LocalPosition: {x: -0.026, y: -0.726, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
