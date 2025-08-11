@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
     public float detectionRange = 5f; // Range to detect the player
     public Transform player; // Reference to the player
     private Transform currentTarget; // Current patrol target
-    
+
     private Rigidbody2D rb; // Reference to the Rigidbody2D component
     private Animator m_animator; // Reference to the Animator component
 
@@ -25,8 +25,8 @@ public class EnemyMovement : MonoBehaviour
 
     [Header("Flags")]
     public bool isGrounded; // Whether the enemy is grounded
-    [SerializeField]private bool isChasing = false; // Whether the skeleton is chasing the player
-    [SerializeField]private bool isFacingRight = false;
+    [SerializeField] private bool isChasing = false; // Whether the skeleton is chasing the player
+    [SerializeField] private bool isFacingRight = false;
     public bool isAttacking = false; // Whether the skeleton is currently attacking
 
     private EnemyHealth enemyHealth; // Reference to the EnemyHealth component
@@ -35,7 +35,9 @@ public class EnemyMovement : MonoBehaviour
     public BoxCollider2D attackBoxTrigger; // Trigger for the attack box
     public float attackDamage = 20f; // Damage dealt by the attack
     public float attackRange = 1f; // Range to detect the player
-    public string [] attackAnimationTrigger; // Animation trigger for the attack
+    public string[] attackAnimationTrigger; // Animation trigger for the attack
+
+    private EnemyJumpDetection obstacle_Detector; // Reference to Jump Detection Trigger
 
 
     private void Start()
@@ -66,12 +68,19 @@ public class EnemyMovement : MonoBehaviour
         {
             Debug.LogError("EnemyHealth is missing on the: " + enemyName + "!");
         }
+
+        obstacle_Detector = GetComponentInChildren<EnemyJumpDetection>();
+        if (obstacle_Detector == null)
+        {
+            Debug.LogError("EnemyJumpDetection component not found in children!");
+        }
     }
 
     private void Update()
     {
         if (enemyHealth.isDead)
         {
+            rb.velocity = new Vector2(0, rb.velocity.y);
             return;
         }
 
@@ -88,7 +97,7 @@ public class EnemyMovement : MonoBehaviour
 
         if (Vector3.Distance(transform.position, player.position) <= attackRange && !isAttacking)
         {
-            rb.velocity = Vector2.zero; // Stop moving when attacking
+            rb.velocity = new Vector2(0, rb.velocity.y);
             int randomIndex = Random.Range(0, attackAnimationTrigger.Length);
             m_animator.SetTrigger(attackAnimationTrigger[randomIndex]); // Trigger the attack animation
         }
@@ -99,7 +108,7 @@ public class EnemyMovement : MonoBehaviour
         m_animator.SetBool("IsGrounded", isGrounded);
 
         // Flip the sprite based on velocity
-        if (!enemyHealth.isHurt && !enemyHealth.isDead) 
+        if (!enemyHealth.isHurt && !enemyHealth.isDead)
         {
             FlipSpriteBasedOnVelocity();
         }
@@ -122,8 +131,10 @@ public class EnemyMovement : MonoBehaviour
 
     private void Patrol()
     {
-        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || !pointA || !pointB || !isGrounded)
+        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || !pointA || !pointB ||
+            obstacle_Detector.obstacleDetected)
         {
+            rb.velocity = new Vector2(0, rb.velocity.y);
             return;
         }
 
@@ -142,11 +153,11 @@ public class EnemyMovement : MonoBehaviour
 
     private void ChasePlayer()
     {
-        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking)
+        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || obstacle_Detector.obstacleDetected)
         {
+            rb.velocity = new Vector2(0, rb.velocity.y);
             return;
         } // Don't do anything if the enemy is dead
-        if (!isGrounded) return;
 
         // Calculate direction to the player
         Vector2 direction = (player.position - transform.position).normalized;
@@ -168,7 +179,7 @@ public class EnemyMovement : MonoBehaviour
 
     void FlipSpriteBasedOnVelocity()
     {
-        if (isAttacking) 
+        if (isAttacking || !isGrounded) 
         {
             return;
         }
