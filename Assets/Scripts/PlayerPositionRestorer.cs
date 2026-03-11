@@ -8,8 +8,22 @@ public class PlayerPositionRestorer : MonoBehaviour
     [SerializeField] Transform spawnPointEnd;
     private void Start()
     {
-        spawnPointStart = GameObject.FindGameObjectWithTag("StartPoint").transform;
-        spawnPointEnd   = GameObject.FindGameObjectWithTag("EndPoint").transform;
+        try
+        {
+            spawnPointStart = GameObject.FindGameObjectWithTag("StartPoint").transform;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("StartPoint not found: " + ex.Message);
+        }
+        try
+        {
+            spawnPointEnd = GameObject.FindGameObjectWithTag("EndPoint").transform;
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("EndPoint not found: " + ex.Message);
+        }
 
         //Invoke(nameof(GameManager.instance.SaveCheckPoint), 1f); // Delay to ensure the StartPoint is found
     }

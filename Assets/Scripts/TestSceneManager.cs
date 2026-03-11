@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -30,11 +32,11 @@ public class TestSceneManager : MonoBehaviour
             return;
         }
 
-        PopulateStages();
-        PopulateFeatures();
+        PopulateStagesFromBuildSettings();
+        PopulateFeaturesFromBuildSettingsAndInspector();
     }
 
-    void PopulateStages()
+    void PopulateStagesFromBuildSettings()
     {
         if (stagesContainer == null) return;
 
@@ -42,34 +44,160 @@ public class TestSceneManager : MonoBehaviour
         foreach (Transform t in stagesContainer) Destroy(t.gameObject);
 
         int count = SceneManager.sceneCountInBuildSettings;
+        Debug.Log($"Found {count} scenes in Build Settings. Populating stage buttons...");
         for (int i = 0; i < count; i++)
         {
             string path = SceneUtility.GetScenePathByBuildIndex(i);
             string sceneName = Path.GetFileNameWithoutExtension(path);
-            GameObject go = Instantiate(buttonPrefab, stagesContainer);
-            var txt = go.transform.Find("Text");
-            if (txt != null) txt.GetComponent<Text>().text = sceneName;
+
+            // Only include scenes that follow the Stage naming convention: "Stage..." (case-insensitive)
+            if (!sceneName.StartsWith("Stage", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            GameObject go = Instantiate(buttonPrefab);
+            go.transform.SetParent(stagesContainer, false);
+
+            // robustly find and set text for either TextMeshProUGUI or UnityEngine.UI.Text
+            var txtTransform = go.transform.Find("Text");
+            if (txtTransform != null)
+            {
+                var tmpUGUI = txtTransform.GetComponent<TextMeshProUGUI>();
+                if (tmpUGUI != null)
+                {
+                    tmpUGUI.text = sceneName;
+                }
+                else
+                {
+                    var uiText = txtTransform.GetComponent<Text>();
+                    if (uiText != null)
+                    {
+                        uiText.text = sceneName;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("TestSceneManager: 'Text' child found but no TextMeshProUGUI or Text component present on prefab.");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("TestSceneManager: button prefab does not contain a child named 'Text'.");
+            }
+
             var btn = go.GetComponent<Button>();
-            string capturedName = sceneName;
-            btn.onClick.AddListener(() => LoadStage(capturedName));
+            if (btn != null)
+            {
+                string capturedName = sceneName;
+                btn.onClick.AddListener(() => LoadStage(capturedName));
+            }
+            else
+            {
+                Debug.LogWarning("TestSceneManager: instantiated prefab does not have a Button component.");
+            }
         }
     }
 
-    void PopulateFeatures()
+    void PopulateFeaturesFromBuildSettingsAndInspector()
     {
         if (featuresContainer == null) return;
 
         // Clear existing children
         foreach (Transform t in featuresContainer) Destroy(t.gameObject);
 
+        int count = SceneManager.sceneCountInBuildSettings;
+        Debug.Log($"Found {count} scenes in Build Settings. Populating feature-scene buttons...");
+        // First, auto-add scenes that follow the Feat naming convention: "Feat..."
+        for (int i = 0; i < count; i++)
+        {
+            string path = SceneUtility.GetScenePathByBuildIndex(i);
+            string sceneName = Path.GetFileNameWithoutExtension(path);
+
+            if (!sceneName.StartsWith("Feat", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            GameObject go = Instantiate(buttonPrefab);
+            go.transform.SetParent(featuresContainer, false);
+
+            var txtTransform = go.transform.Find("Text");
+            if (txtTransform != null)
+            {
+                var tmpUGUI = txtTransform.GetComponent<TextMeshProUGUI>();
+                if (tmpUGUI != null)
+                {
+                    tmpUGUI.text = sceneName;
+                }
+                else
+                {
+                    var uiText = txtTransform.GetComponent<Text>();
+                    if (uiText != null)
+                    {
+                        uiText.text = sceneName;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("TestSceneManager: 'Text' child found but no TextMeshProUGUI or Text component present on prefab.");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("TestSceneManager: button prefab does not contain a child named 'Text'.");
+            }
+
+            var btn = go.GetComponent<Button>();
+            if (btn != null)
+            {
+                string capturedName = sceneName;
+                btn.onClick.AddListener(() => LoadStage(capturedName));
+            }
+            else
+            {
+                Debug.LogWarning("TestSceneManager: instantiated prefab does not have a Button component.");
+            }
+        }
+
+        // Then add any features configured manually in the Inspector (these invoke UnityEvents)
         foreach (var feat in features)
         {
-            GameObject go = Instantiate(buttonPrefab, featuresContainer);
-            var txt = go.transform.Find("Text");
-            if (txt != null) txt.GetComponent<Text>().text = feat.name;
+            GameObject go = Instantiate(buttonPrefab);
+            go.transform.SetParent(featuresContainer, false);
+
+            var txtTransform = go.transform.Find("Text");
+            if (txtTransform != null)
+            {
+                var tmpUGUI = txtTransform.GetComponent<TextMeshProUGUI>();
+                if (tmpUGUI != null)
+                {
+                    tmpUGUI.text = feat.name;
+                }
+                else
+                {
+                    var uiText = txtTransform.GetComponent<Text>();
+                    if (uiText != null)
+                    {
+                        uiText.text = feat.name;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("TestSceneManager: 'Text' child found but no TextMeshProUGUI or Text component present on prefab.");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("TestSceneManager: button prefab does not contain a child named 'Text'.");
+            }
+
             var btn = go.GetComponent<Button>();
-            UnityAction action = () => feat.onClick?.Invoke();
-            btn.onClick.AddListener(action);
+            if (btn != null)
+            {
+                UnityAction action = () => feat.onClick?.Invoke();
+                btn.onClick.AddListener(action);
+            }
+            else
+            {
+                Debug.LogWarning("TestSceneManager: instantiated prefab does not have a Button component.");
+            }
         }
     }
 
