@@ -17299,7 +17299,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: sceneName
-      value: Bandit's Hideout
+      value: Stage2
       objectReference: {fileID: 0}
     - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: spawnPointName
@@ -17408,6 +17408,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2122813516710600075, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0073242188
+      objectReference: {fileID: 0}
     - target: {fileID: 3771800836167934203, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: m_LocalPosition.x
       value: 150.09787
@@ -17447,6 +17451,10 @@ PrefabInstance:
     - target: {fileID: 3771800836167934203, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4699738310768715592, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.0024414062
       objectReference: {fileID: 0}
     - target: {fileID: 8846716236385820720, guid: d91b96edae2c3024995c7164bb17dc47, type: 3}
       propertyPath: m_Name

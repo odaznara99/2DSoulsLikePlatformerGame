@@ -72,11 +72,17 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene(string sceneName, SpawnPointType spawnPoint)
     {
+        try
+        {
 
-        StartCoroutine(LoadSceneAsync(sceneName, spawnPoint));
-        //AudioManager.Instance.PlayMusic("MedievalOpener");
-        AudioManager.Instance.StopMusic(); // Stop any currently playing music
-        AudioManager.Instance.PlayMusic("Ballad");
+            StartCoroutine(LoadSceneAsync(sceneName, spawnPoint));
+            //AudioManager.Instance.PlayMusic("MedievalOpener");
+            AudioManager.Instance.StopMusic(); // Stop any currently playing music
+            AudioManager.Instance.PlayMusic("Ballad");
+        }catch
+        {
+            Debug.LogError($"Failed to load scene: {sceneName}");
+        }
 
     }
 

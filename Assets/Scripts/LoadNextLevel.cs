@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LoadNextLevel : MonoBehaviour
 {
-    public string sceneName; // Name of the scene to load
+    public string sceneName; // Name of the scene to load (can be "Stage1_Scenename")
     public SpawnPointType spawnPointType; // Name of the spawn point to use
 
     private void Start()
@@ -32,9 +34,35 @@ public class LoadNextLevel : MonoBehaviour
 
     private void LoadSpecificScene()
     {
-        // Load a specific scene by name
+        // Play click SFX
         AudioManager.Instance.PlaySFX("Click");
-        SceneLoader.Instance.LoadScene(sceneName, spawnPointType);
+
+        // If sceneName follows the convention "Stage1_Scenename" and you only want "Stage1"
+        // we will look for the first scene in Build Settings that starts with the prefix
+        string targetScene = sceneName;
+
+        if (!string.IsNullOrEmpty(sceneName))
+        {
+            //Debug.Log($"Scene name '{sceneName}' contains an underscore. Attempting to find a matching scene in Build Settings.");
+            string prefix = sceneName.Split(new char[] { '_' }, 2)[0];
+
+            int count = SceneManager.sceneCountInBuildSettings;
+            for (int i = 0; i < count; i++)
+            {
+                string path = SceneUtility.GetScenePathByBuildIndex(i);
+                string candidate = Path.GetFileNameWithoutExtension(path);
+
+                if (candidate.StartsWith(prefix, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    targetScene = candidate;
+                    break; // first match wins
+                }
+            }
+        }
+
+        // Fallback: if no match found, targetScene remains the original sceneName
+        Debug.Log($"Loading scene: {targetScene} with spawn point: {spawnPointType}");
+        SceneLoader.Instance.LoadScene(targetScene, spawnPointType);
     }
 
     
