@@ -32,4 +32,12 @@ public class BossHealthUI : MonoBehaviour
         //else
         //    Debug.LogWarning("UI Container is not assigned in BossHealthUI script.");
     }
+
+    private void Update()
+    {
+        if (GameManager.instance.IsGameOver())
+        {
+            SetHealthUIActive(false);
+        }
+    }
 }
