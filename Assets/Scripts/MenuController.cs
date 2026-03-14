@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class MenuController : MonoBehaviour
 {
     public GameObject settingsScreen;
+    public GameObject testingHubScreen;
 
     private void Start()
     {
@@ -14,7 +15,7 @@ public class MenuController : MonoBehaviour
     {
         //SceneManager.LoadScene("GameScene1"); // Use the actual scene name
         AudioManager.Instance.PlaySFX("Click");
-        SceneLoader.Instance.LoadScene("Forest of the Beginnings",SpawnPointType.Start); // Use the SceneLoader to load the scene
+        SceneLoader.Instance.LoadScene("Stage1",SpawnPointType.Start); // Use the SceneLoader to load the scene
     }
 
     public void LoadGame()
@@ -22,6 +23,14 @@ public class MenuController : MonoBehaviour
         // Your load logic here
         AudioManager.Instance.PlaySFX("Click");
         Debug.Log("Load Game clicked");
+    }
+
+    public void TestGame(bool setActive)
+    {
+        // Your testing logic here
+        AudioManager.Instance.PlaySFX("Click");
+        Debug.Log("TestGame is set to" + setActive);
+        testingHubScreen.SetActive(setActive);
     }
 
     public void Settings(bool setActive)

@@ -7871,7 +7871,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: sceneName
-      value: Bandit's Hideout
+      value: Stage2
       objectReference: {fileID: 0}
     - target: {fileID: 2418713047365616471, guid: 6225e2d2fcca2d143835eb5896cd7849, type: 3}
       propertyPath: spawnPointName

@@ -14,7 +14,7 @@ public class PlayerPositionRestorer : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            Debug.LogWarning("StartPoint not found: " + ex.Message);
+            Debug.Log("StartPoint not found: " + ex.Message);
         }
         try
         {
@@ -22,7 +22,7 @@ public class PlayerPositionRestorer : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            Debug.LogWarning("EndPoint not found: " + ex.Message);
+            Debug.Log("EndPoint not found: " + ex.Message);
         }
 
         //Invoke(nameof(GameManager.instance.SaveCheckPoint), 1f); // Delay to ensure the StartPoint is found

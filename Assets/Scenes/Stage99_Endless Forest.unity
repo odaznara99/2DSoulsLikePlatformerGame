@@ -367,6 +367,17 @@ Transform:
   - {fileID: 1094061138}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &714129778 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1782841848544733299, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+  m_PrefabInstance: {fileID: 9192378388258444789}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &953226860
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1056,6 +1067,17 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &2141680481 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4049938642775700374, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+  m_PrefabInstance: {fileID: 9192378388258444789}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2144636845482751032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3848115282342435269, guid: 73e1de441de745447be863177c95bfd4, type: 3}
@@ -1214,23 +1236,15 @@ PrefabInstance:
     - target: {fileID: 712506135812361986, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: healthBar
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2141680481}
     - target: {fileID: 712506135812361986, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: healthText
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 714129778}
     - target: {fileID: 712506135812361986, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: worldCanvas
       value: 
       objectReference: {fileID: 1073447530}
-    - target: {fileID: 1806744474678443789, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
-      propertyPath: enabledKeyboardInput
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1806744474678443789, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
-      propertyPath: playerKnockbackForce
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 7721701825642549688, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.13
