@@ -127,6 +127,13 @@ public class PlayerControllerVersion2 : MonoBehaviour
     [Header("Damage Sounds List")]
     public List<string> damageSoundNames = new List<string>();
 
+    // Stamina integration
+    [Header("Stamina Integration")]
+    public PlayerStamina stamina;              // assign in Inspector (your Player GameObject)
+    public float attackStaminaCost = 15f;      // stamina cost for each attack
+    public float rollStaminaCost = 25f;        // stamina cost for rolling
+    public AudioClip outOfStaminaSfx;          // optional SFX when not enough stamina
+
     // === Unity Methods ===
     void Start()
     {
@@ -219,6 +226,16 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     }
 
+    // Play feedback when no stamina
+    private void PlayOutOfStaminaFeedback()
+    {
+        DisplayLog("Not enough stamina.");
+        if (outOfStaminaSfx != null)
+        {
+            AudioManager.Instance.PlaySFX(outOfStaminaSfx.name);
+        }
+    }
+
     // == Method/Function to change a player state
     private void SwitchPlayerState(PlayerState newState, GameObject switcher)
     {
@@ -266,6 +283,14 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             DisplayLog(newState + " Cannot interupt " + currentState + "!");
             return;
+        }
+
+        // Prevent entering Attacking if no stamina available
+        else if (newState == PlayerState.Attacking
+            && stamina != null && !stamina.TryConsume(attackStaminaCost))
+        {
+                PlayOutOfStaminaFeedback();
+                return;
         }
 
         else
@@ -331,6 +356,16 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             DisplayLog("Already in Rolling State, cannot switch to Rolling again!");
             return; // If already in Rolling state, then do nothing
+        }
+
+        // Require stamina before entering Rolling state
+        if (newXVelocityState == XVelocityState.Rolling)
+        {
+            if (stamina != null && !stamina.TryConsume(rollStaminaCost))
+            {
+                PlayOutOfStaminaFeedback();
+                return;
+            }
         }
 
         // Interrupt any Coroutine Related to X Velocity State
@@ -486,8 +521,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
         attackBoxCollider.enabled = false;
     }
 
-    private void DoAttacking() {
-
+    private void DoAttacking()
+    {
+        // Stamina check moved to SwitchPlayerState to prevent entering Attacking when not enough stamina.
         // Slow your movement speed during attack
         SwitchXVelocityState(XVelocityState.Slow);
 
@@ -505,7 +541,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
             currentAttackAnimation = 0;
             DisplayLog("Combo completed");
         }
-
     }
     /*private void DoAttackingOld()
     {

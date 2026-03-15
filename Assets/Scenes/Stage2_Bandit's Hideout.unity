@@ -27789,6 +27789,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7721701825642549688, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
   m_PrefabInstance: {fileID: 2981750770201359112}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4135637085881948555 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 20273531643742300, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
+  m_PrefabInstance: {fileID: 2981750770201359112}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57dcd6f27438ad043a4815c1c6ccdd6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4382594559931637273
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28249,6 +28260,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.00012207031
       objectReference: {fileID: 0}
+    - target: {fileID: 6960481192509818259, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: stamina
+      value: 
+      objectReference: {fileID: 4135637085881948555}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

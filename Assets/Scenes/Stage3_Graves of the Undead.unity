@@ -90590,6 +90590,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
+--- !u!114 &2981750770201359113 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 20273531643742300, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
+  m_PrefabInstance: {fileID: 2981750770201359112}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57dcd6f27438ad043a4815c1c6ccdd6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3391199107880063823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -91123,6 +91134,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6960481192509818259, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: stamina
+      value: 
+      objectReference: {fileID: 2981750770201359113}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

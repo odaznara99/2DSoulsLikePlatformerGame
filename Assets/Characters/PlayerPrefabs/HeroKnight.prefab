@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 430750399797686370}
   - component: {fileID: 100267485337794080}
   - component: {fileID: 3688760624617468788}
+  - component: {fileID: 20273531643742300}
   m_Layer: 3
   m_Name: HeroKnight
   m_TagString: Player
@@ -769,7 +770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3b1c2e26c544045bd3273c3e4ad63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enabledDebugLog: 0
+  enabledDebugLog: 1
   enabledKeyboardInput: 1
   m_noBlood: 1
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
@@ -816,6 +817,10 @@ MonoBehaviour:
   - damage_3_ian
   - damage_4_ian
   - damage_5_ian
+  stamina: {fileID: 20273531643742300}
+  attackStaminaCost: 15
+  rollStaminaCost: 25
+  outOfStaminaSfx: {fileID: 8300000, guid: 6006813d4a21d6643b39087cf8fb782f, type: 3}
 --- !u!95 &7408353236059228160
 Animator:
   serializedVersion: 5
@@ -978,3 +983,25 @@ MonoBehaviour:
   lastCheckpointPosition: {x: 0, y: 0, z: 0}
   spawnPointStart: {fileID: 0}
   spawnPointEnd: {fileID: 0}
+--- !u!114 &20273531643742300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8226440734884926468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57dcd6f27438ad043a4815c1c6ccdd6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 100
+  currentStamina: 100
+  baseRegenRate: 10
+  regenDelay: 1.5
+  level: 0
+  regenPerLevelMultiplier: 0.1
+  maxStaminaPerLevel: 5
+  onStaminaChanged:
+    m_PersistentCalls:
+      m_Calls: []
