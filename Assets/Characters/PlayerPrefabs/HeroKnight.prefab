@@ -997,8 +997,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxStamina: 100
   currentStamina: 100
-  baseRegenRate: 10
-  regenDelay: 1.5
+  baseRegenRate: 20
+  regenDelay: 0.5
   level: 0
   regenPerLevelMultiplier: 0.1
   maxStaminaPerLevel: 5
