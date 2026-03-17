@@ -173,7 +173,7 @@ public class SceneLoader : MonoBehaviour
                 playerScript.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
             }
 
-            
+
         }
 
         // Delay for Camera Follow the Player's New Position
@@ -185,8 +185,9 @@ public class SceneLoader : MonoBehaviour
         // Start Fading Out - showing the Scene
         yield return StartCoroutine(Fade(1f, 0f));
 
-        // Scene loaded, it will now show the scene name
-        MessageManager.Instance.ShowMessage(sceneName, false, 100);
+        // Scene loaded, show the scene name without naming-prefixes
+        string displayName = GetDisplayLevelName(sceneName);
+        MessageManager.Instance.ShowMessage(displayName, false, 100);
 
     }
 
@@ -208,5 +209,28 @@ public class SceneLoader : MonoBehaviour
         fadeImage.color = color;
     }
 
+    // Returns a cleaned display name for the level:
+    // - If scene name contains an underscore, returns the substring after the first underscore.
+    // - Otherwise, if it starts with "Stage" followed by digits, strips "Stage" + digits and any separator ('_', '-', ' ').
+    // - Otherwise returns the original scene name.
+    private string GetDisplayLevelName(string scene)
+    {
+        if (string.IsNullOrEmpty(scene)) return scene;
+
+        int underscore = scene.IndexOf('_');
+        if (underscore >= 0 && underscore < scene.Length - 1)
+            return scene.Substring(underscore + 1);
+
+        if (scene.StartsWith("Stage", System.StringComparison.OrdinalIgnoreCase))
+        {
+            int i = 5; // after "Stage"
+            while (i < scene.Length && char.IsDigit(scene[i])) i++;
+            if (i < scene.Length && (scene[i] == '_' || scene[i] == '-' || scene[i] == ' ')) i++;
+            if (i < scene.Length) return scene.Substring(i);
+        }
+
+        // fallback: return the original
+        return scene;
+    }
 
 }

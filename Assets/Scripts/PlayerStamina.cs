@@ -18,6 +18,10 @@ public class PlayerStamina : MonoBehaviour
     public float regenPerLevelMultiplier = 0.1f; // +10% per level to regen rate
     public float maxStaminaPerLevel = 5f; // +5 stamina per level
 
+    [Header("Floating Damage Text")]
+    public GameObject floatingTextPrefab;
+    public Transform worldCanvas;
+
     // Event: (current, max)
     [Serializable] public class StaminaChangedEvent : UnityEvent<float, float> { }
     public StaminaChangedEvent onStaminaChanged;
@@ -76,6 +80,9 @@ public class PlayerStamina : MonoBehaviour
             regenTimer = regenDelay;
             return true;
         }
+
+        // Not enough stamina: show floating text "No Stamina"
+        ShowNoStaminaFloatingText();
         return false;
     }
 
@@ -106,5 +113,28 @@ public class PlayerStamina : MonoBehaviour
     public void ResetRegenDelay()
     {
         regenTimer = regenDelay;
+    }
+
+    private void ShowNoStaminaFloatingText()
+    {
+        if (floatingTextPrefab == null) return;
+
+        if (worldCanvas == null)
+        {
+            GameObject go = GameObject.FindGameObjectWithTag("WorldSpaceCanvas");
+            if (go != null) worldCanvas = go.transform;
+        }
+
+        Vector3 spawnPos = transform.position + Vector3.up;
+
+        GameObject ft;
+        if (worldCanvas != null)
+            ft = Instantiate(floatingTextPrefab, spawnPos, Quaternion.identity, worldCanvas);
+        else
+            ft = Instantiate(floatingTextPrefab, spawnPos, Quaternion.identity);
+
+        var floating = ft.GetComponent<FloatingText>();
+        if (floating != null)
+            floating.SetText("Not enough Stamina");
     }
 }

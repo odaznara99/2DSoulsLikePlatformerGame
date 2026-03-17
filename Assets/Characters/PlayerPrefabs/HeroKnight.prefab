@@ -756,7 +756,7 @@ MonoBehaviour:
   isInvincible: 0
   healthBar: {fileID: 0}
   healthText: {fileID: 0}
-  floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
+  floatingTextPrefab: {fileID: 3106159360136694730, guid: e15316900ce917949b022d6f521c60b2, type: 3}
   worldCanvas: {fileID: 0}
 --- !u!114 &1806744474678443789
 MonoBehaviour:
@@ -1002,6 +1002,8 @@ MonoBehaviour:
   level: 0
   regenPerLevelMultiplier: 0.1
   maxStaminaPerLevel: 5
+  floatingTextPrefab: {fileID: 3106159360136694730, guid: e15316900ce917949b022d6f521c60b2, type: 3}
+  worldCanvas: {fileID: 0}
   onStaminaChanged:
     m_PersistentCalls:
       m_Calls: []
