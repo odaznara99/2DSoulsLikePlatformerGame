@@ -205,12 +205,10 @@ public class TestSceneManager : MonoBehaviour
     public void LoadStage(string sceneName)
     {
         // Optional: play SFX, show confirmation, etc.
-        SceneManager.LoadScene(sceneName);
+        //SceneManager.LoadScene(sceneName);
+        // For simplicity, we assume the scene name format is "StageX_Description" or "FeatY_Description", and we want to load just "StageX" or "FeatY"
+        string result = sceneName.Split('_')[0];
+        SceneLoader.Instance.LoadScene(result, SpawnPointType.Start);
     }
 
-    // Example helper features you can expose in Inspector or call from other scripts:
-    public void ReloadCurrentScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
 }
