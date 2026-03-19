@@ -4,12 +4,6 @@ using UnityEngine.UI;
 using System.IO; // Needed for Path methods
 using System.Collections;
 
-public enum SpawnPointType
-{
-    Start,
-    Last,
-    Checkpoint
-}
 
 public class SceneLoader : MonoBehaviour
 {
@@ -152,29 +146,9 @@ public class SceneLoader : MonoBehaviour
         yield return new WaitForSeconds(1f); // Optional delay
 
         // Find the Current Player in the New Scene
+        // After scene load
+        RespawnManager.Instance.RespawnPlayer(spawnPoint);
 
-        playerScript = FindObjectOfType<PlayerControllerVersion2>();
-
-        if (playerScript != null)
-        {
-            // Position the Player on the Start Point
-            if (spawnPoint == SpawnPointType.Start)
-            {
-                playerScript.GetComponent<PlayerPositionRestorer>().TeleportToStartSpawn();
-            }
-            // Position the Player on the EndPoint
-            else if (spawnPoint == SpawnPointType.Last)
-            {
-                playerScript.GetComponent<PlayerPositionRestorer>().TeleportToEndSpawn();
-            }
-            // Position the Player on the Checkpoint
-            else if (spawnPoint == SpawnPointType.Checkpoint)
-            {
-                playerScript.GetComponent<PlayerPositionRestorer>().TeleportToCheckpoint();
-            }
-
-
-        }
 
         // Delay for Camera Follow the Player's New Position
         yield return new WaitForSeconds(2f);

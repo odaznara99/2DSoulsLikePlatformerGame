@@ -15,8 +15,19 @@ public class UIScreensManager : MonoBehaviour
 
     private Dictionary<string, GameObject> screenDict;
 
+    public static UIScreensManager Instance;
+
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         screenDict = new Dictionary<string, GameObject>();
 
         foreach (var screen in screens)
