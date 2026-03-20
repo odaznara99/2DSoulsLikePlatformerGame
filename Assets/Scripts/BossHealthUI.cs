@@ -35,7 +35,7 @@ public class BossHealthUI : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.instance.IsGameOver())
+        if (GameManager.Instance.IsGameOver())
         {
             SetHealthUIActive(false);
         }

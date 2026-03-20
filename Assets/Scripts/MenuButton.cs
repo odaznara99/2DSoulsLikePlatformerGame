@@ -18,9 +18,9 @@ public class MenuButton : MonoBehaviour
 
     public void GoToMenu()
     {
-        if (GameManager.instance != null)
+        if (GameManager.Instance != null)
         {
-            GameManager.instance.GoToMainMenu();
+            GameManager.Instance.GoToMainMenu();
         }
     }
 }

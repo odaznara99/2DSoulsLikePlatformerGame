@@ -18,9 +18,9 @@ public class ResumeButton : MonoBehaviour
 
     public void ResumeGame()
     {
-        if (GameManager.instance != null)
+        if (GameManager.Instance != null)
         {
-            GameManager.instance.ResumeGame();
+            GameManager.Instance.ResumeGame();
         }
     }
 }

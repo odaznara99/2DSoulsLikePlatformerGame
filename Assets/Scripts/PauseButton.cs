@@ -19,15 +19,15 @@ public class PauseButton : MonoBehaviour
 
     public void OnPauseButtonClicked()
     {
-        if (GameManager.instance != null)
+        if (GameManager.Instance != null)
         {
-            if (GameManager.instance.IsGamePaused())
+            if (GameManager.Instance.IsGamePaused())
             {
-                GameManager.instance.ResumeGame();
+                GameManager.Instance.ResumeGame();
             }
             else
             {
-                GameManager.instance.PauseGame();
+                GameManager.Instance.PauseGame();
             }
         }
     }

@@ -38,7 +38,7 @@ public class PlayerHealth : MonoBehaviour
         player          = this.GetComponent<PlayerControllerVersion2>();
         playerAnimator  = this.GetComponent<Animator>();
         rb              = this.GetComponent<Rigidbody2D>();
-        gameManager     = GameManager.instance; // Get the GameManager instance
+        gameManager     = GameManager.Instance; // Get the GameManager instance
 
         if (gameManager != null)
         {
