@@ -55,8 +55,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         isGamePaused = true;
-
-        UIScreensManager.Instance.ShowScreen("Pause Screen");
+        FindObjectOfType<UIScreensManager>().ShowScreen("Pause Screen");
         AudioManager.Instance.PlaySFX("Click");
     }
 
@@ -65,7 +64,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         isGamePaused = false;
 
-        UIScreensManager.Instance.HideScreen("Pause Screen");
+        FindObjectOfType<UIScreensManager>().HideScreen("Pause Screen");
         AudioManager.Instance.PlaySFX("Click");
     }
 
@@ -74,7 +73,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.StopMusic();
         AudioManager.Instance.PlayMusic("GameOver");
 
-        UIScreensManager.Instance.ShowScreenWithFadeIn("Game Over Screen", 2f);
+        FindObjectOfType<UIScreensManager>().ShowScreenWithFadeIn("Game Over Screen", 2f);
         Invoke(nameof(SetGameOver), 2f);
     }
 

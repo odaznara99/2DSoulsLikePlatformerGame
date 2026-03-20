@@ -119,6 +119,9 @@ public class SceneLoader : MonoBehaviour
             playerScript.enabled = false; // Disable player controls during loading
         }
 
+        // Hide all in game UI, except loading screen
+        //FindObjectOfType<UIScreensManager>().HideAllScreens();
+
         // Fade Out to black
         yield return StartCoroutine(Fade(0f, 1f));
 
@@ -145,9 +148,12 @@ public class SceneLoader : MonoBehaviour
 
         yield return new WaitForSeconds(1f); // Optional delay
 
-        // Find the Current Player in the New Scene
+
         // After scene load
-        RespawnManager.Instance.RespawnPlayer(spawnPoint);
+        if (playerScript != null) { 
+            RespawnManager.Instance.RespawnPlayer(spawnPoint);
+            
+        }
 
 
         // Delay for Camera Follow the Player's New Position
@@ -162,6 +168,11 @@ public class SceneLoader : MonoBehaviour
         // Scene loaded, show the scene name without naming-prefixes
         string displayName = GetDisplayLevelName(sceneName);
         MessageManager.Instance.ShowMessage(displayName, false, 100);
+
+        // Show In Game UI
+        if (sceneName != "StartMenu")
+            FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
+            //UIButtonsManager.Instance.AssignPlayer(playerScript);
 
     }
 

@@ -90537,6 +90537,10 @@ PrefabInstance:
       propertyPath: worldCanvas
       value: 
       objectReference: {fileID: 1073447530}
+    - target: {fileID: 1806744474678443789, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
+      propertyPath: enabledDebugLog
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3688760624617468788, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
       propertyPath: spawnPointEnd
       value: 
@@ -90589,7 +90593,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: HeroKnight
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3688760624617468788, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -90603,6 +90608,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57dcd6f27438ad043a4815c1c6ccdd6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2981750770201359120 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1806744474678443789, guid: d7f33c13bd3e4fe4e9f95d5e48c0ec01, type: 3}
+  m_PrefabInstance: {fileID: 2981750770201359112}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3b1c2e26c544045bd3273c3e4ad63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &3391199107880063823
@@ -91082,6 +91098,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 529309194878060641, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
+      propertyPath: m_playerController
+      value: 
+      objectReference: {fileID: 2981750770201359120}
     - target: {fileID: 3678104684269669328, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

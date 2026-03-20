@@ -702,7 +702,6 @@ GameObject:
   - component: {fileID: 7077461748514592953}
   - component: {fileID: 430750399797686370}
   - component: {fileID: 100267485337794080}
-  - component: {fileID: 3688760624617468788}
   - component: {fileID: 20273531643742300}
   m_Layer: 3
   m_Name: HeroKnight
@@ -770,7 +769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3b1c2e26c544045bd3273c3e4ad63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enabledDebugLog: 1
+  enabledDebugLog: 0
   enabledKeyboardInput: 1
   m_noBlood: 1
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
@@ -968,21 +967,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9fc8cf473d38cf42961e4db25ca81b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3688760624617468788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8226440734884926468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ed128a3209975140bcb0ebb417b103b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lastCheckpointPosition: {x: 0, y: 0, z: 0}
-  spawnPointStart: {fileID: 0}
-  spawnPointEnd: {fileID: 0}
 --- !u!114 &20273531643742300
 MonoBehaviour:
   m_ObjectHideFlags: 0

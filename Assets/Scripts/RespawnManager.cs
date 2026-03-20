@@ -51,5 +51,7 @@ public class RespawnManager : MonoBehaviour
         var health = player.GetComponent<PlayerHealth>();
         if (health != null)
             health.isInvincible = false;
+
+        UIButtonsManager.Instance.AssignPlayer(player);
     }
 }
