@@ -841,8 +841,16 @@ public class PlayerControllerVersion2 : MonoBehaviour
             // Do not flip player sprite from the following conditions above
             return;
         }
-        if (rb.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
-        else if (rb.velocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
+        if (!isGrounded)
+        {
+            if (rb.velocity.x > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
+            else if (rb.velocity.x < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
+        }
+        else
+        {
+            if (inputX > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
+            else if (inputX < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
+        }
     }
 
     void AE_SlideDust()
