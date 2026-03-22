@@ -160,6 +160,19 @@ public class PlayerControllerVersion2 : MonoBehaviour
         originalRollingSpeed = rollingSpeed;
         //UIButtonsManager.Instance.AssignPlayer(this);
 
+        // Apply permanent bonuses from pickups stored in PlayerData
+        var pd = GameManager.Instance != null ? GameManager.Instance.playerData : null;
+        if (pd != null)
+        {
+            if (pd.bonusJumpCount > 0)
+                maxDoubleJumpCount += pd.bonusJumpCount;
+            if (pd.bonusMovementSpeed > 0f)
+            {
+                movementSpeed += pd.bonusMovementSpeed;
+                originalMovementSpeed = movementSpeed;
+            }
+        }
+
 #if UNITY_EDITOR
         enabledKeyboardInput = true;
 #endif

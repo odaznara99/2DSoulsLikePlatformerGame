@@ -42,7 +42,15 @@ public class PlayerHealth : MonoBehaviour
 
         if (gameManager != null)
         {
+            // Apply any permanent max-health bonuses from pickups (additive, on top of inspector value)
+            if (gameManager.playerData.bonusMaxHealth > 0f)
+                maxHealth += gameManager.playerData.bonusMaxHealth;
+            // Restore shield damage-reduction bonus from pickups
+            if (gameManager.playerData.bonusDamageReduction > 0f)
+                shieldDamageReduction += gameManager.playerData.bonusDamageReduction;
             currentHealth = gameManager.playerData.currentHealth;
+            // Keep playerData.maxHealth in sync with the effective max (used by RestartGame)
+            gameManager.playerData.maxHealth = maxHealth;
         }
 
 
@@ -261,6 +269,12 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player healed " + healAmount + " points. Current health: " + currentHealth);
 
         UpdateHealthUI(); // Update the UI to reflect the currentHealth change
+    }
+
+    // Refresh the health UI without modifying currentHealth (e.g., after maxHealth changes)
+    public void RefreshHealthUI()
+    {
+        UpdateHealthUI();
     }
 
     public void ResetHealth() { 
