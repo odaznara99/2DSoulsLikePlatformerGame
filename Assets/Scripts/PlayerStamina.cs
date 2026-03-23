@@ -40,6 +40,12 @@ public class PlayerStamina : MonoBehaviour
 
     private void Start()
     {
+        // Apply any permanently stored stamina-relic upgrades from PlayerData
+        if (GameManager.Instance != null && GameManager.Instance.playerData.staminaRelicLevel > 0)
+        {
+            level = GameManager.Instance.playerData.staminaRelicLevel;
+        }
+
         // ensure initial values trigger UI
         CurrentStamina = currentStamina;
     }
@@ -113,6 +119,32 @@ public class PlayerStamina : MonoBehaviour
     public void ResetRegenDelay()
     {
         regenTimer = regenDelay;
+    }
+
+    // Apply a temporary bonus to capacity and/or regen for a given duration (seconds).
+    // Pass 0 for either parameter to skip that bonus.
+    // Multiple overlapping calls are safe: each coroutine independently tracks and
+    // removes only the exact amounts it added, so effects cancel correctly when they expire.
+    public void StartTemporaryEffect(float capacityBonus, float regenBonus, float duration)
+    {
+        if (duration <= 0f) return;
+        StartCoroutine(TemporaryEffectCoroutine(capacityBonus, regenBonus, duration));
+    }
+
+    private System.Collections.IEnumerator TemporaryEffectCoroutine(float capacityBonus, float regenBonus, float duration)
+    {
+        maxStamina += capacityBonus;
+        baseRegenRate += regenBonus;
+        onStaminaChanged?.Invoke(CurrentStamina, GetMaxStamina());
+
+        yield return new WaitForSeconds(duration);
+
+        maxStamina -= capacityBonus;
+        baseRegenRate -= regenBonus;
+        // Clamp current stamina if it now exceeds the new max
+        if (currentStamina > GetMaxStamina())
+            CurrentStamina = GetMaxStamina();
+        onStaminaChanged?.Invoke(CurrentStamina, GetMaxStamina());
     }
 
     private void ShowNoStaminaFloatingText()
