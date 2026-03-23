@@ -60,7 +60,10 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
   - Health items or vitality shards may exist and are handled by pickup or inventory scripts.
  
 - Souls pickup
-  - Main currency that can use to level up permanent stats of the character, buy weapon and armor in shops, or spells and even special skills. Will reset to zero upon death and leave the souls to the death place. Can also be pick-up again, but if you did not pick it up before the second death, it will disappear.
+  - Main currency that can use to level up permanent stats of the character, buy permanent weapon and armor in shops, or spells and even special skills. Will reset to zero upon death and leave the souls to the death place. Can also be pick-up again, but if you did not pick it up before the second death, it will disappear.
+ 
+- Coins pickup
+  - Another currency, mainly for consumable items, weapons, armors, but only temporary. All item bought by coins will be lose upon death.
 
 ## Enemy & Encounter interactions
 - Echo Ambushes
