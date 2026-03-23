@@ -1,4 +1,4 @@
-# Player Mechanics — Souls of the Hollow Vale
+# Player Mechanics â€” Souls of the Hollow Vale
 
 This document summarizes the player's gameplay mechanics and how they integrate with systems in the project. Use this as a reference for design, tuning, and quick navigation to implementation files.
 
@@ -58,11 +58,14 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
 
 - Other pick-ups
   - Health items or vitality shards may exist and are handled by pickup or inventory scripts.
+ 
+- Souls pickup
+  - Main currency that can use to level up permanent stats of the character, buy weapon and armor in shops, or spells and even special skills. Will reset to zero upon death and leave the souls to the death place. Can also be pick-up again, but if you did not pick it up before the second death, it will disappear.
 
 ## Enemy & Encounter interactions
 - Echo Ambushes
   - Enemies that mimic recent player actions to force adaptation (design mechanic).
-  - Consider testing players’ attack patterns vs. mimic behavior.
+  - Consider testing playersâ€™ attack patterns vs. mimic behavior.
 
 - Boss interactions
   - Boss health behavior and UI uses `BossHealthUI.cs`. Boss AI scripts (e.g., `BossAI.cs`) drive encounter rules and stamina/health interactions.
@@ -97,7 +100,7 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
 When tuning gameplay, adjust values in `PlayerStamina.cs` (capacity, regen rate, cooldown/delay), `PlayerHealth.cs` (max health, invulnerability windows), and the controller scripts for stamina costs per action.
 
 ## Design recommendations
-- Keep stamina costs visible and consistent — players should understand cost vs. reward from the UI and audio cues.
+- Keep stamina costs visible and consistent â€” players should understand cost vs. reward from the UI and audio cues.
 - Use memory shards to pace power growth; avoid letting shards trivialize core traversal early.
 - Make anchors meaningful trade-offs: safe progress with structural narrative/upgrade consequences.
 - Test echo enemies against common player behaviors to ensure they force adaptation without feeling unfair.
