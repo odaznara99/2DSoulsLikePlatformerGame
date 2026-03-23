@@ -99,6 +99,10 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
 - UI: `Assets/Scripts/StaminaUI.cs`, `Assets/Scripts/BossHealthUI.cs`.
 - Respawn / anchors: `Assets/Scripts/GameManager.cs`, `Assets/Scripts/PlayerPositionRestorer.cs`.
 - Scene loading and transitions: `Assets/Scripts/SceneLoader.cs`.
+- Souls pickup: `Assets/Scripts/SoulsPickup.cs` — collectible souls in the world.
+- Coins pickup: `Assets/Scripts/CoinsPickup.cs` — collectible coins in the world.
+- Dropped souls pickup: `Assets/Scripts/DroppedSoulsPickup.cs` — spawned at death position; configure `GameManager.droppedSoulsPrefab` in the Inspector.
+- Currency data & death reset logic: `Assets/Scripts/PlayerData.cs` (`souls`, `coins`, `droppedSouls`), `Assets/Scripts/GameManager.cs` (`NotifyPlayerDeath`, `SpawnDroppedSoulsIfAny`, `ClearDroppedSoulsPickup`).
 
 When tuning gameplay, adjust values in `PlayerStamina.cs` (capacity, regen rate, cooldown/delay), `PlayerHealth.cs` (max health, invulnerability windows), and the controller scripts for stamina costs per action.
 
@@ -111,3 +115,4 @@ When tuning gameplay, adjust values in `PlayerStamina.cs` (capacity, regen rate,
 ## Quick links
 - Design story / narrative context: `Docs/GameStory.md`
 - Mechanics implementation: open `Assets/Scripts/PlayerStamina.cs`, `Assets/Scripts/PlayerHealth.cs`, `Assets/Scripts/PlayerControllerVersion2.cs`, `Assets/Scripts/StaminaUI.cs`.
+- Currency pickups: `Assets/Scripts/SoulsPickup.cs`, `Assets/Scripts/CoinsPickup.cs`, `Assets/Scripts/DroppedSoulsPickup.cs`.

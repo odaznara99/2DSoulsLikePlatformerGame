@@ -7,9 +7,16 @@ public class GameManager : MonoBehaviour
 
     public PlayerData playerData = new();
 
+    [Header("Souls Drop")]
+    [Tooltip("Prefab for the dropped-souls pickup spawned at the player's death position. Assign in Inspector.")]
+    public GameObject droppedSoulsPrefab;
+
     private bool isGamePaused;
     private bool isGameOver;
     private int playerScore;
+
+    // Reference to the currently active DroppedSoulsPickup in the scene.
+    private GameObject activeDroppedSoulsPickup;
 
     void Awake()
     {
@@ -93,4 +100,59 @@ public class GameManager : MonoBehaviour
 
     public bool IsGamePaused() => isGamePaused;
     public bool IsGameOver() => isGameOver;
+
+    // ── Souls & Coins ────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Called by PlayerHealth when the player dies.
+    /// Resets souls/coins, records the dropped-souls state, and destroys any
+    /// previously dropped souls (which are then permanently lost).
+    /// </summary>
+    public void NotifyPlayerDeath(Vector2 deathPosition)
+    {
+        // If an uncollected souls pickup already exists, destroy it — those
+        // souls are permanently lost on a second death.
+        if (activeDroppedSoulsPickup != null)
+        {
+            Destroy(activeDroppedSoulsPickup);
+            activeDroppedSoulsPickup = null;
+        }
+
+        // Record the souls to be dropped (only if the player had any).
+        playerData.droppedSouls = playerData.souls;
+        playerData.droppedSoulsPosition = deathPosition;
+
+        // Reset currencies on death.
+        playerData.souls = 0;
+        playerData.coins = 0;
+    }
+
+    /// <summary>
+    /// Spawns the dropped-souls pickup at the stored death position after the
+    /// scene has been reloaded.  Called by SceneLoader once the scene is ready.
+    /// </summary>
+    public void SpawnDroppedSoulsIfAny()
+    {
+        if (playerData.droppedSouls <= 0 || droppedSoulsPrefab == null) return;
+
+        activeDroppedSoulsPickup = Instantiate(
+            droppedSoulsPrefab,
+            playerData.droppedSoulsPosition,
+            Quaternion.identity);
+
+        var pickup = activeDroppedSoulsPickup.GetComponent<DroppedSoulsPickup>();
+        if (pickup != null)
+            pickup.soulsAmount = playerData.droppedSouls;
+    }
+
+    /// <summary>
+    /// Called by DroppedSoulsPickup when the player picks up the dropped souls,
+    /// clearing the stored state so no new pickup is spawned on the next respawn.
+    /// </summary>
+    public void ClearDroppedSoulsPickup()
+    {
+        activeDroppedSoulsPickup = null;
+        playerData.droppedSouls = 0;
+        playerData.droppedSoulsPosition = Vector2.zero;
+    }
 }

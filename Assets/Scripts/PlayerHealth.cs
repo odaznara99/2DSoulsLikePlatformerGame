@@ -287,6 +287,10 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player died!");
         player.OnDead();
         UpdateHealthUI();
+
+        // Drop souls at death position and reset currencies.
+        gameManager.NotifyPlayerDeath(transform.position);
+
         // Optionally, you can trigger a death screen, restart the level, or respawn the player.
         gameManager.TriggerGameOverWithDelay(); // Call the GameOver method from GameManager
     }
