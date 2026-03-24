@@ -19,6 +19,16 @@ public class CoinsPickup : MonoBehaviour
     [Tooltip("Text shown in the floating message on pickup.")]
     public string pickupMessage = "Coins";
 
+    private Transform worldCanvas;
+
+    private void Start()
+    {
+        if (worldCanvas == null)
+        {
+            worldCanvas = GameObject.FindGameObjectWithTag("WorldSpaceCanvas").GetComponent<Transform>();
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
@@ -35,16 +45,11 @@ public class CoinsPickup : MonoBehaviour
 
     private void ShowFloatingText(Transform target)
     {
-        if (floatingTextPrefab == null) return;
+       if (floatingTextPrefab == null || worldCanvas == null) return;
 
-        Transform canvas = GetWorldCanvas();
-        Vector3 pos = target.position + Vector3.up;
+       GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
 
-        GameObject ft = canvas != null
-            ? Instantiate(floatingTextPrefab, pos, Quaternion.identity, canvas)
-            : Instantiate(floatingTextPrefab, pos, Quaternion.identity);
-
-        ft.GetComponent<FloatingText>()?.SetText($"+{coinsValue} {pickupMessage}");
+       ft.GetComponent<FloatingText>()?.SetText($"+{coinsValue} {pickupMessage}");
     }
 
     private void PlaySFX()
