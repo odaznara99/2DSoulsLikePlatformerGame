@@ -107,12 +107,23 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Saves a snapshot of the current playerData, including the active scene name.
     /// Call this whenever the player reaches/activates a checkpoint.
+    /// Also persists the snapshot to the local save file via SaveManager.
     /// </summary>
     public void SaveCheckpointSnapshot()
     {
         playerData.checkpointSceneName = SceneManager.GetActiveScene().name;
         checkpointSnapshot = playerData.Clone();
+        SaveManager.Instance?.SaveCheckpoint(checkpointSnapshot);
         Debug.Log("Checkpoint snapshot saved. Scene: " + playerData.checkpointSceneName);
+    }
+
+    /// <summary>
+    /// Restores the in-memory checkpoint snapshot from a previously persisted
+    /// PlayerData instance.  Called by SaveManager.LoadSavedGame().
+    /// </summary>
+    public void RestoreCheckpointSnapshot(PlayerData snapshot)
+    {
+        checkpointSnapshot = snapshot.Clone();
     }
 
     /// <summary>
