@@ -18,6 +18,17 @@ public class PlayerData
     public float maxHealth = 100f;
     public int mana, coins, xp;
 
+    // ── Currencies ──────────────────────────────────────────────────────────
+    // Souls: main currency for permanent upgrades. Resets to zero on death and
+    // drops at the death location. Can be recovered once; lost if the player
+    // dies a second time before picking them up.
+    public int souls = 0;
+
+    // Dropped-souls state (persists in GameManager across scene reloads so the
+    // pickup can be respawned at the correct position after respawn).
+    public int droppedSouls = 0;
+    public Vector2 droppedSoulsPosition = Vector2.zero;
+
     // You can add more later:
     public Vector2 position;
 

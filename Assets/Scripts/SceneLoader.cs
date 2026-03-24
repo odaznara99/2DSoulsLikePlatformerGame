@@ -152,7 +152,9 @@ public class SceneLoader : MonoBehaviour
         // After scene load
         if (playerScript != null) { 
             RespawnManager.Instance.RespawnPlayer(spawnPoint);
-            
+
+            // Spawn dropped-souls pickup at death position if any souls were lost.
+            GameManager.Instance?.SpawnDroppedSoulsIfAny();
         }
 
 
