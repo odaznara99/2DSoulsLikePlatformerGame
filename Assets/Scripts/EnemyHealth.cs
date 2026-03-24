@@ -160,12 +160,12 @@ public class EnemyHealth : MonoBehaviour
 
         float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(knockbackDuration);
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         isKnocked = false;
     }
 }

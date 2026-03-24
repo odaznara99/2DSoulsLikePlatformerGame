@@ -80,7 +80,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (enemyHealth.isDead)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             return;
         }
 
@@ -97,14 +97,14 @@ public class EnemyMovement : MonoBehaviour
 
         if (Vector3.Distance(transform.position, player.position) <= attackRange && !isAttacking)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             int randomIndex = Random.Range(0, attackAnimationTrigger.Length);
             m_animator.SetTrigger(attackAnimationTrigger[randomIndex]); // Trigger the attack animation
         }
 
         // Set Running Parameters in the Animator
-        m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.velocity.x));
-        m_animator.SetFloat("Velocity_Y", rb.velocity.y);
+        m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.linearVelocity.x));
+        m_animator.SetFloat("Velocity_Y", rb.linearVelocity.y);
         m_animator.SetBool("IsGrounded", isGrounded);
 
         // Flip the sprite based on velocity
@@ -134,7 +134,7 @@ public class EnemyMovement : MonoBehaviour
         if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || !pointA || !pointB ||
             obstacle_Detector.obstacleDetected)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             return;
         }
 
@@ -142,7 +142,7 @@ public class EnemyMovement : MonoBehaviour
         Vector2 direction = (currentTarget.position - transform.position).normalized;
 
         // Set velocity towards the target
-        rb.velocity = new Vector3(direction.x * patrolSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector3(direction.x * patrolSpeed, rb.linearVelocity.y);
 
         // Switch target when reaching the current patrol point
         if (Vector3.Distance(transform.position, currentTarget.position) < 0.5f)
@@ -155,7 +155,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || obstacle_Detector.obstacleDetected)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             return;
         } // Don't do anything if the enemy is dead
 
@@ -163,7 +163,7 @@ public class EnemyMovement : MonoBehaviour
         Vector2 direction = (player.position - transform.position).normalized;
 
         // Set velocity towards the player
-        rb.velocity = new Vector3(direction.x * chaseSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector3(direction.x * chaseSpeed, rb.linearVelocity.y);
     }
 
     private void OnDrawGizmosSelected()
@@ -188,12 +188,12 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
         // Check the enemy's velocity on the X-axis to determine direction
-        if (rb.velocity.x > 0 && !isFacingRight)
+        if (rb.linearVelocity.x > 0 && !isFacingRight)
         {
             // Moving right but currently facing left, so flip to face right
             FlipSprite();
         }
-        else if (rb.velocity.x < 0 && isFacingRight)
+        else if (rb.linearVelocity.x < 0 && isFacingRight)
         {
             // Moving left but currently facing right, so flip to face left
             FlipSprite();

@@ -75,7 +75,7 @@ public class SmoothCameraFollow : MonoBehaviour
 
         Vector3 dynamicOffset = offset;
 
-        if (!followBothTargets && playerRigidbody.velocity.y < lookAheadVelocity && !playerController.isGrounded)
+        if (!followBothTargets && playerRigidbody.linearVelocity.y < lookAheadVelocity && !playerController.isGrounded)
         {
             dynamicOffset.y += fallLookAhead;
         }

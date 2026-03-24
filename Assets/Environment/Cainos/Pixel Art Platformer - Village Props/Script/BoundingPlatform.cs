@@ -29,7 +29,7 @@ namespace Cainos.PixelArtPlatformer_VillageProps
         {
             foreach ( Rigidbody2D rb2d in onPlatformRigidbodies)
             {
-                rb2d.velocity += pushSpeed * Vector2.up;
+                rb2d.linearVelocity += pushSpeed * Vector2.up;
 
                 //Make the player Jump
                 if (rb2d.CompareTag("Player")) {

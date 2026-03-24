@@ -227,7 +227,7 @@ public class PlayerHealth : MonoBehaviour
             Vector2 knockDirection = (transform.position - attacker.transform.position).normalized;
             Vector2 knockback = new Vector2(knockDirection.x * knockbackForceX, knockbackForceY);
 
-            rb.velocity = Vector2.zero; // Reset current velocity
+            rb.linearVelocity = Vector2.zero; // Reset current velocity
             rb.AddForce(knockback, ForceMode2D.Impulse);
         }
     }

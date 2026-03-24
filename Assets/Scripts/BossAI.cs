@@ -89,8 +89,8 @@ public class BossAI : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player").transform;
         }
 
-        animator.SetFloat("XVelocity", Mathf.Abs(rb.velocity.x));
-        animator.SetFloat("YVelocity", rb.velocity.y);
+        animator.SetFloat("XVelocity", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetFloat("YVelocity", rb.linearVelocity.y);
 
         if (isAttacking)
             return;
@@ -105,7 +105,7 @@ public class BossAI : MonoBehaviour
                 chaseTimer = 0f;
             }
 
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             animator.SetBool("isMoving", false);
             return; // Skip follow/attack/patrol while resting
         }
@@ -152,7 +152,7 @@ public class BossAI : MonoBehaviour
         {
             isResting = true;
             restTimer = restDuration;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             animator.SetBool("isMoving", false);
             animator.SetTrigger("Taunt");
             return;
@@ -172,7 +172,7 @@ public class BossAI : MonoBehaviour
             patrolPauseTimer -= Time.deltaTime;
             patrolPauseTimer = Mathf.Max(patrolPauseTimer, 0f);
 
-            rb.velocity = new Vector2(0f, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             animator.SetBool("isMoving", false);
 
             if (patrolPauseTimer <= 0f)
@@ -190,7 +190,7 @@ public class BossAI : MonoBehaviour
         {
             hasArrivedAtPatrolPoint = true;
             patrolPauseTimer = patrolPauseDuration;
-            rb.velocity = new Vector2(0f, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             animator.SetBool("isMoving", false);
             return;
         }
@@ -206,7 +206,7 @@ public class BossAI : MonoBehaviour
     {
         if (GetHurtBool()) return;
 
-        rb.velocity = new Vector2(dir * moveSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(dir * moveSpeed, rb.linearVelocity.y);
         animator.SetBool("isMoving", true);
 
         // Flip
@@ -234,7 +234,7 @@ public class BossAI : MonoBehaviour
         }
 
         isAttacking = true;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         //animator.SetBool("isMoving", false);
 
         string randomTrigger = attackTriggers[Random.Range(0, attackTriggers.Length)];
@@ -332,7 +332,7 @@ public class BossAI : MonoBehaviour
     {
         //Debug.Log("Boss has died!");
         // Stop Velocity
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         // Stop Fight Music
         AudioManager.Instance.StopFightMusic();
         // Show Victory Message

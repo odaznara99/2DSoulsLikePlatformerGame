@@ -242,10 +242,10 @@ public class Bandit : MonoBehaviour
         }
 
         //Set AirSpeed in animator
-        m_animator.SetFloat("AirSpeed", rb.velocity.y);
+        m_animator.SetFloat("AirSpeed", rb.linearVelocity.y);
 
         //Run
-        if (Mathf.Abs(rb.velocity.x) > Mathf.Epsilon)
+        if (Mathf.Abs(rb.linearVelocity.x) > Mathf.Epsilon)
             m_animator.SetInteger("AnimState", 2);
 
         //Combat Neutral
@@ -284,7 +284,7 @@ public class Bandit : MonoBehaviour
         direction.y = 0;
 
         // Maintain the current vertical velocity (y) to preserve gravity
-        rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(direction.x * moveSpeed, rb.linearVelocity.y);
     }
 
     // Method to attack the player
@@ -412,9 +412,9 @@ public class Bandit : MonoBehaviour
         m_animator.SetBool("Grounded", m_grounded);
 
         float facingDirection = isFacingRight ? 1f : -1f;
-        rb.velocity = new Vector2(jumpHorizontalSpeed * facingDirection, jumpForce);
+        rb.linearVelocity = new Vector2(jumpHorizontalSpeed * facingDirection, jumpForce);
 
-        Log("Jump velocity: " + rb.velocity);
+        Log("Jump velocity: " + rb.linearVelocity);
 
         m_groundSensor.Disable(0.2f);
     }
@@ -437,12 +437,12 @@ public class Bandit : MonoBehaviour
 
         float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(knockbackDuration);
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         isKnocked = false;
     }
 
@@ -474,12 +474,12 @@ public class Bandit : MonoBehaviour
     void FlipSpriteBasedOnVelocity()
     {
         // Check the enemy's velocity on the X-axis to determine direction
-        if (rb.velocity.x > 0 && !isFacingRight)
+        if (rb.linearVelocity.x > 0 && !isFacingRight)
         {
             // Moving right but currently facing left, so flip to face right
             FlipSprite();
         }
-        else if (rb.velocity.x < 0 && isFacingRight)
+        else if (rb.linearVelocity.x < 0 && isFacingRight)
         {
             // Moving left but currently facing right, so flip to face left
             FlipSprite();
@@ -499,7 +499,7 @@ public class Bandit : MonoBehaviour
     {
         if (currentState != EnemyState.Jump)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         }
     }
 
