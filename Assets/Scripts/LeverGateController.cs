@@ -2,9 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class LeverGateController : MonoBehaviour
 {
+    [Header("Persistence")]
+    [Tooltip("Unique ID for this lever within the scene. Set this to a non-empty string to make the gate state (open/closed) persist across scene reloads and game restarts.")]
+    public string persistentId;
+
     [Header("References")]
     public GameObject gate;
     public bool isGateOpen = false;
@@ -13,6 +18,9 @@ public class LeverGateController : MonoBehaviour
     [Header("Gate Settings")]
     public Vector3 openPositionOffset = new Vector3(0, 3f, 0);
     public float openSpeed = 2f;
+
+    private const float LeverOpenAngle   = 50f;
+    private const float LeverClosedAngle = 130f;
 
     private Vector3 initialGatePosition;
 
@@ -26,6 +34,17 @@ public class LeverGateController : MonoBehaviour
             initialGatePosition = gate.transform.position;
 
         leverButton.onClick.AddListener(OnButtonClick);
+
+        // Restore persisted gate state (no animation — instant snap to saved position).
+        if (!string.IsNullOrEmpty(persistentId) &&
+            SaveManager.Instance != null &&
+            SaveManager.Instance.GetObjectState(SceneManager.GetActiveScene().name, persistentId))
+        {
+            isGateOpen = true;
+            if (gate != null)
+                gate.transform.position = initialGatePosition + openPositionOffset;
+            transform.rotation = Quaternion.Euler(0f, 0f, LeverOpenAngle);
+        }
     }
 
     bool canToggleGate()
@@ -71,8 +90,12 @@ public class LeverGateController : MonoBehaviour
         {
             isGateOpen = true;
 
+            // Persist the new state.
+            if (!string.IsNullOrEmpty(persistentId) && SaveManager.Instance != null)
+                SaveManager.Instance.SetObjectState(SceneManager.GetActiveScene().name, persistentId, true);
+
             // Start lever rotation (e.g., rotate to 50 degrees on Z axis)
-            StartCoroutine(RotateLever(new Vector3(0, 0, 50f)));
+            StartCoroutine(RotateLever(new Vector3(0, 0, LeverOpenAngle)));
 
             
         } 
@@ -80,8 +103,12 @@ public class LeverGateController : MonoBehaviour
         {
             isGateOpen = false;
 
+            // Persist the new state.
+            if (!string.IsNullOrEmpty(persistentId) && SaveManager.Instance != null)
+                SaveManager.Instance.SetObjectState(SceneManager.GetActiveScene().name, persistentId, false);
+
             // Start lever rotation back to 0 degrees
-            StartCoroutine(RotateLever(new Vector3(0, 0, 130f)));
+            StartCoroutine(RotateLever(new Vector3(0, 0, LeverClosedAngle)));
         }
     }
 

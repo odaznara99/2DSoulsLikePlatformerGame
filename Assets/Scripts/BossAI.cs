@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BossAI : MonoBehaviour
 {
+    [Header("Persistence")]
+    [Tooltip("Unique ID for this boss within the scene. Set this to a non-empty string to make the boss permanently dead after being defeated (survives scene reloads and game restarts).")]
+    public string persistentId;
+
     [Header("References")]
     public Transform player;
     public Animator animator;
@@ -63,6 +68,16 @@ public class BossAI : MonoBehaviour
 
     void Start()
     {
+        // If this boss has a persistent ID and was already defeated, remove it
+        // immediately so it does not appear in the scene again.
+        if (!string.IsNullOrEmpty(persistentId) &&
+            SaveManager.Instance != null &&
+            SaveManager.Instance.GetObjectState(SceneManager.GetActiveScene().name, persistentId))
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         rb = GetComponent<Rigidbody2D>();
         if (animator == null)
             animator = GetComponent<Animator>();
@@ -342,6 +357,10 @@ public class BossAI : MonoBehaviour
         // Play Dying Sounds
         AudioManager.Instance.PlaySFX("DragonDie");
         isDead = true;
+
+        // Persist the defeat so this boss is not respawned in future sessions.
+        if (!string.IsNullOrEmpty(persistentId) && SaveManager.Instance != null)
+            SaveManager.Instance.SetObjectState(SceneManager.GetActiveScene().name, persistentId, true);
 
         // Disable AI or controls
         this.enabled = false;
