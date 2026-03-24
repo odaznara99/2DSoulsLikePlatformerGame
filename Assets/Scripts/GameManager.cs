@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +18,9 @@ public class GameManager : MonoBehaviour
 
     // Reference to the currently active DroppedSoulsPickup in the scene.
     private GameObject activeDroppedSoulsPickup;
+
+    // Snapshot of playerData taken at the last checkpoint.
+    private PlayerData checkpointSnapshot;
 
     void Awake()
     {
@@ -51,11 +55,8 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        isGameOver = false;
-        playerScore = 0;
-        playerData.currentHealth = playerData.maxHealth;
-
-        SceneLoader.Instance.LoadScene(SceneManager.GetActiveScene().name, SpawnPointType.Checkpoint);
+        // "Try again" on death — return to last checkpoint, dropping souls/coins.
+        ReturnToLastCheckpoint();
     }
 
     public void PauseGame()
@@ -93,13 +94,76 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.StopMusic();
         AudioManager.Instance.PlayMusic("Ballad");
 
-        SceneLoader.Instance.LoadScene("StartMenu", SpawnPointType.Start);
+        SceneLoader.Instance.LoadScene("StartMenu");
     }
 
     public void AddScore(int points) => playerScore += points;
 
     public bool IsGamePaused() => isGamePaused;
     public bool IsGameOver() => isGameOver;
+
+    // ── Checkpoint Snapshot ──────────────────────────────────────────────────
+
+    /// <summary>
+    /// Saves a snapshot of the current playerData, including the active scene name.
+    /// Call this whenever the player reaches/activates a checkpoint.
+    /// </summary>
+    public void SaveCheckpointSnapshot()
+    {
+        playerData.checkpointSceneName = SceneManager.GetActiveScene().name;
+        checkpointSnapshot = playerData.Clone();
+        Debug.Log("Checkpoint snapshot saved. Scene: " + playerData.checkpointSceneName);
+    }
+
+    /// <summary>
+    /// Returns the player to the last checkpoint, reverting playerData to the
+    /// snapshot (health, position, scene). Souls and coins collected since the
+    /// checkpoint are dropped at the death location and can be recovered once.
+    /// This is also used as the "Try Again" flow upon player death.
+    /// </summary>
+    public void ReturnToLastCheckpoint()
+    {
+        if (checkpointSnapshot == null)
+        {
+            Debug.LogWarning("No checkpoint snapshot found. Cannot return to checkpoint.");
+            return;
+        }
+
+        // Determine which scene the checkpoint belongs to
+        string targetScene = checkpointSnapshot.checkpointSceneName;
+
+        if (string.IsNullOrEmpty(targetScene))
+        {
+            Debug.LogWarning("Checkpoint snapshot has no scene name. Falling back to current scene.");
+            targetScene = SceneManager.GetActiveScene().name;
+        }
+
+        // Revert playerData to the checkpoint snapshot
+        // (souls & coins were already zeroed by NotifyPlayerDeath;
+        //  the snapshot restores the checkpoint-time values which are also
+        //  the "before collection" amounts, effectively dropping everything
+        //  collected after the checkpoint.)
+        playerData.RestoreFrom(checkpointSnapshot);
+
+        isGameOver = false;
+        playerScore = 0;
+
+        // Destroy any active dropped-souls pickup since progress is reverted
+        if (activeDroppedSoulsPickup != null)
+        {
+            Destroy(activeDroppedSoulsPickup);
+            activeDroppedSoulsPickup = null;
+        }
+
+        Time.timeScale = 1f;
+
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlayMusic("Ballad");
+
+        // Load the checkpoint scene — RespawnManager will place the player
+        // at playerData.position (the saved checkpoint position).
+        SceneLoader.Instance.LoadScene(targetScene);
+    }
 
     // ── Souls & Coins ────────────────────────────────────────────────────────
 

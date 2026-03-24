@@ -1,13 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.IO; // Needed for Path methods
-using System.Collections;
-
 
 public class SceneLoader : MonoBehaviour
 {
-
 
     public static SceneLoader Instance;
 
@@ -64,7 +64,7 @@ public class SceneLoader : MonoBehaviour
 
 
 
-    public void LoadScene(string sceneName, SpawnPointType spawnPoint)
+    public void LoadScene(string sceneName)
     {
         try
         {
@@ -72,7 +72,7 @@ public class SceneLoader : MonoBehaviour
             // we will look for the first scene in Build Settings that starts with the prefix
             string targetScene = sceneName;
 
-            if (!string.IsNullOrEmpty(sceneName))
+            if (!string.IsNullOrEmpty(sceneName) && !sceneName.Contains("_"))
             {
                 //Debug.Log($"Scene name '{sceneName}' contains an underscore. Attempting to find a matching scene in Build Settings.");
                 string prefix = sceneName.Split(new char[] { '_' }, 2)[0];
@@ -91,7 +91,7 @@ public class SceneLoader : MonoBehaviour
                 }
             }
 
-            StartCoroutine(LoadSceneAsync(targetScene, spawnPoint));
+            StartCoroutine(LoadSceneAsync(targetScene));
             //AudioManager.Instance.PlayMusic("MedievalOpener");
             AudioManager.Instance.StopMusic(); // Stop any currently playing music
             AudioManager.Instance.PlayMusic("Ballad");
@@ -102,7 +102,7 @@ public class SceneLoader : MonoBehaviour
 
     }
 
-    private IEnumerator LoadSceneAsync(string sceneName, SpawnPointType spawnPoint)
+    private IEnumerator LoadSceneAsync(string sceneName)
     {
         if (sceneName == null)
         {
@@ -118,9 +118,6 @@ public class SceneLoader : MonoBehaviour
             playerScript.GetComponent<PlayerHealth>().isInvincible = true;
             playerScript.enabled = false; // Disable player controls during loading
         }
-
-        // Hide all in game UI, except loading screen
-        //FindObjectOfType<UIScreensManager>().HideAllScreens();
 
         // Fade Out to black
         yield return StartCoroutine(Fade(0f, 1f));
@@ -151,7 +148,7 @@ public class SceneLoader : MonoBehaviour
 
         // After scene load
         if (playerScript != null) { 
-            RespawnManager.Instance.RespawnPlayer(spawnPoint);
+            RespawnManager.Instance.RespawnPlayer();
 
             // Spawn dropped-souls pickup at death position if any souls were lost.
             GameManager.Instance?.SpawnDroppedSoulsIfAny();

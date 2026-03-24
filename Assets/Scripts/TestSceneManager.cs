@@ -208,7 +208,7 @@ public class TestSceneManager : MonoBehaviour
         //SceneManager.LoadScene(sceneName);
         // For simplicity, we assume the scene name format is "StageX_Description" or "FeatY_Description", and we want to load just "StageX" or "FeatY"
         string result = sceneName.Split('_')[0];
-        SceneLoader.Instance.LoadScene(result, SpawnPointType.Start);
+        SceneLoader.Instance.LoadScene(result);
     }
 
 }

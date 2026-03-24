@@ -15,7 +15,7 @@ public class MenuController : MonoBehaviour
     {
         //SceneManager.LoadScene("GameScene1"); // Use the actual scene name
         AudioManager.Instance.PlaySFX("Click");
-        SceneLoader.Instance.LoadScene("Stage1",SpawnPointType.Start); // Use the SceneLoader to load the scene
+        SceneLoader.Instance.LoadScene("Stage1"); // Use the SceneLoader to load the scene
     }
 
     public void LoadGame()

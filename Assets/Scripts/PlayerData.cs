@@ -32,6 +32,11 @@ public class PlayerData
     // You can add more later:
     public Vector2 position;
 
+    // ── Checkpoint ──────────────────────────────────────────────────────────
+    // Scene name where the last checkpoint was activated. Used by
+    // ReturnToLastCheckpoint to load the correct scene.
+    public string checkpointSceneName = "";
+
     // ── Pickups & Upgrades ──────────────────────────────────────────────────
     // Memory Shards collected (persists across death)
     public int memoryShards = 0;
@@ -47,5 +52,57 @@ public class PlayerData
 
     // Permanent stamina-relic upgrades (applied via PlayerStamina.LevelUp on init)
     public int staminaRelicLevel = 0;
+
+    /// <summary>
+    /// Creates a deep copy of this PlayerData so mutations to the copy
+    /// do not affect the original (and vice-versa).
+    /// </summary>
+    public PlayerData Clone()
+    {
+        return new PlayerData
+        {
+            currentHealth          = currentHealth,
+            maxHealth              = maxHealth,
+            mana                   = mana,
+            coins                  = coins,
+            xp                     = xp,
+            souls                  = souls,
+            droppedSouls           = droppedSouls,
+            droppedSoulsPosition   = droppedSoulsPosition,
+            position               = position,
+            checkpointSceneName    = checkpointSceneName,
+            memoryShards           = memoryShards,
+            unlockedPassives       = new List<PassiveAbility>(unlockedPassives),
+            bonusMaxHealth         = bonusMaxHealth,
+            bonusDamageReduction   = bonusDamageReduction,
+            bonusJumpCount         = bonusJumpCount,
+            bonusMovementSpeed     = bonusMovementSpeed,
+            staminaRelicLevel      = staminaRelicLevel
+        };
+    }
+
+    /// <summary>
+    /// Copies all values from another PlayerData snapshot into this instance.
+    /// </summary>
+    public void RestoreFrom(PlayerData snapshot)
+    {
+        currentHealth          = snapshot.currentHealth;
+        maxHealth              = snapshot.maxHealth;
+        mana                   = snapshot.mana;
+        coins                  = snapshot.coins;
+        xp                     = snapshot.xp;
+        souls                  = snapshot.souls;
+        droppedSouls           = snapshot.droppedSouls;
+        droppedSoulsPosition   = snapshot.droppedSoulsPosition;
+        position               = snapshot.position;
+        checkpointSceneName    = snapshot.checkpointSceneName;
+        memoryShards           = snapshot.memoryShards;
+        unlockedPassives       = new List<PassiveAbility>(snapshot.unlockedPassives);
+        bonusMaxHealth         = snapshot.bonusMaxHealth;
+        bonusDamageReduction   = snapshot.bonusDamageReduction;
+        bonusJumpCount         = snapshot.bonusJumpCount;
+        bonusMovementSpeed     = snapshot.bonusMovementSpeed;
+        staminaRelicLevel      = snapshot.staminaRelicLevel;
+    }
 }
 

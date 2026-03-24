@@ -15,7 +15,7 @@ public class CoinsPickup : MonoBehaviour
     [Header("Feedback")]
     public GameObject floatingTextPrefab;
     [Tooltip("SFX clip name registered in AudioManager. Leave empty to skip.")]
-    public string pickupSfxName = "";
+    public string pickupSfxName = "Coin_sfx";
     [Tooltip("Text shown in the floating message on pickup.")]
     public string pickupMessage = "Coins";
     [Tooltip("Color of the floating text on pickup.")]
@@ -29,6 +29,12 @@ public class CoinsPickup : MonoBehaviour
         {
             worldCanvas = GameObject.FindGameObjectWithTag("WorldSpaceCanvas").GetComponent<Transform>();
         }
+
+        if(string.IsNullOrEmpty(pickupSfxName))
+        {
+            //Debug.LogWarning("CoinsPickup: pickupSfxName is empty. No sound will be played on pickup.");
+            pickupSfxName = "Coin_sfx"; // Default SFX name
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -40,8 +46,9 @@ public class CoinsPickup : MonoBehaviour
 
         gm.playerData.coins += coinsValue;
 
-        ShowFloatingText(other.transform);
         PlaySFX();
+        ShowFloatingText(other.transform);
+        
         Destroy(gameObject);
     }
 
@@ -58,7 +65,7 @@ public class CoinsPickup : MonoBehaviour
 
     private void PlaySFX()
     {
-        if (AudioManager.Instance != null && !string.IsNullOrEmpty(pickupSfxName))
+       // if (AudioManager.Instance != null && !string.IsNullOrEmpty(pickupSfxName))
             AudioManager.Instance.PlaySFX(pickupSfxName);
     }
 

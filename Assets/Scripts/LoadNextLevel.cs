@@ -38,7 +38,7 @@ public class LoadNextLevel : MonoBehaviour
         AudioManager.Instance.PlaySFX("Click");
         // Fallback: if no match found, targetScene remains the original sceneName
         Debug.Log($"Loading scene: {sceneName} with spawn point: {spawnPointType}");
-        SceneLoader.Instance.LoadScene(sceneName, spawnPointType);
+        SceneLoader.Instance.LoadScene(sceneName);
     }
 
     

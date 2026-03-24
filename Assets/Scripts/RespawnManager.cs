@@ -54,4 +54,23 @@ public class RespawnManager : MonoBehaviour
 
         //UIButtonsManager.Instance.AssignPlayer(player);
     }
+
+    /// <summary>
+    /// Respawns the player at the position stored in GameManager.playerData.
+    /// Called after a scene load (checkpoint return, try again, etc.).
+    /// </summary>
+    public void RespawnPlayer()
+    {
+        var player = FindObjectOfType<PlayerControllerVersion2>();
+
+        if (player == null) return;
+
+        Vector2 savedPosition = GameManager.Instance.playerData.position;
+        player.transform.position = new Vector3(savedPosition.x, savedPosition.y, player.transform.position.z);
+
+        // Reset invincibility after respawn
+        var health = player.GetComponent<PlayerHealth>();
+        if (health != null)
+            health.isInvincible = false;
+    }
 }
