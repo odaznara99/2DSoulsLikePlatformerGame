@@ -11,7 +11,8 @@ public class UIScreensManager : MonoBehaviour
         public GameObject screenObject;
     }
 
-    public List<UIScreen> screens;
+    [SerializeField]
+    List<UIScreen> screens;
 
     private Dictionary<string, GameObject> screenDict;
 
