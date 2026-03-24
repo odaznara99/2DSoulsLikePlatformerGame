@@ -22,7 +22,12 @@ public class SmoothCameraFollow : MonoBehaviour
 
     private void Start()
     {
-        playerTarget = GameObject.FindGameObjectWithTag("Player").transform;
+        if (!playerTarget)
+        {
+            Debug.LogWarning("Player target for Camera Follow not assigned in inspector. Might cause some issues. Finding now...");
+            playerTarget = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+
         playerRigidbody = playerTarget.GetComponent<Rigidbody2D>();
         playerController = playerTarget.GetComponent<PlayerControllerVersion2>();
 

@@ -18,6 +18,8 @@ public class CoinsPickup : MonoBehaviour
     public string pickupSfxName = "";
     [Tooltip("Text shown in the floating message on pickup.")]
     public string pickupMessage = "Coins";
+    [Tooltip("Color of the floating text on pickup.")]
+    public Color floatingTextColor = Color.yellow;
 
     private Transform worldCanvas;
 
@@ -49,7 +51,9 @@ public class CoinsPickup : MonoBehaviour
 
        GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
 
-       ft.GetComponent<FloatingText>()?.SetText($"+{coinsValue} {pickupMessage}");
+       var floatingText = ft.GetComponent<FloatingText>();
+       floatingText?.SetText($"+{coinsValue} {pickupMessage}");
+       floatingText?.SetTextColor(floatingTextColor);
     }
 
     private void PlaySFX()

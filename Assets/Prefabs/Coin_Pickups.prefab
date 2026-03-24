@@ -122,8 +122,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coinsValue: 5
   floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
-  pickupSfxName: 
+  pickupSfxName: Coin_sfx
   pickupMessage: Coins
+  floatingTextColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!58 &2651068084611437037
 CircleCollider2D:
   m_ObjectHideFlags: 0

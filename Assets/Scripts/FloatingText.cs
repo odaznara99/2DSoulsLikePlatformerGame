@@ -30,4 +30,10 @@ public class FloatingText : MonoBehaviour
         if (text == null) text = GetComponent<TextMeshProUGUI>();
         text.text = value;
     }
+
+    public void SetTextColor(Color color)
+    {
+        if (text == null) text = GetComponent<TextMeshProUGUI>();
+        text.color = color;
+    }
 }
