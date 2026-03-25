@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,6 +22,36 @@ public class GameManager : MonoBehaviour
 
     // Snapshot of playerData taken at the last checkpoint.
     private PlayerData checkpointSnapshot;
+
+    // ── Currency Events ──────────────────────────────────────────────────────
+    /// <summary>Raised whenever the souls count changes. Parameter is the new total.</summary>
+    public event Action<int> OnSoulsChanged;
+
+    /// <summary>Raised whenever the coins count changes. Parameter is the new total.</summary>
+    public event Action<int> OnCoinsChanged;
+
+    // ── Currency Helpers ─────────────────────────────────────────────────────
+
+    /// <summary>Adds (or subtracts) souls and notifies listeners.</summary>
+    public void AddSouls(int amount)
+    {
+        playerData.souls += amount;
+        OnSoulsChanged?.Invoke(playerData.souls);
+    }
+
+    /// <summary>Adds (or subtracts) coins and notifies listeners.</summary>
+    public void AddCoins(int amount)
+    {
+        playerData.coins += amount;
+        OnCoinsChanged?.Invoke(playerData.coins);
+    }
+
+    /// <summary>Forces a UI refresh for both currencies (e.g. after a scene load or checkpoint restore).</summary>
+    public void BroadcastCurrencyUpdate()
+    {
+        OnSoulsChanged?.Invoke(playerData.souls);
+        OnCoinsChanged?.Invoke(playerData.coins);
+    }
 
     void Awake()
     {
@@ -174,6 +205,9 @@ public class GameManager : MonoBehaviour
         // Load the checkpoint scene — RespawnManager will place the player
         // at playerData.position (the saved checkpoint position).
         SceneLoader.Instance.LoadScene(targetScene);
+
+        // Notify UI of restored currency values after checkpoint revert.
+        BroadcastCurrencyUpdate();
     }
 
     // ── Souls & Coins ────────────────────────────────────────────────────────
@@ -200,6 +234,9 @@ public class GameManager : MonoBehaviour
         // Reset currencies on death.
         playerData.souls = 0;
         playerData.coins = 0;
+
+        // Notify UI that currencies were reset.
+        BroadcastCurrencyUpdate();
     }
 
     /// <summary>

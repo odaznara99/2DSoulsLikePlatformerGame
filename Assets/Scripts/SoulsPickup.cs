@@ -26,7 +26,7 @@ public class SoulsPickup : MonoBehaviour
         var gm = GameManager.Instance;
         if (gm == null) return;
 
-        gm.playerData.souls += soulsValue;
+        gm.AddSouls(soulsValue);
 
         ShowFloatingText(other.transform);
         PlaySFX();

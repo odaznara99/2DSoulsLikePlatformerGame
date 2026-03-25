@@ -44,7 +44,7 @@ public class CoinsPickup : MonoBehaviour
         var gm = GameManager.Instance;
         if (gm == null) return;
 
-        gm.playerData.coins += coinsValue;
+        gm.AddCoins(coinsValue);
 
         PlaySFX();
         ShowFloatingText(other.transform);

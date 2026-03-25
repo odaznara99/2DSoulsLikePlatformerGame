@@ -1,3 +1,4 @@
+File: CONTRIBUTING.md
 # Contributing to SoulsHero
 
 Thank you for contributing to SoulsHero. This document describes the development standards, coding conventions, and workflow expectations for this repository. All contributors (including maintainers) must follow these guidelines to keep the codebase consistent and high quality.
@@ -9,6 +10,7 @@ Thank you for contributing to SoulsHero. This document describes the development
 - Branching & pull request process
 - Commit message style
 - Coding standards (C# / Unity)
+- UI standards
 - Formatting and EditorConfig
 - Unit tests & automated CI
 - Code reviews
@@ -50,66 +52,43 @@ Example:
 ```
 feat: add stamina UI and binding to PlayerStamina
 
-Adds a new HUD element that displays current stamina and max stamina.
+Adds a new HUD element that displays current stamina.
 ```
 
 ## Coding standards (C# / Unity)
 
-We follow common C# conventions and Unity best practices. Key rules:
+- Follow standard C# naming conventions (PascalCase for public members, camelCase for private fields).
+- Use `[Header]` and `[Tooltip]` attributes on serialized fields for Inspector clarity.
+- Prefer events/delegates for cross-system communication over direct references.
 
-- Use PascalCase for class, property, and method names.
-- Use camelCase for private fields and parameters. Prefix private serialized fields with `_` if necessary: `_movementSpeed`.
-- Avoid public fields unless they are intentionally exposed to the Unity Inspector. Prefer `[SerializeField] private` for inspector-exposed fields.
-- Keep MonoBehaviour scripts focused on a single responsibility.
-- Use `nameof(...)` for property/method names in logs and exceptions.
-- Prefer composition over inheritance for gameplay systems.
-- Avoid heavy logic in `Update()`; use events or coroutines when appropriate.
+## UI standards
 
-### Event and delegate usage
-
-- Use UnityEvent for inspector-wired events. Keep event payloads small and explicit.
-- Unsubscribe listeners in `OnDisable()` to avoid leaks and null-reference issues.
-
-### Null checks
-
-- Guard public API points with argument checks where appropriate.
-- In Unity callbacks, check for null references before accessing components.
+- **Always use TextMeshPro (`TextMeshProUGUI`)** for all in-game UI text elements. Do **not** use the legacy `UnityEngine.UI.Text` component.
+- Import the TMPro namespace with `using TMPro;`.
+- Serialized text fields should be typed as `TextMeshProUGUI` (for canvas/screen-space UI) or `TextMeshPro` (for world-space 3D text).
+- When referencing text in code, use the `.text` property on the TMP component as usual.
 
 ## Formatting and EditorConfig
 
-This repository uses an `.editorconfig` to enforce formatting. If one is present in the root, configure your editor to respect it. Key preferences expected:
-
-- indent_style = space
-- indent_size = 4
-- charset = utf-8
-- end_of_line = lf
-- insert_final_newline = true
-- trim_trailing_whitespace = true
-
-If an `.editorconfig` is not present, adhere to the above formatting rules.
+- Follow the `.editorconfig` rules defined in the repository root (when present).
+- Use 4-space indentation for C# files.
 
 ## Unit tests & automated CI
 
-- Add unit tests for core gameplay logic where practical (non-MonoBehaviour logic is easiest to test).
-- Unit tests should be placed under `Assets/Tests` and use the Unity Test Runner.
-- CI will run tests; ensure all tests pass locally before opening a PR.
+- Add or update unit tests for new logic.
+- Ensure all tests pass locally before pushing.
 
 ## Code reviews
 
-- Reviews focus on correctness, readability, and adherence to conventions.
-- Suggest improvements with clear rationale.
-- Approvals should be given only if the reviewer is confident in the change.
+- Be constructive and respectful.
+- Focus on correctness, readability, and adherence to these standards.
 
 ## Adding assets and third-party packages
 
-- Prefer package manager (UPM) for dependencies when possible.
-- Check licenses before adding third-party assets. Document the license and source in the PR description.
-- Keep large binary changes (audio, textures) limited to separate PRs when possible.
+- Document any new packages in the README or a dedicated dependencies section.
+- Prefer Unity Package Manager packages over manual imports.
 
-## Reporting issues
+## Contact / reporting issues
 
-Open an issue with a clear title and reproduction steps. Attach logs, stack traces, and screenshots where useful.
-
----
-
-Thank you for contributing — your work helps make this project better for everyone.
+- Use GitHub Issues for bug reports and feature requests.
+- Tag issues with appropriate labels (bug, enhancement, etc.).
