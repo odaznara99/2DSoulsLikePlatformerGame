@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoadNextLevel : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class LoadNextLevel : MonoBehaviour
         {
             locationButton.gameObject.SetActive(true); // Show the button when player is nearby
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 OnButtonClick();
             }

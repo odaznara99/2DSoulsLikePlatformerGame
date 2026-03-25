@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
     m_MixedBakeMode: 1
     m_BakeBackend: 0
@@ -204,8 +201,7 @@ LightingSettings:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Settings.lighting
-  serializedVersion: 6
-  m_GIWorkflowMode: 1
+  serializedVersion: 10
   m_EnableBakedLightmaps: 0
   m_EnableRealtimeLightmaps: 0
   m_RealtimeEnvironmentLighting: 1
@@ -213,11 +209,19 @@ LightingSettings:
   m_AlbedoBoost: 1
   m_IndirectOutputScale: 1
   m_UsingShadowmask: 0
-  m_BakeBackend: 0
+  m_BakeBackend: 1
   m_LightmapMaxSize: 1024
+  m_LightmapSizeFixed: 0
+  m_UseMipmapLimits: 1
   m_BakeResolution: 40
   m_Padding: 2
   m_LightmapCompression: 3
+  m_LightmapPackingMode: 1
+  m_LightmapPackingMethod: 0
+  m_XAtlasPackingAttempts: 16384
+  m_XAtlasBruteForce: 0
+  m_XAtlasBlockAlign: 0
+  m_XAtlasRepackUnderutilizedLightmaps: 1
   m_AO: 0
   m_AOMaxDistance: 1
   m_CompAOExponent: 0
@@ -228,13 +232,11 @@ LightingSettings:
   m_FilterMode: 1
   m_LightmapParameters: {fileID: 15204, guid: 0000000000000000f000000000000000, type: 0}
   m_ExportTrainingData: 0
+  m_EnableWorkerProcessBaking: 1
   m_TrainingDataDestination: TrainingData
   m_RealtimeResolution: 2
   m_ForceWhiteAlbedo: 0
   m_ForceUpdates: 0
-  m_FinalGather: 0
-  m_FinalGatherRayCount: 1024
-  m_FinalGatherFiltering: 1
   m_PVRCulling: 1
   m_PVRSampling: 1
   m_PVRDirectSampleCount: 32
@@ -258,8 +260,6 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaDirect: 0.5
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
-  m_PVRTiledBaking: 0
-  m_NumRaysToShootPerTexel: -1
   m_RespectSceneVisibilityWhenBakingGI: 0
 --- !u!1 &38370712
 GameObject:
@@ -358,20 +358,23 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1084,6 +1087,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &223953769
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1099,6 +1103,11 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1120,9 +1129,11 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -100
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -1130,7 +1141,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!1839735485 &223953770
 Tilemap:
   m_ObjectHideFlags: 0
@@ -2179,20 +2189,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -3080,20 +3093,23 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -3155,6 +3171,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &918008320
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3170,6 +3187,11 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3191,9 +3213,11 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 2130810699
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -3201,7 +3225,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!1839735485 &918008321
 Tilemap:
   m_ObjectHideFlags: 0
@@ -16016,6 +16039,7 @@ TilemapCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 918008318}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -16039,7 +16063,8 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 1
+  m_CompositeOperation: 1
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
@@ -16793,23 +16818,23 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[1]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[1]'
       value: -1905932279
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[2]'
       value: 1457414637
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[3]'
       value: -1031134899
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
       value: -1905735669
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
       value: 2130810699
       objectReference: {fileID: 0}
     - target: {fileID: 3427041151410699425, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
@@ -17038,7 +17063,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1222000199}
   - component: {fileID: 1222000198}
-  - component: {fileID: 1222000197}
+  - component: {fileID: 1222000200}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -17046,26 +17071,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1222000197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1222000196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &1222000198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17096,6 +17101,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1222000200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222000196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &1272183667
 GameObject:
   m_ObjectHideFlags: 0
@@ -17537,23 +17573,23 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[1]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[1]'
       value: -1905932279
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[2]'
       value: 1457414637
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[3]'
       value: -1031134899
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
       value: -1905735669
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
       value: 2130810699
       objectReference: {fileID: 0}
     - target: {fileID: 3427041151410699425, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
@@ -17806,20 +17842,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -18182,14 +18221,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ComponentVersion: 1
+  m_ComponentVersion: 2
   m_LightType: 4
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
-  m_LightVolumeIntensityEnabled: 0
+  m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 633193551bbcb6d7cba5a64ce19976dd695b14171954efdb000000004d218ac24b97017f09c8658eed61de560bc8688e7fa7f01abf73a4985116c891
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
@@ -18199,8 +18238,10 @@ MonoBehaviour:
   m_NormalMapDistance: 3
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
-  m_ShadowIntensityEnabled: 0
+  m_ShadowsEnabled: 0
   m_ShadowIntensity: 0.75
+  m_ShadowSoftness: 0
+  m_ShadowSoftnessFalloffIntensity: 0.5
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
@@ -18457,20 +18498,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -18731,20 +18775,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -18865,20 +18912,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -19079,23 +19129,23 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[1]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[1]'
       value: -1905932279
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[2]'
       value: 1457414637
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[3]'
       value: -1031134899
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
       value: -1905735669
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
       value: 2130810699
       objectReference: {fileID: 0}
     - target: {fileID: 3427041151410699425, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
@@ -19322,23 +19372,23 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[1]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[1]'
       value: -1905932279
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[2]'
       value: 1457414637
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[3]'
       value: -1031134899
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
       value: -1905735669
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
       value: 2130810699
       objectReference: {fileID: 0}
     - target: {fileID: 8179542987865338714, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
@@ -19902,20 +19952,23 @@ MonoBehaviour:
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -20071,23 +20124,23 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[1]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[1]'
       value: -1905932279
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[2]'
       value: 1457414637
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[3]'
       value: -1031134899
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
       value: -1905735669
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
       value: 2130810699
       objectReference: {fileID: 0}
     - target: {fileID: 3427041151410699425, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
@@ -20201,23 +20254,23 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[1]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[1]'
       value: -1905932279
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[2]'
       value: 1457414637
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[3]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[3]'
       value: -1031134899
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[4]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[4]'
       value: -1905735669
       objectReference: {fileID: 0}
     - target: {fileID: 2561628449501399366, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.data[5]
+      propertyPath: 'm_ApplyToSortingLayers.Array.data[5]'
       value: 2130810699
       objectReference: {fileID: 0}
     - target: {fileID: 8179542987865338714, guid: c759bb922e42eda4eb6f7e6e4e2fbe63, type: 3}
@@ -22906,7 +22959,6 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -22914,6 +22966,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!224 &8060793936542807101
 RectTransform:
   m_ObjectHideFlags: 0
