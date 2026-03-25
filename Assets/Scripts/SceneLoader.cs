@@ -112,7 +112,7 @@ public class SceneLoader : MonoBehaviour
 
         // Find current player instance in the Scene
 
-        PlayerControllerVersion2 playerScript = FindObjectOfType<PlayerControllerVersion2>();
+        PlayerControllerVersion2 playerScript = FindAnyObjectByType<PlayerControllerVersion2>();
 
         if (playerScript != null) {
             playerScript.GetComponent<PlayerHealth>().isInvincible = true;
@@ -170,7 +170,7 @@ public class SceneLoader : MonoBehaviour
 
         // Show In Game UI
         if (sceneName != "StartMenu")
-            FindObjectOfType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
+            FindAnyObjectByType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
             //UIButtonsManager.Instance.AssignPlayer(playerScript);
 
     }

@@ -41,7 +41,7 @@ public class RespawnManager : MonoBehaviour
 
     public void RespawnPlayer(SpawnPointType type)
     {
-        var player = FindObjectOfType<PlayerControllerVersion2>();
+        var player = FindAnyObjectByType<PlayerControllerVersion2>();
 
         if (player == null) return;
 
@@ -61,7 +61,7 @@ public class RespawnManager : MonoBehaviour
     /// </summary>
     public void RespawnPlayer()
     {
-        var player = FindObjectOfType<PlayerControllerVersion2>();
+        var player = FindAnyObjectByType<PlayerControllerVersion2>();
 
         if (player == null) return;
 

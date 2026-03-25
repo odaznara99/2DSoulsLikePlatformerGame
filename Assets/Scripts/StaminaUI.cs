@@ -10,7 +10,7 @@ public class StaminaUI : MonoBehaviour
     void Start()
     {
         if (stamina == null)
-            stamina = FindObjectOfType<PlayerStamina>();
+            stamina = FindAnyObjectByType<PlayerStamina>();
     }
 
     private void OnEnable()

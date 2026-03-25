@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         isGamePaused = true;
-        FindObjectOfType<UIScreensManager>().ShowScreen("Pause Screen");
+        FindAnyObjectByType<UIScreensManager>().ShowScreen("Pause Screen");
         AudioManager.Instance.PlaySFX("Click");
     }
 
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         isGamePaused = false;
 
-        FindObjectOfType<UIScreensManager>().HideScreen("Pause Screen");
+        FindAnyObjectByType<UIScreensManager>().HideScreen("Pause Screen");
         AudioManager.Instance.PlaySFX("Click");
     }
 
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.StopMusic();
         AudioManager.Instance.PlayMusic("GameOver");
 
-        FindObjectOfType<UIScreensManager>().ShowScreenWithFadeIn("Game Over Screen", 2f);
+        FindAnyObjectByType<UIScreensManager>().ShowScreenWithFadeIn("Game Over Screen", 2f);
         Invoke(nameof(SetGameOver), 2f);
     }
 

@@ -13,7 +13,7 @@ public class ProgressionUnlocker : MonoBehaviour
     {
         Debug.Log("Extending camera max X!");
         MessageManager.Instance.ShowMessage("Bandits was Defeated!");
-        SmoothCameraFollow cam = FindObjectOfType<SmoothCameraFollow>();
+        SmoothCameraFollow cam = FindAnyObjectByType<SmoothCameraFollow>();
         if (cam != null)
         {
             cam.maxX = newMaxX;
