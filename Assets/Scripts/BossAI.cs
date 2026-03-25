@@ -12,6 +12,10 @@ public class BossAI : MonoBehaviour
     public Animator animator;
 
     
+    [Header("Souls Reward")]
+    [Tooltip("Number of souls awarded to the player when this boss dies.")]
+    [SerializeField] private int soulsReward = 200;
+
     [Header("Boss Health")]
     [SerializeField] private float maxHealth = 300f;
     public float currentHealth;
@@ -357,6 +361,9 @@ public class BossAI : MonoBehaviour
         // Play Dying Sounds
         AudioManager.Instance.PlaySFX("DragonDie");
         isDead = true;
+
+        // Award souls to the player
+        GameManager.Instance?.AddSouls(soulsReward);
 
         // Persist the defeat so this boss is not respawned in future sessions.
         if (!string.IsNullOrEmpty(persistentId) && SaveManager.Instance != null)

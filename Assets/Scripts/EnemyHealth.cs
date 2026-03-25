@@ -31,6 +31,10 @@ public class EnemyHealth : MonoBehaviour
     [Range(0f, 1f)]
     public float knockbackResistance = 0.1f; // Resistance to knockback (0-1, where 1 is no resistance)
 
+    [Header("Souls Reward")]
+    [Tooltip("Number of souls awarded to the player when this enemy dies.")]
+    [SerializeField] private int soulsReward = 10;
+
     [Header("Flags")]
     public bool isDead = false; // Flag to check if the enemy is dead
     public bool isHurt = false; // Flag to check if the enemy is currently hurt
@@ -94,6 +98,8 @@ public class EnemyHealth : MonoBehaviour
             {
                 healthBarUI.DestroyBar();
             }
+            // Award souls to the player
+            GameManager.Instance?.AddSouls(soulsReward);
         }
         else
         {
