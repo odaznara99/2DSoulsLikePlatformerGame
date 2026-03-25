@@ -731,8 +731,8 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: URP_COMPATIBILITY_MODE
-    Windows Store Apps: URP_COMPATIBILITY_MODE
+    Android: 
+    Windows Store Apps: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
@@ -843,7 +843,7 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 0
+  activeInputHandler: 1
   windowsGamepadBackendHint: 0
   cloudProjectId: 25d169a7-cc93-4cc7-8cac-fa8fea1c7a6d
   framebufferDepthMemorylessMode: 0
