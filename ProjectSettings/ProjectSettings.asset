@@ -730,7 +730,9 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: URP_COMPATIBILITY_MODE
+    Windows Store Apps: URP_COMPATIBILITY_MODE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

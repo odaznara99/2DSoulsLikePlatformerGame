@@ -36,6 +36,9 @@ public class EnemyMovement : MonoBehaviour
     public float attackDamage = 20f; // Damage dealt by the attack
     public float attackRange = 1f; // Range to detect the player
     public string[] attackAnimationTrigger; // Animation trigger for the attack
+    [Tooltip("Time in seconds between attacks (attack speed).")]
+    public float attackCooldown = 1.5f; // Cooldown between attacks
+    private float lastAttackTime = -999f; // Track when the enemy last attacked
 
     private EnemyJumpDetection obstacle_Detector; // Reference to Jump Detection Trigger
 
@@ -95,8 +98,11 @@ public class EnemyMovement : MonoBehaviour
             isChasing = false;
         }
 
-        if (Vector3.Distance(transform.position, player.position) <= attackRange && !isAttacking)
+        if (Vector3.Distance(transform.position, player.position) <= attackRange
+            && !isAttacking
+            && Time.time >= lastAttackTime + attackCooldown)
         {
+            lastAttackTime = Time.time;
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             int randomIndex = Random.Range(0, attackAnimationTrigger.Length);
             m_animator.SetTrigger(attackAnimationTrigger[randomIndex]); // Trigger the attack animation

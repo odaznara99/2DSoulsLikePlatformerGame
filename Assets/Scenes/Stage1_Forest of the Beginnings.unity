@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.79983985, g: 0.80308914, b: 0.8113208, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: d48a7646f5d0547e889733d84b50cb9f, type: 2}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -19102,6 +19102,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7129703502429775226, guid: deb9cadae593272428b458aeebd13815, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7652807875564418047, guid: deb9cadae593272428b458aeebd13815, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19753,34 +19761,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 546489011816554926, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 546489011816554926, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 2485010834306178742, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2485010834306178742, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2485010834306178742, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570866425165839581, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 3570866425165839581, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 40
-      objectReference: {fileID: 0}
     - target: {fileID: 3678104684269669328, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.5
@@ -19824,26 +19804,6 @@ PrefabInstance:
     - target: {fileID: 3896838311430431188, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: m_Name
       value: UI Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 4658106309669459241, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4658106309669459241, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: da953264f085d904d8442f3bb63be5f9, type: 3}
-    - target: {fileID: 4658106309669459241, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_Maskable
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4658106309669459241, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_UseSpriteMesh
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4658106309669459241, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6960481192509818259, guid: 2bcdb3a29e5a19045b3b34aef3fa56e7, type: 3}
       propertyPath: stamina
