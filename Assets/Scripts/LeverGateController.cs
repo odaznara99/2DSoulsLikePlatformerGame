@@ -1,8 +1,9 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LeverGateController : MonoBehaviour
 {
@@ -66,7 +67,7 @@ public class LeverGateController : MonoBehaviour
         {
             leverButton.gameObject.SetActive(true);
 
-            if (Input.GetKeyDown(KeyCode.E)) {
+            if (Keyboard.current.eKey.wasPressedThisFrame) {
                 ToggleGate();
             }
         }

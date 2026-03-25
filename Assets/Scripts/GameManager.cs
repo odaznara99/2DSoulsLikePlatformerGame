@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -67,18 +68,21 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !isGameOver)
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return;
+
+        if (keyboard.escapeKey.wasPressedThisFrame && !isGameOver)
         {
             if (isGamePaused) ResumeGame();
             else PauseGame();
         }
 
-        if (Input.GetKeyUp(KeyCode.R))
+        if (keyboard.rKey.wasReleasedThisFrame)
         {
             RestartGame();
         }
 
-        if (isGameOver && (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0)))
+        if (isGameOver && (keyboard.enterKey.wasPressedThisFrame || Mouse.current?.leftButton.wasPressedThisFrame == true))
         {
             RestartGame();
         }

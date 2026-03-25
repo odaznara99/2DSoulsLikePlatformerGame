@@ -1,5 +1,6 @@
 // Second Organized version of PlayerController.cs which we use enum as Player States
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -559,97 +560,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             DisplayLog("Combo completed");
         }
     }
-    /*private void DoAttackingOld()
-    {
-        
-
-        // Reference to the AttackPoint if not assigned
-        if (attackPoint == null)
-        {
-            attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
-        }
-
-
-        // Slow your movement speed during attack
-        SwitchXVelocityState(XVelocityState.Slow);
-
-        // Find all nearby enemies within the attack range/radius
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackPoint.GetComponent<CircleCollider2D>().radius);
-
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            // Pick random index
-            int index = Random.Range(0, hitEffectPrefabs.Length);
-
-            // Calculate the closest contact point between your attack and the object
-            Vector2 contactPoint = enemy.ClosestPoint(transform.position);
-
-            if (enemy.CompareTag("Enemy"))
-            {
-                // Get the enemy script
-                Bandit enemyScript = enemy.GetComponent<Bandit>();
-
-                // Apply damage to the enemy
-                enemyScript.TakeDamage(attackDamage);
-                // Instantiate the randomly chosen effect
-                GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
-                if (enemyScript.currentState != EnemyState.Dead)
-                {
-                    AudioManager.Instance.PlaySFX("Attack1");
-                }
-               
-
-                // Apply knockback to the enemy
-                //Vector2 knockDirection = enemy.transform.position - transform.position;
-                //enemyScript.ApplyKnockback(knockDirection,playerKnockbackForce);
-            } 
-            else if (enemy.CompareTag("Boss"))
-            {
-                BossAI bossScript = enemy.GetComponent<BossAI>();
-
-                // Apply damage to the boss
-                bossScript.TakeDamage(attackDamage);
-                // Instantiate the randomly chosen effect
-                GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
-
-                if (!bossScript.IsDead())
-                {
-                    AudioManager.Instance.PlaySFX("Attack1");
-                }
-            }
-            else if (enemy.CompareTag("Breakable"))
-            {
-                // If the enemy is a breakable object, then break it
-                BreakableObject breakableObject = enemy.GetComponent<BreakableObject>();
-                if (breakableObject != null)
-                {
-                    breakableObject.TakeHit();
-                    // Instantiate the randomly chosen effect
-                    GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
-                    AudioManager.Instance.PlaySFX("Attack1");
-                }
-            }
-
-
-        }
-
-        //Variable for Current Attack Animation
-        currentAttackAnimation++;
-        //currentAttackAnimation = Random.Range(1, 4); // Randomly choose between 1, 2, or 3 for attack animation
-        // Call one of three attack animations "Attack1", "Attack2", "Attack3"
-        playerAnimator.SetTrigger("Attack" + currentAttackAnimation);
-        // Play Sounds
-        AudioManager.Instance.PlaySFX("Attack2");
-        //Debug.Log("Attack: " + currentAttackAnimation);
-
-        // If the combo is complete (after the third attack), apply the cooldown
-        if (currentAttackAnimation >= 3)
-        {
-            // Reset animation
-            currentAttackAnimation = 0;
-            DisplayLog("Combo completed");
-        }
-    } */
+   
     void DoDying() {
         Debug.Log("Player died!");
         playerAnimator.SetBool("noBlood", m_noBlood);
@@ -890,49 +801,64 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     }
 
-    void UpdateKeyboardInputs() {
+    void UpdateKeyboardInputs()
+    {
 #if UNITY_EDITOR
-        if (enabledKeyboardInput) 
-            { 
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                OnMoveLeft();
-            }
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                OnMoveRight();
-            }
-            else
-            {
-                // If no input, then stop moving
-                //SetFloatInputX(0); 
-            }
+        if (!enabledKeyboardInput)
+        {
+            return;
+        }
 
-            inputX = Input.GetAxis("Horizontal"); // This is for Unity Input System, to get the input from the keyboard
+        var keyboard = Keyboard.current;
+        var mouse = Mouse.current;
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                OnJump(); // Jump
-            }
+        if (keyboard == null)
+        {
+            return;
+        }
 
-            // Inputs that cannot be on the same time.
-            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.J))
-            {
-                OnHoldAttack(); // Attack
-            }
-            else if (Input.GetMouseButtonDown(1) || Input.GetKey(KeyCode.K))
-            {
-                OnHoldShield(); // Upon Press
-            }
-            else if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.K))
-            {
-                OnNeutral(); // Stop Shielding // Switch to Neutral State
-                //OnDelayedNeutral(); // Stop Shielding with a slight delay
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.L))
-            {
-                OnRoll(); // Rolling
-            }
+        // Continuous horizontal input (replacement for Input.GetAxis("Horizontal"))
+        float horizontal = 0f;
+        if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) horizontal -= 1f;
+        if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) horizontal += 1f;
+        inputX = Mathf.Clamp(horizontal, -1f, 1f);
+
+        // Optional edge-trigger movement callbacks (kept from your original logic)
+        if (keyboard.aKey.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame)
+        {
+            OnMoveLeft();
+        }
+        else if (keyboard.dKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame)
+        {
+            OnMoveRight();
+        }
+
+        if (keyboard.spaceKey.wasPressedThisFrame)
+        {
+            OnJump();
+        }
+
+        // Inputs that cannot happen at the same time (kept same priority/order)
+        bool attackPressed = (mouse != null && mouse.leftButton.wasPressedThisFrame) || keyboard.jKey.wasPressedThisFrame;
+        bool shieldHeld = (mouse != null && mouse.rightButton.isPressed) || keyboard.kKey.isPressed;
+        bool shieldReleased = (mouse != null && mouse.rightButton.wasReleasedThisFrame) || keyboard.kKey.wasReleasedThisFrame;
+        bool rollPressed = keyboard.leftShiftKey.wasPressedThisFrame || keyboard.lKey.wasPressedThisFrame;
+
+        if (attackPressed)
+        {
+            OnHoldAttack();
+        }
+        else if (shieldHeld)
+        {
+            OnHoldShield();
+        }
+        else if (shieldReleased)
+        {
+            OnNeutral();
+        }
+        else if (rollPressed)
+        {
+            OnRoll();
         }
 #endif
     }
