@@ -1,0 +1,1 @@
+E:\Unity Projects\SoulsHero\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\6f4i284i\obj\arm64-v8a

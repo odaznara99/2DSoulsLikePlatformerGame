@@ -68,7 +68,21 @@ MonoBehaviour:
       - rid: 4626227614520967200
       - rid: 4626227614520967201
     m_RuntimeSettings:
-      m_List: []
+      m_List:
+      - rid: 4626227614520967169
+      - rid: 4626227614520967173
+      - rid: 4626227614520967174
+      - rid: 4626227614520967177
+      - rid: 4626227614520967179
+      - rid: 4626227614520967180
+      - rid: 4626227614520967181
+      - rid: 4626227614520967182
+      - rid: 4626227614520967186
+      - rid: 4626227614520967190
+      - rid: 4626227614520967191
+      - rid: 4626227614520967192
+      - rid: 4626227614520967193
+      - rid: 4626227614520967197
   m_AssetVersion: 10
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}
   m_RenderingLayerNames:
@@ -177,7 +191,6 @@ MonoBehaviour:
         m_SpriteUnshadowShader: {fileID: 4800000, guid: de02b375720b5c445afe83cd483bedf3, type: 3}
         m_GeometryShadowShader: {fileID: 4800000, guid: 19349a0f9a7ed4c48a27445bcf92e5e1, type: 3}
         m_GeometryUnshadowShader: {fileID: 4800000, guid: 77774d9009bb81447b048c907d4c6273, type: 3}
-        m_FallOffLookup: {fileID: 2800000, guid: 5688ab254e4c0634f8d6c8e0792331ca, type: 3}
         m_CopyDepthPS: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
         m_DefaultLitMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
         m_DefaultUnlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
@@ -207,7 +220,7 @@ MonoBehaviour:
       type: {class: RenderGraphSettings, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.Runtime}
       data:
         m_Version: 0
-        m_EnableRenderCompatibilityMode: 1
+        m_EnableRenderCompatibilityMode: 0
     - rid: 4626227614520967180
       type: {class: UniversalRenderPipelineRuntimeTextures, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.Runtime}
       data:
