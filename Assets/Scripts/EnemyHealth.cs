@@ -100,6 +100,11 @@ public class EnemyHealth : MonoBehaviour
             }
             // Award souls to the player
             GameManager.Instance?.AddSouls(soulsReward);
+            if (floatingTextPrefab)
+            {
+                GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                ft.GetComponent<FloatingText>().SetText("+" + soulsReward.ToString() + " Souls");
+            }
         }
         else
         {
@@ -113,7 +118,7 @@ public class EnemyHealth : MonoBehaviour
             if (floatingTextPrefab)
             {
                 GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
-                ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
+                ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
             }
             // Play Sound
             if(damageSounds.Count !=0)
