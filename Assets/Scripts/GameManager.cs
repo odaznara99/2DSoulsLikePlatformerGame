@@ -146,9 +146,23 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void SaveCheckpointSnapshot()
     {
+        var player = FindAnyObjectByType<PlayerControllerVersion2>();
+        if (player != null)
+        {
+            playerData.position = player.transform.position;
+
+            var health = player.GetComponent<PlayerHealth>();
+            if (health != null)
+            {
+                playerData.currentHealth = health.currentHealth;
+                playerData.maxHealth = health.maxHealth;
+            }
+        }
+
         playerData.checkpointSceneName = SceneManager.GetActiveScene().name;
         checkpointSnapshot = playerData.Clone();
         SaveManager.Instance?.SaveCheckpoint(checkpointSnapshot);
+
         Debug.Log("Checkpoint snapshot saved. Scene: " + playerData.checkpointSceneName);
     }
 

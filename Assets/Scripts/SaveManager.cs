@@ -43,7 +43,20 @@ public class SaveManager : MonoBehaviour
     // ── Public API ────────────────────────────────────────────────────────────
 
     /// <summary>Returns true if a save file with at least one checkpoint exists.</summary>
-    public bool HasSave() => currentSave.hasCheckpoint;
+    public bool HasSave()
+    {
+        if (currentSave.hasCheckpoint && currentSave.checkpointData != null)
+            return true;
+
+        // Fallback: check if the save file exists on disk and try to load it
+        if (File.Exists(SaveFilePath))
+        {
+            LoadFromDisk();
+            return currentSave.hasCheckpoint && currentSave.checkpointData != null;
+        }
+
+        return false;
+    }
 
     /// <summary>
     /// Persists <paramref name="checkpointSnapshot"/> (and all currently known
@@ -66,7 +79,16 @@ public class SaveManager : MonoBehaviour
     public bool TryLoadCheckpoint(out PlayerData restoredData)
     {
         restoredData = null;
-        if (!currentSave.hasCheckpoint) return false;
+
+        if (!currentSave.hasCheckpoint)
+            return false;
+
+        if (currentSave.checkpointData == null)
+        {
+            Debug.LogWarning("[SaveManager] hasCheckpoint is true but checkpointData is null. Save may be corrupted.");
+            return false;
+        }
+
         restoredData = FromSaveData(currentSave.checkpointData);
         return true;
     }
