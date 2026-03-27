@@ -4,8 +4,10 @@ using UnityEngine.UI;
 public class StaminaUI : MonoBehaviour
 {
     public PlayerStamina stamina;
-    public Image fillImage; // assign UI Image (fill type)
-    public UnityEngine.UI.Text valueText; // optional
+    [Tooltip("UI Image with fill type used to display the stamina bar.")]
+    public Image fillImage;
+    [Tooltip("Optional text label that shows current / max stamina values.")]
+    public UnityEngine.UI.Text valueText;
 
     void Start()
     {

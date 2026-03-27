@@ -3,7 +3,8 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Enemy Settings")]
-    public GameObject[] enemyPrefabs; // Add different enemy types here
+    [Tooltip("Array of enemy prefabs to randomly select from when spawning.")]
+    public GameObject[] enemyPrefabs;
     public float spawnRate = 2f;
 
     [Header("Spawn Points")]

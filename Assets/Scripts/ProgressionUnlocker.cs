@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class ProgressionUnlocker : MonoBehaviour
 {
-    public float newMaxX = 50f; // extended camera limit
+    [Tooltip("The new maximum X boundary to extend the camera when the area is unlocked.")]
+    public float newMaxX = 50f;
 
     private void Start()
     {

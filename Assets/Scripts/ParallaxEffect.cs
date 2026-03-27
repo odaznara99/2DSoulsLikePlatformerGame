@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class ParallaxEffect : MonoBehaviour
 {
-    public float parallaxFactor = 0.5f; // 0 = static, 1 = moves with camera
+    [Tooltip("Parallax scrolling factor (0 = static background, 1 = moves 1:1 with camera).")]
+    public float parallaxFactor = 0.5f;
     private Transform cam;
     private Vector3 previousCamPos;
 

@@ -3,7 +3,8 @@ using UnityEngine.UI;
 
 public class ButtonClickHandler : MonoBehaviour
 {
-    public Button locationButton; // Reference to the UI Button
+    [Tooltip("Reference to the UI Button used to navigate to the target location.")]
+    public Button locationButton;
 
     private void Start()
     {

@@ -53,15 +53,18 @@ public class BossAI : MonoBehaviour
     
 
     [Header("Patrol Timing")]
-    public float patrolPauseDuration = 2f; // 200 milliseconds
+    [Tooltip("How long (in seconds) the boss pauses at each patrol point.")]
+    public float patrolPauseDuration = 2f;
     [SerializeField] private float patrolPauseTimer = 0f;
     [SerializeField] private Transform currentPatrolTarget;
     [SerializeField] private bool hasArrivedAtPatrolPoint = false;
 
 
     [Header("Chase Break Settings")]
-    [SerializeField] private float chaseDuration = 3f;       // how long to chase before stopping
-    [SerializeField] private float restDuration = 1.5f;       // how long to rest before chasing again
+    [Tooltip("How long (in seconds) the boss chases before entering a rest state.")]
+    [SerializeField] private float chaseDuration = 3f;
+    [Tooltip("How long (in seconds) the boss rests before resuming the chase.")]
+    [SerializeField] private float restDuration = 1.5f;
 
     private float chaseTimer = 0f;
     private float restTimer = 0f;
