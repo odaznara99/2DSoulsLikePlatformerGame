@@ -39,7 +39,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // == Variable for Unity Editor
     [Header("Unity Editor Settings")]
     public bool enabledDebugLog = true;
-    public bool enabledKeyboardInput = false; // Enable Keyboard Input for Player Controller
 
     [Header("Player Parameters")]
     public bool m_noBlood = false;
@@ -156,7 +155,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         originalMovementSpeed = movementSpeed;
         originalRollingSpeed = rollingSpeed;
-        //UIButtonsManager.Instance.AssignPlayer(this);
+        InputSystemManager.Instance?.AssignPlayer(this);
 
         // Apply permanent bonuses from pickups stored in PlayerData
         var pd = GameManager.Instance != null ? GameManager.Instance.playerData : null;
@@ -172,7 +171,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
 
 #if UNITY_EDITOR
-        enabledKeyboardInput = true;
+        if (InputSystemManager.Instance != null)
+            InputSystemManager.Instance.enableKeyboardInput = true;
 #endif
     }
 
@@ -199,9 +199,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
         UpdateAnimationStates();
         // === Handle Cooldown Timers === //
         UpdateCooldownTimers();
-
-        // === Player Inputs on KeyBoard ==== //
-        UpdateKeyboardInputs();
         
     }
 
@@ -796,68 +793,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
     {
         playerAnimator.SetTrigger("Jump");
 
-    }
-
-    void UpdateKeyboardInputs()
-    {
-#if UNITY_EDITOR
-        if (!enabledKeyboardInput)
-        {
-            return;
-        }
-
-        var keyboard = Keyboard.current;
-        var mouse = Mouse.current;
-
-        if (keyboard == null)
-        {
-            return;
-        }
-
-        // Continuous horizontal input (replacement for Input.GetAxis("Horizontal"))
-        float horizontal = 0f;
-        if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) horizontal -= 1f;
-        if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) horizontal += 1f;
-        inputX = Mathf.Clamp(horizontal, -1f, 1f);
-
-        // Optional edge-trigger movement callbacks (kept from your original logic)
-        if (keyboard.aKey.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame)
-        {
-            OnMoveLeft();
-        }
-        else if (keyboard.dKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame)
-        {
-            OnMoveRight();
-        }
-
-        if (keyboard.spaceKey.wasPressedThisFrame)
-        {
-            OnJump();
-        }
-
-        // Inputs that cannot happen at the same time (kept same priority/order)
-        bool attackPressed = (mouse != null && mouse.leftButton.wasPressedThisFrame) || keyboard.jKey.wasPressedThisFrame;
-        bool shieldHeld = (mouse != null && mouse.rightButton.isPressed) || keyboard.kKey.isPressed;
-        bool shieldReleased = (mouse != null && mouse.rightButton.wasReleasedThisFrame) || keyboard.kKey.wasReleasedThisFrame;
-        bool rollPressed = keyboard.leftShiftKey.wasPressedThisFrame || keyboard.lKey.wasPressedThisFrame;
-
-        if (attackPressed)
-        {
-            OnHoldAttack();
-        }
-        else if (shieldHeld)
-        {
-            OnHoldShield();
-        }
-        else if (shieldReleased)
-        {
-            OnNeutral();
-        }
-        else if (rollPressed)
-        {
-            OnRoll();
-        }
-#endif
     }
 
     public bool IsFacingRight()
