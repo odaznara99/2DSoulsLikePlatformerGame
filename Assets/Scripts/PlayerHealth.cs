@@ -138,7 +138,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (player.currentState != PlayerState.Dead && player.currentState != PlayerState.Hurting)
         {
-            if (!player.isParry)
+            if (!player.detection.isParry)
             {
 
                 //Shielded the Attack

@@ -84,7 +84,7 @@ public class MemoryShardPickup : MonoBehaviour
                 int jumps = bonus > 0f ? Mathf.RoundToInt(bonus) : 1;
                 var pc = player.GetComponent<PlayerControllerVersion2>();
                 if (pc != null)
-                    pc.maxDoubleJumpCount += jumps;
+                    pc.jump.maxDoubleJumpCount += jumps;
                 GameManager.Instance.playerData.bonusJumpCount += jumps;
                 break;
             }
@@ -105,8 +105,8 @@ public class MemoryShardPickup : MonoBehaviour
                 var pc = player.GetComponent<PlayerControllerVersion2>();
                 if (pc != null)
                 {
-                    pc.movementSpeed += amount;
-                    pc.SetFloatMovementSpeed(pc.movementSpeed);
+                    pc.movement.movementSpeed += amount;
+                    pc.SetFloatMovementSpeed(pc.movement.movementSpeed);
                 }
                 GameManager.Instance.playerData.bonusMovementSpeed += amount;
                 break;

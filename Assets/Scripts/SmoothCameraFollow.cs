@@ -57,7 +57,7 @@ public class SmoothCameraFollow : MonoBehaviour
         Vector3 dynamicOffset = offset;
 
         // If falling, shift the camera downward slightly
-        if (playerRigidbody.velocity.y < lookAheadVelocity & !playerController.isGrounded)
+        if (playerRigidbody.velocity.y < lookAheadVelocity & !playerController.detection.isGrounded)
         {
             dynamicOffset.y += fallLookAhead; // Looks down
         }
@@ -75,7 +75,7 @@ public class SmoothCameraFollow : MonoBehaviour
 
         Vector3 dynamicOffset = offset;
 
-        if (!followBothTargets && playerRigidbody.linearVelocity.y < lookAheadVelocity && !playerController.isGrounded)
+        if (!followBothTargets && playerRigidbody.linearVelocity.y < lookAheadVelocity && !playerController.detection.isGrounded)
         {
             dynamicOffset.y += fallLookAhead;
         }
