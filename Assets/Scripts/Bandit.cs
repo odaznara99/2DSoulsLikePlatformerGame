@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
 using System.Collections.Generic;
@@ -19,9 +19,73 @@ public enum EnemyState
 
 public class Bandit : MonoBehaviour
 {
+    // ─── Nested Serializable Classes ───────────────────────────────────────────
 
-    public EnemyState currentState = EnemyState.Idle; // Current state of the enemy
-    private Coroutine currentStateCoroutine; // Current coroutine according to the state
+    /// <summary>Inspector-visible settings for the enemy's health and health bar.</summary>
+    [System.Serializable]
+    public class HealthSettings
+    {
+        public float maxHealth = 100f;
+
+        [Tooltip("Current health of the enemy")]
+        public float currentHealth = 100f;
+
+        public GameObject healthBarPrefab;
+    }
+
+    /// <summary>Inspector-visible settings for floating damage text display.</summary>
+    [System.Serializable]
+    public class FloatingDamageTextSettings
+    {
+        public GameObject floatingTextPrefab;
+    }
+
+    /// <summary>Inspector-visible combat state values that track runtime attack and facing data.</summary>
+    [System.Serializable]
+    public class ReferencesSettings
+    {
+        [Tooltip("Track when the enemy last attacked")]
+        public float lastAttackTime = 0f;
+
+        [Tooltip("Track which direction the enemy is facing")]
+        public bool isFacingRight = false;
+    }
+
+    /// <summary>Inspector-visible settings that control knockback behaviour.</summary>
+    [System.Serializable]
+    public class KnockbackSettings
+    {
+        public float knockbackResistance = 0f;
+        public float knockbackDuration = 0.2f;
+    }
+
+    /// <summary>Inspector-visible settings for the ground/wall jump sensors.</summary>
+    [System.Serializable]
+    public class JumpSensorSettings
+    {
+        public Transform groundCheck;
+        public Transform wallCheck;
+        public LayerMask groundLayer;
+        public float checkDistance = 0.2f;
+        public float jumpForce = 10f;
+        // Set X velocity for jump (adjust 2.0f to your desired jump horizontal speed)
+        public float jumpHorizontalSpeed = 5.0f;
+        public float jumpCooldown = 5f;
+    }
+
+    /// <summary>Inspector-visible lists of audio cue names for damage and death events.</summary>
+    [System.Serializable]
+    public class SoundEffectsSettings
+    {
+        public List<string> damageSounds = new List<string>();
+        public List<string> deathSounds = new List<string>();
+    }
+
+    // ─── Fields ────────────────────────────────────────────────────────────────
+
+    [Tooltip("Current state of the enemy")]
+    public EnemyState currentState = EnemyState.Idle;
+    private Coroutine currentStateCoroutine;
 
     //[SerializeField] float      m_speed = 4.0f;
     //[SerializeField] float      m_jumpForce = 7.5f;
@@ -29,39 +93,60 @@ public class Bandit : MonoBehaviour
     private Animator m_animator;
     private Rigidbody2D rb;
     private Sensor_Bandit m_groundSensor;
-    public ParticleSystem m_bloodSplash; // Reference to the blood splash particle system
+
+    [Tooltip("Reference to the blood splash particle system")]
+    public ParticleSystem m_bloodSplash;
+
     private bool m_grounded = false;
     private bool m_combatIdle = false;
     //[SerializeField]private bool                EnemyState.Dead = false;
 
-    //Added: Odaz 09/29/2024    
-    public Transform attackPoint; // Attach this to a point in the scene or a child of the enemya
-    public Transform headPoint; // Attach this to a point in the scene or a child of the enemy for head detection
-    public float moveSpeed = 2f; // Speed of the enemy
-    public float followRange = 10f; // Range in which the enemy follows the player
-    public float attackRange = 1.5f; // Range in which the enemy attacks the player    
-    public float attackCooldown = 1f; // Time between attacks
-    public float attackTiming = 0.5f; // Timing the end of Attack Animation
-    
-    public float damage = 10; // Damage dealt to the player
+    //Added: Odaz 09/29/2024
+    [Tooltip("Attach this to a point in the scene or a child of the enemy")]
+    public Transform attackPoint;
+
+    [Tooltip("Attach this to a point in the scene or a child of the enemy for head detection")]
+    public Transform headPoint;
+
+    [Tooltip("Speed of the enemy")]
+    public float moveSpeed = 2f;
+
+    [Tooltip("Range in which the enemy follows the player")]
+    public float followRange = 10f;
+
+    [Tooltip("Range in which the enemy attacks the player")]
+    public float attackRange = 1.5f;
+
+    [Tooltip("Time between attacks")]
+    public float attackCooldown = 1f;
+
+    [Tooltip("Timing the end of Attack Animation")]
+    public float attackTiming = 0.5f;
+
+    [Tooltip("Damage dealt to the player")]
+    public float damage = 10;
 
     [Header("Health")]
-    [SerializeField] private float maxHealth = 100f;
-    public float currentHealth = 100f; // Health of the enemy
-    [SerializeField] private GameObject healthBarPrefab;
+    public HealthSettings health = new HealthSettings();
     private FloatingHealthbar healthBarUI;
 
     [Header("Floating Damage Text")]
-    public GameObject floatingTextPrefab;
+    public FloatingDamageTextSettings floatingDamageText = new FloatingDamageTextSettings();
     public Transform worldCanvas;
 
     [Header("References")]
-    [SerializeField] private Transform player; // Reference to the player position
-    [SerializeField] private PlayerHealth playerHealth; // Reference to the player's currentHealth script
-    [SerializeField] private PlayerControllerVersion2 playerScript; // Reference to the player main script
-    [SerializeField] private float lastAttackTime = 0f; // Track when the enemy last attacked
+    public ReferencesSettings references = new ReferencesSettings();
+
+    [Tooltip("Reference to the player position")]
+    [SerializeField] private Transform player;
+
+    [Tooltip("Reference to the player's currentHealth script")]
+    [SerializeField] private PlayerHealth playerHealth;
+
+    [Tooltip("Reference to the player main script")]
+    [SerializeField] private PlayerControllerVersion2 playerScript;
+
     //[SerializeField] private bool        isAttacking = false; // Track if the enemy is currently attacking
-    [SerializeField] private bool isFacingRight = false; // Track which direction the enemy is facing
     //[SerializeField] private bool        isHurting = false; // Track when the bandit is being Hurt
 
     //private Coroutine attackCoroutine;
@@ -69,42 +154,39 @@ public class Bandit : MonoBehaviour
     [Header("Knockback Variables")]
     //public Rigidbody2D rb;
     //public float knockbackForce = 10f;
-    public float knockbackResistance = 0f;
-    public float knockbackDuration = 0.2f;
+    public KnockbackSettings knockback = new KnockbackSettings();
     private bool isKnocked = false;
 
     [Header("Sensors to Jump")]
-    public Transform groundCheck;
-    public Transform wallCheck;
-    public LayerMask groundLayer;
-    public float checkDistance = 0.2f;
-    public float jumpForce = 10f;
-    // Set X velocity for jump (adjust 2.0f to your desired jump horizontal speed)
-    public float jumpHorizontalSpeed = 5.0f;
+    public JumpSensorSettings jumpSensors = new JumpSensorSettings();
     private float lastJumpTime = 0f;
-    public float jumpCooldown = 5f;
 
     private bool wasSpawned = false;
 
     [Header("Sound Effects")]
-    public List<string> damageSounds = new List<string>();
-    public List<string> deathSounds = new List<string>();
+    public SoundEffectsSettings soundEffects = new SoundEffectsSettings();
 
-    // Called by spawner after instantiation
+    [Tooltip("Toggle for logging")]
+    public bool enableLogging = false;
+
+    // ─── Methods ───────────────────────────────────────────────────────────────
+
+    /// <summary>Marks this enemy as having been spawned by the <see cref="EnemyManager"/> spawner.</summary>
     public void SetAsSpawned()
     {
         wasSpawned = true;
     }
-    public bool enableLogging = false; // Toggle for logging
-    private void Log(string logMessage) { 
+
+    /// <summary>Writes <paramref name="logMessage"/> to the console when <see cref="enableLogging"/> is true.</summary>
+    private void Log(string logMessage)
+    {
         if (enableLogging)
             Debug.Log(logMessage);
         else
             return; // Do nothing if logging is disabled
     }
 
-
-
+    /// <summary>Called by Unity before the first frame. Grabs the <see cref="Animator"/> component and resets the Jump trigger.</summary>
     private void Awake()
     {
         // isAttacking = false; // Initialize attacking state
@@ -113,7 +195,7 @@ public class Bandit : MonoBehaviour
         m_animator.ResetTrigger("Jump");
     }
 
-    // Use this for initialization
+    /// <summary>Initializes component references, sets up the health bar, and configures the starting state.</summary>
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -123,30 +205,28 @@ public class Bandit : MonoBehaviour
         player = GameObject.Find("HeroKnight").GetComponent<Transform>();
         playerHealth = player.GetComponent<PlayerHealth>();
         attackPoint = transform.Find("AttackPoint").GetComponent<Transform>();
-        lastAttackTime = Time.time - attackCooldown;
+        references.lastAttackTime = Time.time - attackCooldown;
         worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
 
         // Ignore Collision Between Enemy
         Physics2D.IgnoreLayerCollision(6, 6);
 
         // HEALTH BAR SETUP
-        currentHealth = maxHealth;
+        health.currentHealth = health.maxHealth;
 
-        if (healthBarPrefab != null)
+        if (health.healthBarPrefab != null)
         {
-            GameObject hb = Instantiate(healthBarPrefab, transform.position, Quaternion.identity);
+            GameObject hb = Instantiate(health.healthBarPrefab, transform.position, Quaternion.identity);
             healthBarUI = hb.GetComponent<FloatingHealthbar>();
             healthBarUI.SetTarget(this.transform);
         }
 
-        healthBarUI.SetHealth(currentHealth, maxHealth);
-
+        healthBarUI.SetHealth(health.currentHealth, health.maxHealth);
     }
 
-    // Update is called once per frame
+    /// <summary>Called once per frame. Evaluates distances to the player and drives the enemy state machine.</summary>
     void Update()
     {
-
         //Reference to the AttackPoint if not assigned
         if (attackPoint == null)
         {
@@ -207,8 +287,6 @@ public class Bandit : MonoBehaviour
                 //SwitchEn0emyState(EnemyState.Idle); // Switch to Idle state
                 m_combatIdle = false;
             }
-
-
         }
         //Player is Dead
         else if (playerScript.currentState == PlayerState.Dead)
@@ -221,6 +299,7 @@ public class Bandit : MonoBehaviour
             //StopXVelocity();
             //SwitchEnemyState(EnemyState.Dead); // Switch to Dead state
         }
+
         // Update sprite direction based on movement
         if (!isKnocked && currentState != EnemyState.Dead)
         {
@@ -256,25 +335,24 @@ public class Bandit : MonoBehaviour
         else
             m_animator.SetInteger("AnimState", 0);
 
-        bool isGroundAhead = Physics2D.Raycast(groundCheck.position, Vector2.down, checkDistance, groundLayer);
-        bool isWallAhead = Physics2D.Raycast(wallCheck.position, Vector2.right * transform.localScale.x, checkDistance, groundLayer);
+        bool isGroundAhead = Physics2D.Raycast(jumpSensors.groundCheck.position, Vector2.down, jumpSensors.checkDistance, jumpSensors.groundLayer);
+        bool isWallAhead = Physics2D.Raycast(jumpSensors.wallCheck.position, Vector2.right * transform.localScale.x, jumpSensors.checkDistance, jumpSensors.groundLayer);
 
         // Jump if there's a wall or no ground
         if ((isWallAhead || !isGroundAhead) && m_grounded)
         {
-            if (Time.time >= lastJumpTime + jumpCooldown)
+            if (Time.time >= lastJumpTime + jumpSensors.jumpCooldown)
             {
                 lastJumpTime = Time.time;
                 SwitchEnemyState(EnemyState.Jump); // Switch to Jump state
             }
         }
 
-        Debug.DrawRay(groundCheck.position, Vector2.down * checkDistance, Color.red);
-        Debug.DrawRay(wallCheck.position, Vector2.right * transform.localScale.x * checkDistance, Color.blue);
-
+        Debug.DrawRay(jumpSensors.groundCheck.position, Vector2.down * jumpSensors.checkDistance, Color.red);
+        Debug.DrawRay(jumpSensors.wallCheck.position, Vector2.right * transform.localScale.x * jumpSensors.checkDistance, Color.blue);
     }
 
-    // Method to follow the player
+    /// <summary>Moves the enemy horizontally toward the player at <see cref="moveSpeed"/>.</summary>
     void ChaseState()
     {
         // Calculate the direction to the player
@@ -287,12 +365,12 @@ public class Bandit : MonoBehaviour
         rb.linearVelocity = new Vector2(direction.x * moveSpeed, rb.linearVelocity.y);
     }
 
-    // Method to attack the player
+    /// <summary>Coroutine that triggers the attack animation, waits for the hit frame, then deals damage if the player is still in range.</summary>
     IEnumerator AttackState()
     {
-        if (Time.time >= lastAttackTime + attackCooldown + attackTiming)
+        if (Time.time >= references.lastAttackTime + attackCooldown + attackTiming)
         {
-            lastAttackTime = Time.time; // Update the time of the last attack  
+            references.lastAttackTime = Time.time; // Update the time of the last attack
             //isAttacking = true;
             m_animator.SetTrigger("Attack");
 
@@ -303,12 +381,10 @@ public class Bandit : MonoBehaviour
                 && currentState != EnemyState.Hurt
                 && currentState != EnemyState.Dead)
             {
-                
-
                 // Calculate the distance between the enemy and the player
                 float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-                if (distanceToPlayer <= attackRange) 
+                if (distanceToPlayer <= attackRange)
                 {
                     Log("Enemy: Attacks the player!");
                     playerHealth.TakeDamage(damage, this.gameObject);
@@ -325,10 +401,10 @@ public class Bandit : MonoBehaviour
         SwitchEnemyState(EnemyState.StopAttack);
     }
 
-    // Method to receive damage when attacked by the player
+    /// <summary>Public entry point for dealing integer damage to this enemy; ignored when already dead.</summary>
     public void BanditReceiveDamage(int damageAmount)
     {
-        if (currentHealth > 0 && currentState != EnemyState.Dead)
+        if (health.currentHealth > 0 && currentState != EnemyState.Dead)
         {
             Log("Enemy: Receives " + damageAmount + " damage!");
             StartCoroutine(HurtState(damageAmount));
@@ -339,11 +415,13 @@ public class Bandit : MonoBehaviour
         }
     }
 
+    /// <summary>Public entry point that switches the enemy into the Hurt state with the given <paramref name="damageAmount"/>.</summary>
     public void TakeDamage(float damageAmount)
     {
         SwitchEnemyState(EnemyState.Hurt, damageAmount); // Switch to Hurt state with damage amount
     }
 
+    /// <summary>Coroutine that applies damage, updates the health bar, spawns VFX and SFX, then transitions back to Idle or Dead.</summary>
     private IEnumerator HurtState(float damageAmount)
     {
         if (currentState == EnemyState.Dead)
@@ -355,15 +433,15 @@ public class Bandit : MonoBehaviour
         if (currentState != EnemyState.Dead)
         {
             m_animator.SetTrigger("Hurt");
-            currentHealth -= damageAmount;
-            currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+            health.currentHealth -= damageAmount;
+            health.currentHealth = Mathf.Clamp(health.currentHealth, 0f, health.maxHealth);
 
             if (healthBarUI != null)
             {
-                healthBarUI.SetHealth(currentHealth, maxHealth);
+                healthBarUI.SetHealth(health.currentHealth, health.maxHealth);
             }
 
-            if (currentHealth <= 0)
+            if (health.currentHealth <= 0)
             {
                 //Die();
                 SwitchEnemyState(EnemyState.Dead); // Switch to Dead state
@@ -373,21 +451,19 @@ public class Bandit : MonoBehaviour
             {
                 Instantiate(m_bloodSplash, headPoint.position, Quaternion.identity); // Instantiate blood splash effect
                 //StopXVelocity();
-                if (floatingTextPrefab)
+                if (floatingDamageText.floatingTextPrefab)
                 {
-                    GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                    GameObject ft = Instantiate(floatingDamageText.floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
                     ft.GetComponent<FloatingText>().SetText(damageAmount.ToString());
                 }
-                AudioManager.Instance.PlaySFX(damageSounds[Random.Range(0, damageSounds.Count)]); // Play random damage sound
-                //Log("Enemy took " + damageAmount + " damage! Remaining currentHealth: " + currentHealth);
+                AudioManager.Instance.PlaySFX(soundEffects.damageSounds[Random.Range(0, soundEffects.damageSounds.Count)]); // Play random damage sound
+                //Log("Enemy took " + damageAmount + " damage! Remaining currentHealth: " + health.currentHealth);
                 //Duration when the Enemy will be on Hurt State
                 yield return new WaitForSeconds(0.3f);
                 Log("Hurting Stops");
                 m_animator.ResetTrigger("Hurt");
                 SwitchEnemyState(EnemyState.StopHurt); // Switch back to Idle state after hurting
-
             }
-
         }
         else
         {
@@ -398,7 +474,7 @@ public class Bandit : MonoBehaviour
 
     // Method to destroy the enemy when its currentHealth reaches zero
 
-    //Method to make the Bandit Jump
+    /// <summary>Applies an upward and horizontal impulse to make the enemy jump over walls or gaps.</summary>
     void DoJump()
     {
         if (!m_grounded || isKnocked || currentState == EnemyState.Dead)
@@ -411,13 +487,15 @@ public class Bandit : MonoBehaviour
         m_grounded = false;
         m_animator.SetBool("Grounded", m_grounded);
 
-        float facingDirection = isFacingRight ? 1f : -1f;
-        rb.linearVelocity = new Vector2(jumpHorizontalSpeed * facingDirection, jumpForce);
+        float facingDirection = references.isFacingRight ? 1f : -1f;
+        rb.linearVelocity = new Vector2(jumpSensors.jumpHorizontalSpeed * facingDirection, jumpSensors.jumpForce);
 
         Log("Jump velocity: " + rb.linearVelocity);
 
         m_groundSensor.Disable(0.2f);
     }
+
+    /// <summary>Starts the knockback coroutine if the enemy is not already being knocked back.</summary>
     public void ApplyKnockback(Vector2 direction, float knockbackForce)
     {
         if (!isKnocked)
@@ -426,6 +504,7 @@ public class Bandit : MonoBehaviour
         }
     }
 
+    /// <summary>Coroutine that applies a physics impulse in <paramref name="direction"/> for <see cref="KnockbackSettings.knockbackDuration"/> seconds.</summary>
     IEnumerator KnockbackCoroutine(Vector2 direction, float knockbackForce)
     {
         if (currentState == EnemyState.Dead)
@@ -435,18 +514,18 @@ public class Bandit : MonoBehaviour
 
         isKnocked = true;
 
-        float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
+        float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockback.knockbackResistance));
 
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
 
-        yield return new WaitForSeconds(knockbackDuration);
+        yield return new WaitForSeconds(knockback.knockbackDuration);
 
         rb.linearVelocity = Vector2.zero;
         isKnocked = false;
     }
 
-    // Optional: For visual representation, you can use Gizmos to show the follow and attack ranges in the editor
+    /// <summary>Draws follow-range and attack-range gizmos in the Scene view when the object is selected.</summary>
     private void OnDrawGizmosSelected()
     {
         // Draw follow range
@@ -457,44 +536,47 @@ public class Bandit : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
 
-        if (groundCheck != null)
+        if (jumpSensors.groundCheck != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * checkDistance);
+            Gizmos.DrawLine(jumpSensors.groundCheck.position, jumpSensors.groundCheck.position + Vector3.down * jumpSensors.checkDistance);
         }
 
-        if (wallCheck != null)
+        if (jumpSensors.wallCheck != null)
         {
             Gizmos.color = Color.blue;
             Vector3 direction = Vector3.right * transform.localScale.x;
-            Gizmos.DrawLine(wallCheck.position, wallCheck.position + direction * checkDistance);
+            Gizmos.DrawLine(jumpSensors.wallCheck.position, jumpSensors.wallCheck.position + direction * jumpSensors.checkDistance);
         }
     }
 
+    /// <summary>Flips the sprite to match the current horizontal movement direction.</summary>
     void FlipSpriteBasedOnVelocity()
     {
         // Check the enemy's velocity on the X-axis to determine direction
-        if (rb.linearVelocity.x > 0 && !isFacingRight)
+        if (rb.linearVelocity.x > 0 && !references.isFacingRight)
         {
             // Moving right but currently facing left, so flip to face right
             FlipSprite();
         }
-        else if (rb.linearVelocity.x < 0 && isFacingRight)
+        else if (rb.linearVelocity.x < 0 && references.isFacingRight)
         {
             // Moving left but currently facing right, so flip to face left
             FlipSprite();
         }
     }
 
+    /// <summary>Toggles <see cref="ReferencesSettings.isFacingRight"/> and mirrors the transform's X scale.</summary>
     void FlipSprite()
     {
         // Flip the sprite by changing the local scale on the X-axis
-        isFacingRight = !isFacingRight;
+        references.isFacingRight = !references.isFacingRight;
         Vector3 localScale = transform.localScale;
         localScale.x *= -1; // Reverse the scale on X-axis
         transform.localScale = localScale;
     }
 
+    /// <summary>Zeroes the rigidbody's horizontal velocity unless the enemy is currently jumping.</summary>
     void StopXVelocity()
     {
         if (currentState != EnemyState.Jump)
@@ -503,6 +585,7 @@ public class Bandit : MonoBehaviour
         }
     }
 
+    /// <summary>Placeholder patrol behaviour; currently just logs the patrol state.</summary>
     void PatrolState()
     {         // Implement patrol logic here
         // For example, move back and forth between two points or randomly within a defined area
@@ -510,17 +593,18 @@ public class Bandit : MonoBehaviour
         Log("Patrolling...");
     }
 
+    /// <summary>Stops horizontal movement and logs the idle state.</summary>
     void IdleState()
     {
         StopXVelocity();
         Log("Idle");
-
     }
 
+    /// <summary>Plays the death animation and SFX, destroys the health bar, notifies the <see cref="EnemyManager"/>, then destroys this GameObject.</summary>
     void DeadState()
     {
         Log("Enemy died!");
-        AudioManager.Instance.PlaySFX(deathSounds[Random.Range(0, deathSounds.Count)]); // Play random death sound
+        AudioManager.Instance.PlaySFX(soundEffects.deathSounds[Random.Range(0, soundEffects.deathSounds.Count)]); // Play random death sound
 
         // Destroy health bar
         if (healthBarUI != null)
@@ -537,9 +621,14 @@ public class Bandit : MonoBehaviour
         Destroy(gameObject, 5f);
     }
 
+    /// <summary>
+    /// Transitions the enemy to <paramref name="newState"/>, stopping any running state coroutine first.
+    /// Ignores the transition when guarded states (Dead, Hurt, duplicate Attack) are active.
+    /// </summary>
     public void SwitchEnemyState(EnemyState newState, float damageAmount = 0)
     {
-        if (currentState == EnemyState.Dead) {
+        if (currentState == EnemyState.Dead)
+        {
             return;
         }
 
@@ -570,7 +659,6 @@ public class Bandit : MonoBehaviour
                 IdleState();
                 break;
             case EnemyState.Patrol:
-
                 //currentStateCoroutine = StartCoroutine(PatrolState());
                 PatrolState();
                 break;
@@ -601,7 +689,5 @@ public class Bandit : MonoBehaviour
                 DeadState();
                 break;
         }
-
-
     }
 }
