@@ -27,15 +27,17 @@ public class EnemyHealth : MonoBehaviour
     public List<string> deathSounds = new List<string>();
 
     [Header("Knockback Settings")]
+    [Tooltip("Duration of the knockback effect")]
     public float knockbackDuration = 0.5f; // Duration of the knockback effect
     [Range(0f, 1f)]
-    public float knockbackResistance = 0.1f; // Resistance to knockback (0-1, where 1 is no resistance)
+    [Tooltip("Resistance to knockback (0 = no resistance, 1 = full resistance / immune)")]
+    public float knockbackResistance = 0.1f;
 
     [Header("Souls Reward")]
     [Tooltip("Number of souls awarded to the player when this enemy dies.")]
     [SerializeField] private int soulsReward = 10;
 
-    [Header("Flags")]
+    [Header("State Flags")]
     public bool isDead = false; // Flag to check if the enemy is dead
     public bool isHurt = false; // Flag to check if the enemy is currently hurt
     public bool isKnocked = false; // Flag to check if the enemy is knocked back
@@ -171,8 +173,9 @@ public class EnemyHealth : MonoBehaviour
 
         float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
 
-        rb.linearVelocity = Vector2.zero;
-        rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
+        // Normalize the force relative to the enemy's mass so knockback feels consistent
+        rb.linearVelocity = Vector2.zero; // Clear current velocity so the impulse isn't fighting existing motion
+        rb.AddForce(direction.normalized * adjustedForce * rb.mass, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(knockbackDuration);
 

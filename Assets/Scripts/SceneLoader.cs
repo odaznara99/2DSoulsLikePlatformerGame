@@ -102,6 +102,12 @@ public class SceneLoader : MonoBehaviour
 
     }
 
+    public void ReloadCurrentScene()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        LoadScene(currentScene);
+    }
+
     private IEnumerator LoadSceneAsync(string sceneName)
     {
         if (sceneName == null)

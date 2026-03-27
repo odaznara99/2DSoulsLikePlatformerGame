@@ -247,6 +247,7 @@ MonoBehaviour:
   - {fileID: 7315070289985910556, guid: b902f7be3b779274ca318d449b8210f7, type: 3}
   - {fileID: 4491813178121395643, guid: 9c84a4cf3efcf9c4e8ebcb96de94b140, type: 3}
   attackDamage: 20
+  knockBackForce: 15
 --- !u!1 &4451737542538099972
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,6 +801,7 @@ MonoBehaviour:
   airControlFactor: 3
   groundControlFactor: 3
   directionChangeSpeed: 5
+  attackDamage: 20
   attackBoxObject: {fileID: 4028321758023377089}
   attackBoxCollider: {fileID: 5111446264070832831}
   attackIntervalTime: 0.5

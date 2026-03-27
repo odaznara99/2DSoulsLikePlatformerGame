@@ -87,6 +87,11 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
+        if (enemyHealth.isKnocked)
+        {
+            return; // Don't process chase/attack logic during knockback
+        }
+
         if (Vector3.Distance(transform.position, player.position) <= detectionRange)
         {
             // Start chasing the player
@@ -124,6 +129,13 @@ public class EnemyMovement : MonoBehaviour
     {
         // Check if the enemy is grounded
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        // Don't override velocity while being knocked back
+        if (enemyHealth.isKnocked)
+        {
+            return;
+        }
+
 
         if (isChasing)
         {

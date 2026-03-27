@@ -93,12 +93,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     // === Variables for Attack === //
     [Header("Attack Settings")]
+    [Tooltip("Damage dealt by the attack")] public float attackDamage = 20f;
     [SerializeField] private GameObject attackBoxObject; // The object with BoxCollider2D
     [SerializeField] private Collider2D attackBoxCollider;
-    //private float attackRadius = 2f;
-    //public int attackDamage = 20;
     public float attackIntervalTime = 0.5f;
-    public float playerKnockbackForce = 15f; // Knock back to enemies
+    [Tooltip("Knock back to enemies")]public float playerKnockbackForce = 15f; // Knock back to enemies
 
     [Header("Detection Flags")]
     // == Variable for Sensors / Conditions / SubStates

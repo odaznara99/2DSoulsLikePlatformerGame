@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
         if (keyboard.rKey.wasReleasedThisFrame)
         {
-            RestartGame();
+            SceneLoader.Instance.ReloadCurrentScene();
         }
 
         if (isGameOver && (keyboard.enterKey.wasPressedThisFrame || Mouse.current?.leftButton.wasPressedThisFrame == true))
