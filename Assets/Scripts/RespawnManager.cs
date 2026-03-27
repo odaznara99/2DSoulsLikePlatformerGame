@@ -63,7 +63,11 @@ public class RespawnManager : MonoBehaviour
     {
         var player = FindAnyObjectByType<PlayerControllerVersion2>();
 
-        if (player == null) return;
+        if (player == null)
+        {
+            Debug.LogWarning("[RespawnManager] No player found to respawn.");
+            return;
+        }
 
         Vector2 savedPosition = GameManager.Instance.playerData.position;
         player.transform.position = new Vector3(savedPosition.x, savedPosition.y, player.transform.position.z);
@@ -72,5 +76,7 @@ public class RespawnManager : MonoBehaviour
         var health = player.GetComponent<PlayerHealth>();
         if (health != null)
             health.isInvincible = false;
+
+        Debug.Log($"Respawned player at saved position: {savedPosition}");
     }
 }

@@ -6,6 +6,8 @@ public class CheckpointTrigger : MonoBehaviour
 
     private bool activated;
 
+    [SerializeField] private EnableGlowCheckpoint enableGlowScript;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (activated || !other.CompareTag("Player"))
@@ -35,9 +37,16 @@ public class CheckpointTrigger : MonoBehaviour
         gm.SaveCheckpointSnapshot();
         activated = true;
 
+        if (enableGlowScript != null)
+        {
+            enableGlowScript.EnableGlowingLights();
+        }
+
         if (disableAfterUse)
         {
             gameObject.SetActive(false);
         }
+
+        MessageManager.Instance.ShowMessage("Stone of Recall Activated", false, 100);
     }
 }

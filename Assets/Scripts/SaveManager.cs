@@ -45,8 +45,8 @@ public class SaveManager : MonoBehaviour
     /// <summary>Returns true if a save file with at least one checkpoint exists.</summary>
     public bool HasSave()
     {
-        if (currentSave.hasCheckpoint && currentSave.checkpointData != null)
-            return true;
+        //if (currentSave.hasCheckpoint && currentSave.checkpointData != null)
+          //  return true;
 
         // Fallback: check if the save file exists on disk and try to load it
         if (File.Exists(SaveFilePath))

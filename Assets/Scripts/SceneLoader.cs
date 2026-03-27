@@ -147,11 +147,15 @@ public class SceneLoader : MonoBehaviour
 
 
         // After scene load
+        playerScript = FindAnyObjectByType<PlayerControllerVersion2>();
         if (playerScript != null) { 
             RespawnManager.Instance.RespawnPlayer();
 
             // Spawn dropped-souls pickup at death position if any souls were lost.
             GameManager.Instance?.SpawnDroppedSoulsIfAny();
+        } else
+        {
+            Debug.LogWarning("[SceneLoader]PlayerControllerVersion2 not found in the scene after loading. Player may not be respawned correctly.");
         }
 
 

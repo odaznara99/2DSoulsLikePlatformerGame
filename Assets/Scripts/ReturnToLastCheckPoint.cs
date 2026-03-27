@@ -18,9 +18,16 @@ public class ReturnToLastCheckPoint : MonoBehaviour
 
     public void ReturnLastCheckPoint()
     {
-        if (GameManager.Instance != null)
+        AudioManager.Instance.PlaySFX("Click");
+
+        if (SaveManager.Instance != null && SaveManager.Instance.HasSave() &&SaveManager.Instance.LoadSavedGame())
         {
-            GameManager.Instance.ReturnToLastCheckpoint();
+            Debug.Log("Loaded save from disk.");
+            return;
         }
+
+        Debug.LogWarning("No checkpoint or saved game found.");
+        //SceneLoader.Instance.LoadScene("Stage1");
+        MessageManager.Instance.ShowMessage("No checkpoint or saved game found.", false, 24);
     }
 }
