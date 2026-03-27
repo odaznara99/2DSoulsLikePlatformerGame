@@ -21,6 +21,7 @@ public class ButtonHoverAnimate : MonoBehaviour, IPointerEnterHandler, IPointerE
             return;
         }
 
+        button = GetComponent<Button>();
         if (!button)
         {
             Debug.Log("ButtonHoverAnimate: button is not assigned in the inspector.");

@@ -8,10 +8,15 @@ public class AttackBox : MonoBehaviour
     [Header("Attack Settings")]
     [SerializeField] private GameObject[] hitEffectPrefabs;
     [SerializeField] private float attackDamage = 20f;
+    [SerializeField] private float knockBackForce = 15f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        PlayerControllerVersion2 player = FindAnyObjectByType<PlayerControllerVersion2>();
+
+        // Get the player attack stats
+        knockBackForce = player.playerKnockbackForce;
+        attackDamage = player.attackDamage;
     }
 
     // Update is called once per frame
@@ -48,7 +53,7 @@ public class AttackBox : MonoBehaviour
 
             // Apply knockback to the enemy
             Vector2 knockDirection = other.transform.position - transform.position;
-            enemyScript.ApplyKnockback(knockDirection, 2f);
+            enemyScript.ApplyKnockback(knockDirection, knockBackForce);
         }
         else if (other.CompareTag("Skeleton"))
         {
@@ -64,7 +69,7 @@ public class AttackBox : MonoBehaviour
 
             // Apply knockback to the skeleton
             Vector2 knockDirection = other.transform.position - transform.position;
-            enemyHealth.ApplyKnockback(knockDirection, 2f);
+            enemyHealth.ApplyKnockback(knockDirection, knockBackForce);
 
         }
         else if (other.CompareTag("Boss"))

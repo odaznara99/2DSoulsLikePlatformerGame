@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3619693336465886900}
   - component: {fileID: 6788975107627252585}
   - component: {fileID: 1973947490279004210}
+  - component: {fileID: 1491524959062683196}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -77,6 +78,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb7efe47c7b4a14088fa1ddc27fab97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RespawnManager
+--- !u!114 &1491524959062683196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4050465493181609182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14ba4433830a0844b195926b81b3860, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveManager
 --- !u!1 &5546120524213171749
 GameObject:
   m_ObjectHideFlags: 0

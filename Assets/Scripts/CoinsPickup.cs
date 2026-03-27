@@ -39,7 +39,7 @@ public class CoinsPickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag("CoinCollector")) return;
 
         var gm = GameManager.Instance;
         if (gm == null) return;

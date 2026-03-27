@@ -205,6 +205,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     [Header("Attack Settings")]
     public AttackSettings attack = new AttackSettings();
+    [Tooltip("Damage dealt by the attack")] public float attackDamage = 20f;
+    [SerializeField] private GameObject attackBoxObject; // The object with BoxCollider2D
+    [SerializeField] private Collider2D attackBoxCollider;
+    public float attackIntervalTime = 0.5f;
+    [Tooltip("Knock back to enemies")]public float playerKnockbackForce = 15f; // Knock back to enemies
 
     [Header("Detection Flags")]
     public DetectionFlags detection = new DetectionFlags();

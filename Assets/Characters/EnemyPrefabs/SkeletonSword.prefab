@@ -110,8 +110,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 1
-  m_Mass: 0.4613997
+  m_UseAutoMass: 0
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -207,7 +207,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0.5, z: 0}
   damageSounds: []
   deathSounds: []
-  knockbackDuration: 1
+  knockbackDuration: 0.3
   knockbackResistance: 0
   soulsReward: 50
   isDead: 0

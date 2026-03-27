@@ -90,6 +90,11 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Knockback Settings")]
     public KnockbackSettings knockback = new KnockbackSettings();
+    [Tooltip("Duration of the knockback effect")]
+    public float knockbackDuration = 0.5f; // Duration of the knockback effect
+    [Range(0f, 1f)]
+    [Tooltip("Resistance to knockback (0 = no resistance, 1 = full resistance / immune)")]
+    public float knockbackResistance = 0.1f;
 
     [Header("Souls Reward")]
     public SoulsRewardSettings soulsRewardSettings = new SoulsRewardSettings();
@@ -97,6 +102,11 @@ public class EnemyHealth : MonoBehaviour
     [Header("Flags")]
     public EnemyStatusFlags flags = new EnemyStatusFlags();
 
+    [Header("State Flags")]
+    public bool isDead = false; // Flag to check if the enemy is dead
+    public bool isHurt = false; // Flag to check if the enemy is currently hurt
+    public bool isKnocked = false; // Flag to check if the enemy is knocked back
+    //public float hurtDuration = 0.3f; // Duration of the hurt animation
     private Animator m_animator;
     private Rigidbody2D rb;
 
@@ -244,8 +254,9 @@ public class EnemyHealth : MonoBehaviour
 
         float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockback.knockbackResistance));
 
-        rb.linearVelocity = Vector2.zero;
-        rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
+        // Normalize the force relative to the enemy's mass so knockback feels consistent
+        rb.linearVelocity = Vector2.zero; // Clear current velocity so the impulse isn't fighting existing motion
+        rb.AddForce(direction.normalized * adjustedForce * rb.mass, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(knockback.knockbackDuration);
 

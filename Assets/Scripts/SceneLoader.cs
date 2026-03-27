@@ -28,6 +28,11 @@ public class SceneLoader : MonoBehaviour
     /// <summary>
     /// Ensures only one SceneLoader instance exists and marks it to persist across scene loads.
     /// </summary>
+    // When true, RespawnPlayer is called after the scene loads.
+    // Set by LoadSceneWithRespawn; cleared after use.
+    private bool shouldRespawnAfterLoad;
+
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -116,6 +121,21 @@ public class SceneLoader : MonoBehaviour
     /// then fades back in and displays the level name.
     /// </summary>
     /// <param name="sceneName">The exact scene name to load asynchronously.</param>
+    /// Loads a scene and respawns the player at the saved checkpoint position
+    /// afterward. Use this for death/try-again and return-to-checkpoint flows.
+    /// </summary>
+    public void LoadSceneWithRespawn(string sceneName)
+    {
+        shouldRespawnAfterLoad = true;
+        LoadScene(sceneName);
+    }
+
+    public void ReloadCurrentScene()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        LoadScene(currentScene);
+    }
+
     private IEnumerator LoadSceneAsync(string sceneName)
     {
         if (sceneName == null)
@@ -169,9 +189,21 @@ public class SceneLoader : MonoBehaviour
             GameManager.Instance?.SpawnDroppedSoulsIfAny();
         }
         else
+        if (playerScript != null) { 
+            if (shouldRespawnAfterLoad)
+            {
+                RespawnManager.Instance.RespawnPlayer();
+
+                // Spawn dropped-souls pickup at death position if any souls were lost.
+                GameManager.Instance?.SpawnDroppedSoulsIfAny();
+            }
+        } else
         {
             Debug.LogWarning("[SceneLoader]PlayerControllerVersion2 not found in the scene after loading. Player may not be respawned correctly.");
         }
+
+        // Reset the flag after use
+        shouldRespawnAfterLoad = false;
 
         // Delay for Camera Follow the Player's New Position
         yield return new WaitForSeconds(2f);

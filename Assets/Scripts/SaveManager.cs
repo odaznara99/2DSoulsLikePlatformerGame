@@ -109,7 +109,7 @@ public class SaveManager : MonoBehaviour
         if (string.IsNullOrEmpty(scene)) return false;
 
         Time.timeScale = 1f;
-        SceneLoader.Instance.LoadScene(scene);
+        SceneLoader.Instance.LoadSceneWithRespawn(scene);
         return true;
     }
 

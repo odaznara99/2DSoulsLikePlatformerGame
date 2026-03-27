@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
         if (keyboard.rKey.wasReleasedThisFrame)
         {
-            RestartGame();
+            SceneLoader.Instance.ReloadCurrentScene();
         }
 
         if (isGameOver && (keyboard.enterKey.wasPressedThisFrame || Mouse.current?.leftButton.wasPressedThisFrame == true))
@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour
 
         // Load the checkpoint scene — RespawnManager will place the player
         // at playerData.position (the saved checkpoint position).
-        SceneLoader.Instance.LoadScene(targetScene);
+        SceneLoader.Instance.LoadSceneWithRespawn(targetScene);
 
         // Notify UI of restored currency values after checkpoint revert.
         BroadcastCurrencyUpdate();
