@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Feat1_Destructables.unity
     guid: f9340ad7f435ebc4a9f67e67cc79b866
   - enabled: 1
-    path: Assets/Scenes/Feat2_PickUps.unity
+    path: Assets/Scenes/Feat2_Enemies.unity
     guid: c89ed5c75329ef44aa421d4cb36e9ecb
   - enabled: 1
     path: "Assets/Scenes/Stage1_Awakening at the Vale\u2019s Threshold.unity"
