@@ -169,11 +169,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 originalMovementSpeed = movementSpeed;
             }
         }
-
-#if UNITY_EDITOR
-        if (InputSystemManager.Instance != null)
-            InputSystemManager.Instance.enableKeyboardInput = true;
-#endif
     }
 
     private void FixedUpdate()
