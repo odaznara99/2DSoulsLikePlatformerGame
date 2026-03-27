@@ -51,7 +51,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     [System.Serializable]
     public class MovementSettings
     {
-        [SerializeField] public float inputX;
+        public float inputX;
         public float movementSpeed = 4.0f;
         public float slowMovementSpeed = 1.5f;
         public float rollingSpeed = 5.0f;
@@ -65,7 +65,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         public float jumpForce = 6.0f;
         [Tooltip("Maximum number of jumps player can perform (Double Jump)")]
         public int maxDoubleJumpCount = 1;
-        [SerializeField] public int currentDoubleJumpCount = 0;
+        public int currentDoubleJumpCount = 0;
     }
 
     /// <summary>Wall-slide speed and wall-jump force configuration.</summary>
@@ -139,9 +139,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
         [Tooltip("Cooldown for shielding")]
         public float shieldingCooldown = 2.0f;
         [Tooltip("Last time player rolled")]
-        [SerializeField] public float lastRollingTimestamp = 0.0f;
+        public float lastRollingTimestamp = 0.0f;
         [Tooltip("Last time player shielded")]
-        [SerializeField] public float lastShieldingTimestamp = 0.0f;
+        public float lastShieldingTimestamp = 0.0f;
     }
 
     /// <summary>Stamina component reference and stamina cost values.</summary>
