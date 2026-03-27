@@ -782,7 +782,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enabledDebugLog: 0
   enabledKeyboardInput: 1
-  m_noBlood: 1
+  m_noBlood: 0
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
   upperBodyCollider: {fileID: 8000442065729155241}
   currentState: 0

@@ -19,6 +19,7 @@ TagManager:
   - Breakable
   - ZoneCamera
   - Skeleton
+  - CoinCollector
   layers:
   - Default
   - TransparentFX
