@@ -32,7 +32,7 @@ public class EnemyJumpDetection : MonoBehaviour
         Invoke(nameof(SetFalseDetection), 2f);
 
         // Check if the enemy is grounded
-        if (enemyMovement.isGrounded)
+        if (enemyMovement.flags.isGrounded)
         {
             // Apply jump force
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);

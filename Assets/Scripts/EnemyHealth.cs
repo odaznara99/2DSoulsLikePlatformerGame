@@ -5,45 +5,104 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [System.Serializable]
+    public class HealthParameters
+    {
+        [SerializeField] public float maxHealth = 100f;
+        [Tooltip("Health of the enemy.")]
+        public float currentHealth = 100f;
+    }
+
+    [System.Serializable]
+    public class FloatingHealthbarSettings
+    {
+        [SerializeField] public GameObject healthBarPrefab;
+        [Tooltip("Offset for the health bar.")]
+        [SerializeField] public Vector3 healthBarOffset = new Vector3(0, 1.0f, 0);
+    }
+
+    [System.Serializable]
+    public class FloatingDamageTextSettings
+    {
+        public GameObject floatingTextPrefab;
+        public Transform worldCanvas;
+    }
+
+    [System.Serializable]
+    public class BloodSplashSettings
+    {
+        [SerializeField] public GameObject m_bloodSplash;
+        [Tooltip("Offset for the blood splash effect.")]
+        public Vector3 offset = new Vector3(0, 0.5f, 0);
+    }
+
+    [System.Serializable]
+    public class SoundEffectsSettings
+    {
+        public List<string> damageSounds = new List<string>();
+        public List<string> deathSounds = new List<string>();
+    }
+
+    [System.Serializable]
+    public class KnockbackSettings
+    {
+        [Tooltip("Duration of the knockback effect.")]
+        public float knockbackDuration = 0.5f;
+        [Range(0f, 1f)]
+        [Tooltip("Resistance to knockback (0-1, where 1 is no resistance).")]
+        public float knockbackResistance = 0.1f;
+    }
+
+    [System.Serializable]
+    public class SoulsRewardSettings
+    {
+        [Tooltip("Number of souls awarded to the player when this enemy dies.")]
+        [SerializeField] public int soulsReward = 10;
+    }
+
+    [System.Serializable]
+    public class EnemyStatusFlags
+    {
+        [Tooltip("Flag to check if the enemy is dead.")]
+        public bool isDead = false;
+        [Tooltip("Flag to check if the enemy is currently hurt.")]
+        public bool isHurt = false;
+        [Tooltip("Flag to check if the enemy is knocked back.")]
+        public bool isKnocked = false;
+        //public float hurtDuration = 0.3f; // Duration of the hurt animation
+    }
+
     [Header("Health Parameters")]
-    [SerializeField] private float maxHealth = 100f;
-    public float currentHealth = 100f; // Health of the enemy
+    public HealthParameters healthParams = new HealthParameters();
 
     [Header("Floating Healthbar")]
-    [SerializeField] private GameObject healthBarPrefab;
+    public FloatingHealthbarSettings floatingHealthbar = new FloatingHealthbarSettings();
     private FloatingHealthbar healthBarUI;
-    [SerializeField] private Vector3 healthBarOffset = new Vector3(0, 1.0f, 0); // Offset for the health bar
 
     [Header("Floating Damage Text")]
-    public GameObject floatingTextPrefab;
-    public Transform worldCanvas;
+    public FloatingDamageTextSettings floatingDamageText = new FloatingDamageTextSettings();
 
     [Header("Blood Splash Effect")]
-    [SerializeField]private GameObject m_bloodSplash;
-    public Vector3 offset = new Vector3(0, 0.5f, 0); // Offset for the blood splash effect
+    public BloodSplashSettings bloodSplash = new BloodSplashSettings();
 
     [Header("Sound Effects")]
-    public List<string> damageSounds = new List<string>();
-    public List<string> deathSounds = new List<string>();
+    public SoundEffectsSettings soundEffects = new SoundEffectsSettings();
 
     [Header("Knockback Settings")]
-    public float knockbackDuration = 0.5f; // Duration of the knockback effect
-    [Range(0f, 1f)]
-    public float knockbackResistance = 0.1f; // Resistance to knockback (0-1, where 1 is no resistance)
+    public KnockbackSettings knockback = new KnockbackSettings();
 
     [Header("Souls Reward")]
-    [Tooltip("Number of souls awarded to the player when this enemy dies.")]
-    [SerializeField] private int soulsReward = 10;
+    public SoulsRewardSettings soulsRewardSettings = new SoulsRewardSettings();
 
     [Header("Flags")]
-    public bool isDead = false; // Flag to check if the enemy is dead
-    public bool isHurt = false; // Flag to check if the enemy is currently hurt
-    public bool isKnocked = false; // Flag to check if the enemy is knocked back
-    //public float hurtDuration = 0.3f; // Duration of the hurt animation
-    private Animator m_animator;
-    private Rigidbody2D rb; // Reference to the Rigidbody2D component
+    public EnemyStatusFlags flags = new EnemyStatusFlags();
 
-    // Start is called before the first frame update
+    private Animator m_animator;
+    private Rigidbody2D rb;
+
+    /// <summary>
+    /// Initializes components, sets up the floating health bar UI, and resets animator triggers.
+    /// </summary>
     void Start()
     {
         m_animator = GetComponent<Animator>();
@@ -52,44 +111,47 @@ public class EnemyHealth : MonoBehaviour
         m_animator.ResetTrigger("Hurt");
         m_animator.ResetTrigger("Die");
 
-        worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
+        floatingDamageText.worldCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
 
         // --<< HEALTH BAR UI SETUP
-        currentHealth = maxHealth;
+        healthParams.currentHealth = healthParams.maxHealth;
 
-        if (healthBarPrefab != null)
+        if (floatingHealthbar.healthBarPrefab != null)
         {
-            GameObject hb = Instantiate(healthBarPrefab, transform.position, Quaternion.identity);
+            GameObject hb = Instantiate(floatingHealthbar.healthBarPrefab, transform.position, Quaternion.identity);
             healthBarUI = hb.GetComponent<FloatingHealthbar>();
             healthBarUI.SetTarget(this.transform);
         }
 
-        healthBarUI.SetHealth(currentHealth, maxHealth);
-        healthBarUI.offset = healthBarOffset; // Set the offset for the health bar
+        healthBarUI.SetHealth(healthParams.currentHealth, healthParams.maxHealth);
+        healthBarUI.offset = floatingHealthbar.healthBarOffset; // Set the offset for the health bar
         // -->> HEALTH BAR UI SETUP
     }
 
+    /// <summary>
+    /// Applies damage to the enemy, triggers hurt or death animations, and handles associated visual and audio effects.
+    /// </summary>
     public void TakeDamage(float damageAmount)
     {
-        if (isDead || isHurt)
+        if (flags.isDead || flags.isHurt)
         {
             Debug.Log("Enemy is taking damage or dead");
             return; // Exit if the enemy is dead
         }
 
-        currentHealth -= damageAmount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        healthParams.currentHealth -= damageAmount;
+        healthParams.currentHealth = Mathf.Clamp(healthParams.currentHealth, 0f, healthParams.maxHealth);
 
         // Update Floating Healthbar UI
         if (healthBarUI != null)
         {
-            healthBarUI.SetHealth(currentHealth, maxHealth);
+            healthBarUI.SetHealth(healthParams.currentHealth, healthParams.maxHealth);
         }
 
-        if (currentHealth <= 0)
+        if (healthParams.currentHealth <= 0)
         {
-           isDead = true;
+           flags.isDead = true;
            // Trigger Death Animation
            m_animator.SetTrigger("Die");
            m_animator.SetBool("IsDead", true);
@@ -99,84 +161,95 @@ public class EnemyHealth : MonoBehaviour
                 healthBarUI.DestroyBar();
             }
             // Award souls to the player
-            GameManager.Instance?.AddSouls(soulsReward);
-            if (floatingTextPrefab)
+            GameManager.Instance?.AddSouls(soulsRewardSettings.soulsReward);
+            if (floatingDamageText.floatingTextPrefab)
             {
-                GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
-                ft.GetComponent<FloatingText>().SetText("+" + soulsReward.ToString() + " Souls");
+                GameObject ft = Instantiate(floatingDamageText.floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, floatingDamageText.worldCanvas);
+                ft.GetComponent<FloatingText>().SetText("+" + soulsRewardSettings.soulsReward.ToString() + " Souls");
             }
         }
         else
         {
-            isHurt = true;
+            flags.isHurt = true;
             // Trigger Hurt Animation
             m_animator.SetTrigger("Hurt");
             m_animator.SetBool("IsHurting", true);
             // BloodSlash Effect
-            Instantiate(m_bloodSplash, transform.position + offset, Quaternion.identity); // Instantiate blood splash effect
+            Instantiate(bloodSplash.m_bloodSplash, transform.position + bloodSplash.offset, Quaternion.identity); // Instantiate blood splash effect
             // Show Floating Damage Text
-            if (floatingTextPrefab)
+            if (floatingDamageText.floatingTextPrefab)
             {
-                GameObject ft = Instantiate(floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, worldCanvas);
+                GameObject ft = Instantiate(floatingDamageText.floatingTextPrefab, transform.position + Vector3.up, Quaternion.identity, floatingDamageText.worldCanvas);
                 ft.GetComponent<FloatingText>().SetText("-" + damageAmount.ToString());
             }
             // Play Sound
-            if(damageSounds.Count !=0)
-                AudioManager.Instance.PlaySFX(damageSounds[Random.Range(0, damageSounds.Count)]);
+            if(soundEffects.damageSounds.Count !=0)
+                AudioManager.Instance.PlaySFX(soundEffects.damageSounds[Random.Range(0, soundEffects.damageSounds.Count)]);
         }
 
     }
 
+    /// <summary>
+    /// Resets the hurt state and animator parameters. Call this via State Behavior or Animation Event.
+    /// </summary>
     public void ResetHurtState() // Call this via State Behavior or Animation Event
     {
         m_animator.ResetTrigger("Hurt");
         m_animator.SetBool("IsHurting", false);
-        isHurt = false;
+        flags.isHurt = false;
     }
 
+    /// <summary>
+    /// Revives the enemy by restoring full health and resetting the dead animator state. Call this to revive the enemy.
+    /// </summary>
     public void ReviveEnemy() // Call this to revive the enemy
     {
-        isDead = false;
-        currentHealth = maxHealth;
+        flags.isDead = false;
+        healthParams.currentHealth = healthParams.maxHealth;
         if (healthBarUI != null)
         {
-            healthBarUI.SetHealth(currentHealth, maxHealth);
+            healthBarUI.SetHealth(healthParams.currentHealth, healthParams.maxHealth);
             //healthBarUI.ShowBar();
         }
         m_animator.SetBool("IsDead", false);
     }
 
-
+    /// <summary>
+    /// Initiates a knockback force on the enemy if it is not already knocked back or dead.
+    /// </summary>
     public void ApplyKnockback(Vector2 direction, float knockbackForce)
     {
-        if (isDead)
+        if (flags.isDead)
         {
             return;
         }
 
-        if (!isKnocked)
+        if (!flags.isKnocked)
         {
             StartCoroutine(KnockbackCoroutine(direction, knockbackForce));
         }
     }
 
+    /// <summary>
+    /// Coroutine that applies a knockback impulse and resets the knocked state after the knockback duration elapses.
+    /// </summary>
     IEnumerator KnockbackCoroutine(Vector2 direction, float knockbackForce)
     {
-        if (isDead)
+        if (flags.isDead)
         {
             yield break; // Do not apply knockback if already dead
         }
 
-        isKnocked = true;
+        flags.isKnocked = true;
 
-        float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockbackResistance));
+        float adjustedForce = knockbackForce * (1f - Mathf.Clamp01(knockback.knockbackResistance));
 
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction.normalized * adjustedForce, ForceMode2D.Impulse);
 
-        yield return new WaitForSeconds(knockbackDuration);
+        yield return new WaitForSeconds(knockback.knockbackDuration);
 
         rb.linearVelocity = Vector2.zero;
-        isKnocked = false;
+        flags.isKnocked = false;
     }
 }

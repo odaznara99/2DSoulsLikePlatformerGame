@@ -4,52 +4,103 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    public string enemyName = "Skeleton"; // Name of the enemy
-    [Header("Patrol Params")]
-    public Transform pointA; // Patrol point A
-    public Transform pointB; // Patrol point B
-    public float patrolSpeed = 2f; // Speed of patrolling
-    [Header("Chase Params")]
-    public float chaseSpeed = 3f; // Speed when chasing the player
-    public float detectionRange = 5f; // Range to detect the player
-    public Transform player; // Reference to the player
-    private Transform currentTarget; // Current patrol target
+    [System.Serializable]
+    public class PatrolSettings
+    {
+        [Tooltip("Patrol point A.")]
+        public Transform pointA;
+        [Tooltip("Patrol point B.")]
+        public Transform pointB;
+        [Tooltip("Speed of patrolling.")]
+        public float patrolSpeed = 2f;
+    }
 
-    private Rigidbody2D rb; // Reference to the Rigidbody2D component
-    private Animator m_animator; // Reference to the Animator component
+    [System.Serializable]
+    public class ChaseSettings
+    {
+        [Tooltip("Speed when chasing the player.")]
+        public float chaseSpeed = 3f;
+        [Tooltip("Range to detect the player.")]
+        public float detectionRange = 5f;
+        [Tooltip("Reference to the player.")]
+        public Transform player;
+    }
+
+    [System.Serializable]
+    public class GroundCheckSettings
+    {
+        [Tooltip("A point to check if the enemy is grounded.")]
+        public Transform groundCheck;
+        [Tooltip("Radius of the ground check.")]
+        public float groundCheckRadius = 0.2f;
+        [Tooltip("LayerMask to specify what is considered ground.")]
+        public LayerMask groundLayer;
+    }
+
+    [System.Serializable]
+    public class EnemyFlags
+    {
+        [Tooltip("Whether the enemy is grounded.")]
+        public bool isGrounded;
+        [Tooltip("Whether the skeleton is chasing the player.")]
+        [SerializeField] public bool isChasing = false;
+        [SerializeField] public bool isFacingRight = false;
+        [Tooltip("Whether the skeleton is currently attacking.")]
+        public bool isAttacking = false;
+    }
+
+    [System.Serializable]
+    public class AttackSettings
+    {
+        [Tooltip("Trigger for the attack box.")]
+        public BoxCollider2D attackBoxTrigger;
+        [Tooltip("Damage dealt by the attack.")]
+        public float attackDamage = 20f;
+        [Tooltip("Range to detect the player.")]
+        public float attackRange = 1f;
+        [Tooltip("Animation trigger for the attack.")]
+        public string[] attackAnimationTrigger;
+        [Tooltip("Time in seconds between attacks (attack speed).")]
+        public float attackCooldown = 1.5f;
+    }
+
+    [Tooltip("Name of the enemy.")]
+    public string enemyName = "Skeleton";
+
+    [Header("Patrol Params")]
+    public PatrolSettings patrol = new PatrolSettings();
+
+    [Header("Chase Params")]
+    public ChaseSettings chase = new ChaseSettings();
+
+    private Transform currentTarget;
+    private Rigidbody2D rb;
+    private Animator m_animator;
 
     [Header("Ground Check")]
-    public Transform groundCheck; // A point to check if the enemy is grounded
-    public float groundCheckRadius = 0.2f; // Radius of the ground check
-    public LayerMask groundLayer; // LayerMask to specify what is considered ground
+    public GroundCheckSettings groundDetect = new GroundCheckSettings();
 
     [Header("Flags")]
-    public bool isGrounded; // Whether the enemy is grounded
-    [SerializeField] private bool isChasing = false; // Whether the skeleton is chasing the player
-    [SerializeField] private bool isFacingRight = false;
-    public bool isAttacking = false; // Whether the skeleton is currently attacking
+    public EnemyFlags flags = new EnemyFlags();
 
-    private EnemyHealth enemyHealth; // Reference to the EnemyHealth component
+    private EnemyHealth enemyHealth;
 
     [Header("Attack Settings")]
-    public BoxCollider2D attackBoxTrigger; // Trigger for the attack box
-    public float attackDamage = 20f; // Damage dealt by the attack
-    public float attackRange = 1f; // Range to detect the player
-    public string[] attackAnimationTrigger; // Animation trigger for the attack
-    [Tooltip("Time in seconds between attacks (attack speed).")]
-    public float attackCooldown = 1.5f; // Cooldown between attacks
-    private float lastAttackTime = -999f; // Track when the enemy last attacked
+    public AttackSettings attack = new AttackSettings();
 
-    private EnemyJumpDetection obstacle_Detector; // Reference to Jump Detection Trigger
+    private float lastAttackTime = -999f;
+    private EnemyJumpDetection obstacle_Detector;
 
-
+    /// <summary>
+    /// Initializes references to required components and sets the initial patrol target.
+    /// </summary>
     private void Start()
     {
         // Start patrolling towards point A
-        currentTarget = pointA;
+        currentTarget = patrol.pointA;
 
         // Find the player by tag
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        chase.player = GameObject.FindGameObjectWithTag("Player").transform;
 
         // Get the Rigidbody2D component
         rb = GetComponent<Rigidbody2D>();
@@ -79,53 +130,59 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles per-frame logic including player detection, attack triggering, animator parameter updates, and sprite flipping.
+    /// </summary>
     private void Update()
     {
-        if (enemyHealth.isDead)
+        if (enemyHealth.flags.isDead)
         {
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             return;
         }
 
-        if (Vector3.Distance(transform.position, player.position) <= detectionRange)
+        if (Vector3.Distance(transform.position, chase.player.position) <= chase.detectionRange)
         {
             // Start chasing the player
-            isChasing = true;
+            flags.isChasing = true;
         }
         else
         {
             // Return to patrolling if the player is out of range
-            isChasing = false;
+            flags.isChasing = false;
         }
 
-        if (Vector3.Distance(transform.position, player.position) <= attackRange
-            && !isAttacking
-            && Time.time >= lastAttackTime + attackCooldown)
+        if (Vector3.Distance(transform.position, chase.player.position) <= attack.attackRange
+            && !flags.isAttacking
+            && Time.time >= lastAttackTime + attack.attackCooldown)
         {
             lastAttackTime = Time.time;
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-            int randomIndex = Random.Range(0, attackAnimationTrigger.Length);
-            m_animator.SetTrigger(attackAnimationTrigger[randomIndex]); // Trigger the attack animation
+            int randomIndex = Random.Range(0, attack.attackAnimationTrigger.Length);
+            m_animator.SetTrigger(attack.attackAnimationTrigger[randomIndex]); // Trigger the attack animation
         }
 
         // Set Running Parameters in the Animator
         m_animator.SetFloat("Velocity_X", Mathf.Abs(rb.linearVelocity.x));
         m_animator.SetFloat("Velocity_Y", rb.linearVelocity.y);
-        m_animator.SetBool("IsGrounded", isGrounded);
+        m_animator.SetBool("IsGrounded", flags.isGrounded);
 
         // Flip the sprite based on velocity
-        if (!enemyHealth.isHurt && !enemyHealth.isDead)
+        if (!enemyHealth.flags.isHurt && !enemyHealth.flags.isDead)
         {
             FlipSpriteBasedOnVelocity();
         }
     }
 
+    /// <summary>
+    /// Handles physics-based updates including ground detection and movement selection between patrol and chase.
+    /// </summary>
     private void FixedUpdate()
     {
         // Check if the enemy is grounded
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        flags.isGrounded = Physics2D.OverlapCircle(groundDetect.groundCheck.position, groundDetect.groundCheckRadius, groundDetect.groundLayer);
 
-        if (isChasing)
+        if (flags.isChasing)
         {
             ChasePlayer();
         }
@@ -135,9 +192,12 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Moves the enemy back and forth between patrol points A and B when not chasing the player.
+    /// </summary>
     private void Patrol()
     {
-        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || !pointA || !pointB ||
+        if (enemyHealth.flags.isDead || enemyHealth.flags.isHurt || flags.isAttacking || !patrol.pointA || !patrol.pointB ||
             obstacle_Detector.obstacleDetected)
         {
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
@@ -148,68 +208,80 @@ public class EnemyMovement : MonoBehaviour
         Vector2 direction = (currentTarget.position - transform.position).normalized;
 
         // Set velocity towards the target
-        rb.linearVelocity = new Vector3(direction.x * patrolSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector3(direction.x * patrol.patrolSpeed, rb.linearVelocity.y);
 
         // Switch target when reaching the current patrol point
         if (Vector3.Distance(transform.position, currentTarget.position) < 0.5f)
         {
-            currentTarget = currentTarget == pointA ? pointB : pointA;
+            currentTarget = currentTarget == patrol.pointA ? patrol.pointB : patrol.pointA;
         }
     }
 
+    /// <summary>
+    /// Moves the enemy toward the player when within detection range.
+    /// </summary>
     private void ChasePlayer()
     {
-        if (enemyHealth.isDead || enemyHealth.isHurt || isAttacking || obstacle_Detector.obstacleDetected)
+        if (enemyHealth.flags.isDead || enemyHealth.flags.isHurt || flags.isAttacking || obstacle_Detector.obstacleDetected)
         {
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             return;
         } // Don't do anything if the enemy is dead
 
         // Calculate direction to the player
-        Vector2 direction = (player.position - transform.position).normalized;
+        Vector2 direction = (chase.player.position - transform.position).normalized;
 
         // Set velocity towards the player
-        rb.linearVelocity = new Vector3(direction.x * chaseSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector3(direction.x * chase.chaseSpeed, rb.linearVelocity.y);
     }
 
+    /// <summary>
+    /// Draws debug gizmos for detection range, attack range, and ground check radius in the editor.
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         // Draw the detection range in the editor for debugging
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.DrawWireSphere(transform.position, chase.detectionRange);
 
         // Draw the attack range in the editor for debugging
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, attack.attackRange);
 
         // Draw the attack range in the editor for debugging
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        Gizmos.DrawWireSphere(groundDetect.groundCheck.position, groundDetect.groundCheckRadius);
     }
 
-    void FlipSpriteBasedOnVelocity()
+    /// <summary>
+    /// Flips the enemy sprite based on the current horizontal velocity direction.
+    /// </summary>
+    private void FlipSpriteBasedOnVelocity()
     {
-        if (isAttacking || !isGrounded) 
+        if (flags.isAttacking || !flags.isGrounded)
         {
             return;
         }
         // Check the enemy's velocity on the X-axis to determine direction
-        if (rb.linearVelocity.x > 0 && !isFacingRight)
+        if (rb.linearVelocity.x > 0 && !flags.isFacingRight)
         {
             // Moving right but currently facing left, so flip to face right
             FlipSprite();
         }
-        else if (rb.linearVelocity.x < 0 && isFacingRight)
+        else if (rb.linearVelocity.x < 0 && flags.isFacingRight)
         {
             // Moving left but currently facing right, so flip to face left
             FlipSprite();
         }
     }
 
-    void FlipSprite()
+    /// <summary>
+    /// Flips the enemy sprite by inverting the local X scale.
+    /// </summary>
+    private void FlipSprite()
     {
         // Flip the sprite by changing the local scale on the X-axis
-        isFacingRight = !isFacingRight;
+        flags.isFacingRight = !flags.isFacingRight;
         Vector3 localScale = transform.localScale;
         localScale.x *= -1; // Reverse the scale on X-axis
         transform.localScale = localScale;
@@ -220,18 +292,24 @@ public class EnemyMovement : MonoBehaviour
         //attackBoxTrigger.transform.localScale = localScale_attackBox;
     }
 
+    /// <summary>
+    /// Enables the attack box collider and sets its damage value. Called via Animation Event.
+    /// </summary>
     void PerformAttack() // will be called in Animation Event
     {
-        attackBoxTrigger.GetComponent<EnemyAttack>().attackDamage = attackDamage; // Set the attack damage
+        attack.attackBoxTrigger.GetComponent<EnemyAttack>().attackDamage = attack.attackDamage; // Set the attack damage
         // Enable attack box temporarily
-        attackBoxTrigger.enabled = true;
+        attack.attackBoxTrigger.enabled = true;
 
         // Optionally disable it after short delay
         Invoke(nameof(DisableAttackBox), 0.1f); // adjust timing
     }
 
+    /// <summary>
+    /// Disables the attack box collider after the attack window has elapsed.
+    /// </summary>
     void DisableAttackBox()
     {
-        attackBoxTrigger.enabled = false;
+        attack.attackBoxTrigger.enabled = false;
     }
 }

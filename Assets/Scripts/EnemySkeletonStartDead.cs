@@ -15,14 +15,14 @@ public class EnemySkeletonStartDead : MonoBehaviour
         animator = GetComponentInParent<Animator>();
 
         animator.SetBool("IsDead", true);
-        enemyHealth.isDead = true;
+        enemyHealth.flags.isDead = true;
 
         Invoke(nameof(TriggerDie), 0.5f); // Delay to Ensure to capture the trigger
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && enemyHealth.isDead && !triggered) 
+        if (collision.CompareTag("Player") && enemyHealth.flags.isDead && !triggered) 
         {
             triggered = true;
             animator.SetTrigger("Recover");

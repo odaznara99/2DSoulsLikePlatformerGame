@@ -54,7 +54,7 @@ public class AttackBox : MonoBehaviour
         {
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
 
-            if (enemyHealth.isDead == false) { 
+            if (enemyHealth.flags.isDead == false) { 
                 enemyHealth.TakeDamage(attackDamage);
                 // Instantiate the randomly chosen effect
                 GameObject fx = Instantiate(hitEffectPrefabs[index], contactPoint, Quaternion.identity);
