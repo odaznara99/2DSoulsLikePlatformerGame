@@ -20,13 +20,14 @@ public class SceneLoader : MonoBehaviour
     private float fadeDuration = 1f;
 
     // For Loading Dots Animation
-    public Text loadingDotsText;  // or TMP_Text if using TextMeshPro
+    public Text loadingDotsText;
     private string baseText = "Loading";
     private float dotTimer = 0f;
     private int dotCount = 0;
 
-
-
+    /// <summary>
+    /// Ensures only one SceneLoader instance exists and marks it to persist across scene loads.
+    /// </summary>
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -39,6 +40,9 @@ public class SceneLoader : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    /// <summary>
+    /// Begins the initial fade-in animation from black when the scene first loads.
+    /// </summary>
     private void Start()
     {
         if (fadeImage != null)
@@ -48,6 +52,9 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Animates the loading-dots text while the loading screen is active.
+    /// </summary>
     private void Update()
     {
         if (loadingScreen.activeSelf && loadingDotsText != null)
@@ -62,8 +69,11 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-
-
+    /// <summary>
+    /// Loads the specified scene asynchronously with a fade, loading screen, progress bar,
+    /// and post-load respawn. If the name has no underscore a Build-Settings prefix match is attempted.
+    /// </summary>
+    /// <param name="sceneName">The name or prefix of the scene to load.</param>
     public void LoadScene(string sceneName)
     {
         try
@@ -74,7 +84,6 @@ public class SceneLoader : MonoBehaviour
 
             if (!string.IsNullOrEmpty(sceneName) && !sceneName.Contains("_"))
             {
-                //Debug.Log($"Scene name '{sceneName}' contains an underscore. Attempting to find a matching scene in Build Settings.");
                 string prefix = sceneName.Split(new char[] { '_' }, 2)[0];
 
                 int count = SceneManager.sceneCountInBuildSettings;
@@ -92,16 +101,21 @@ public class SceneLoader : MonoBehaviour
             }
 
             StartCoroutine(LoadSceneAsync(targetScene));
-            //AudioManager.Instance.PlayMusic("MedievalOpener");
-            AudioManager.Instance.StopMusic(); // Stop any currently playing music
+            AudioManager.Instance.StopMusic();
             AudioManager.Instance.PlayMusic("Ballad");
-        }catch
+        }
+        catch
         {
             Debug.LogError($"Failed to load scene: {sceneName}");
         }
-
     }
 
+    /// <summary>
+    /// Coroutine that handles the full asynchronous scene-load sequence: fades to black,
+    /// shows the loading screen with progress, activates the scene, respawns the player,
+    /// then fades back in and displays the level name.
+    /// </summary>
+    /// <param name="sceneName">The exact scene name to load asynchronously.</param>
     private IEnumerator LoadSceneAsync(string sceneName)
     {
         if (sceneName == null)
@@ -111,10 +125,10 @@ public class SceneLoader : MonoBehaviour
         }
 
         // Find current player instance in the Scene
-
         PlayerControllerVersion2 playerScript = FindAnyObjectByType<PlayerControllerVersion2>();
 
-        if (playerScript != null) {
+        if (playerScript != null)
+        {
             playerScript.GetComponent<PlayerHealth>().isInvincible = true;
             playerScript.enabled = false; // Disable player controls during loading
         }
@@ -145,19 +159,19 @@ public class SceneLoader : MonoBehaviour
 
         yield return new WaitForSeconds(1f); // Optional delay
 
-
         // After scene load
         playerScript = FindAnyObjectByType<PlayerControllerVersion2>();
-        if (playerScript != null) { 
+        if (playerScript != null)
+        {
             RespawnManager.Instance.RespawnPlayer();
 
             // Spawn dropped-souls pickup at death position if any souls were lost.
             GameManager.Instance?.SpawnDroppedSoulsIfAny();
-        } else
+        }
+        else
         {
             Debug.LogWarning("[SceneLoader]PlayerControllerVersion2 not found in the scene after loading. Player may not be respawned correctly.");
         }
-
 
         // Delay for Camera Follow the Player's New Position
         yield return new WaitForSeconds(2f);
@@ -175,10 +189,13 @@ public class SceneLoader : MonoBehaviour
         // Show In Game UI
         if (sceneName != "StartMenu")
             FindAnyObjectByType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");
-            //UIButtonsManager.Instance.AssignPlayer(playerScript);
-
     }
 
+    /// <summary>
+    /// Coroutine that fades the overlay image between two alpha values over <see cref="fadeDuration"/> seconds.
+    /// </summary>
+    /// <param name="startAlpha">The alpha value to start the fade from.</param>
+    /// <param name="endAlpha">The alpha value to end the fade at.</param>
     private IEnumerator Fade(float startAlpha, float endAlpha)
     {
         float elapsed = 0f;
@@ -197,10 +214,14 @@ public class SceneLoader : MonoBehaviour
         fadeImage.color = color;
     }
 
-    // Returns a cleaned display name for the level:
-    // - If scene name contains an underscore, returns the substring after the first underscore.
-    // - Otherwise, if it starts with "Stage" followed by digits, strips "Stage" + digits and any separator ('_', '-', ' ').
-    // - Otherwise returns the original scene name.
+    /// <summary>
+    /// Returns a human-readable display name for the given scene by stripping stage prefixes.
+    /// If the scene name contains an underscore, returns the text after the first underscore.
+    /// If it starts with "Stage" followed by digits, strips that prefix and any trailing separator.
+    /// Otherwise returns the original scene name.
+    /// </summary>
+    /// <param name="scene">The internal scene name to clean up.</param>
+    /// <returns>A display-friendly level name.</returns>
     private string GetDisplayLevelName(string scene)
     {
         if (string.IsNullOrEmpty(scene)) return scene;
@@ -220,5 +241,4 @@ public class SceneLoader : MonoBehaviour
         // fallback: return the original
         return scene;
     }
-
 }
