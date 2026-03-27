@@ -25,6 +25,9 @@ public class SceneLoader : MonoBehaviour
     private float dotTimer = 0f;
     private int dotCount = 0;
 
+    // When true, RespawnPlayer is called after the scene loads.
+    // Set by LoadSceneWithRespawn; cleared after use.
+    private bool shouldRespawnAfterLoad;
 
 
     private void Awake()
@@ -102,6 +105,16 @@ public class SceneLoader : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Loads a scene and respawns the player at the saved checkpoint position
+    /// afterward. Use this for death/try-again and return-to-checkpoint flows.
+    /// </summary>
+    public void LoadSceneWithRespawn(string sceneName)
+    {
+        shouldRespawnAfterLoad = true;
+        LoadScene(sceneName);
+    }
+
     public void ReloadCurrentScene()
     {
         string currentScene = SceneManager.GetActiveScene().name;
@@ -155,15 +168,20 @@ public class SceneLoader : MonoBehaviour
         // After scene load
         playerScript = FindAnyObjectByType<PlayerControllerVersion2>();
         if (playerScript != null) { 
-            RespawnManager.Instance.RespawnPlayer();
+            if (shouldRespawnAfterLoad)
+            {
+                RespawnManager.Instance.RespawnPlayer();
 
-            // Spawn dropped-souls pickup at death position if any souls were lost.
-            GameManager.Instance?.SpawnDroppedSoulsIfAny();
+                // Spawn dropped-souls pickup at death position if any souls were lost.
+                GameManager.Instance?.SpawnDroppedSoulsIfAny();
+            }
         } else
         {
             Debug.LogWarning("[SceneLoader]PlayerControllerVersion2 not found in the scene after loading. Player may not be respawned correctly.");
         }
 
+        // Reset the flag after use
+        shouldRespawnAfterLoad = false;
 
         // Delay for Camera Follow the Player's New Position
         yield return new WaitForSeconds(2f);

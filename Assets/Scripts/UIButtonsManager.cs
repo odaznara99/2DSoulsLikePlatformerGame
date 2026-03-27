@@ -11,7 +11,7 @@ public class UIButtonsManager : MonoBehaviour
     // Start is called before the first frame update
     private PlayerControllerVersion2 playerController()
     {
-        return GameObject.Find("HeroKnight").GetComponent<PlayerControllerVersion2>();
+        return FindAnyObjectByType<PlayerControllerVersion2>();
     }
 
     [SerializeField] private PlayerControllerVersion2 m_playerController = null;
@@ -25,11 +25,11 @@ public class UIButtonsManager : MonoBehaviour
     // Update is called once per frame  
     void Update()
     {
-        if (!m_playerController || m_playerController.Equals(null) || m_playerController == null)
-        {
-            //m_playerController = playerController();
-            ResetEventTrigger();
-        }
+        //if (!m_playerController || m_playerController.Equals(null) || m_playerController == null)
+        //{
+        //    //m_playerController = playerController();
+        //    ResetEventTrigger();
+        //}
 
     }
 

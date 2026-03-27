@@ -134,8 +134,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float rollStaminaCost = 25f;        // stamina cost for rolling
     public AudioClip outOfStaminaSfx;          // optional SFX when not enough stamina
 
-    [Header("UI Prefabs")]
-    public GameObject uiButtons; // Prefab for damage popup, assign in Inspector
 
     // === Unity Methods ===
     void Start()
