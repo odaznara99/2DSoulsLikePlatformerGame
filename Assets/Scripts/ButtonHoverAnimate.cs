@@ -8,7 +8,7 @@ public class ButtonHoverAnimate : MonoBehaviour, IPointerEnterHandler, IPointerE
 {
     [Header("References")]
     public TextMeshProUGUI buttonText; // Reference to the button text
-    public Button button; // Reference to the button component
+    public GameObject button; // Reference to the button component
     public float hoverScale = 1.2f;    // Scale factor when hovered
     private Vector3 originalScale;     // Original scale of the text
     private Vector3 originalScaleButton; // Original scale of the button
@@ -17,23 +17,28 @@ public class ButtonHoverAnimate : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         if (!buttonText)
         {
-            Debug.LogError("ButtonHoverAnimate: buttonText is not assigned in the inspector.");
-            return;
-        }
-
-        button = GetComponent<Button>();
-        if (!button)
-        {
-            Debug.Log("ButtonHoverAnimate: button is not assigned in the inspector.");
+            Debug.LogWarning("[ButtonHoverAnimate] (Optional) buttonText is not assigned in the inspector.");
             //return;
         }
         else 
         {
+            // Store the original scale of the text
+            originalScale = buttonText.transform.localScale;
+        }
+
+        button = this.gameObject;
+        if (!button)
+        {
+            Debug.LogWarning("[ButtonHoverAnimate] button is not assigned in the inspector.");
+            //return;
+        }
+        else 
+        {
+            // Store the original scale of the gameObject
             originalScaleButton = button.transform.localScale;
         }
 
-        // Store the original scale of the text
-        originalScale = buttonText.transform.localScale;
+        
         
     }
 

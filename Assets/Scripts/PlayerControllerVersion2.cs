@@ -134,6 +134,10 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float rollStaminaCost = 25f;        // stamina cost for rolling
     public AudioClip outOfStaminaSfx;          // optional SFX when not enough stamina
 
+    // Input Actions
+    InputAction moveAction,interactAction,attackAction,rollAction,shieldAction,jumpAction;
+
+
 
     // === Unity Methods ===
     void Start()
@@ -171,9 +175,19 @@ public class PlayerControllerVersion2 : MonoBehaviour
             }
         }
 
-#if UNITY_EDITOR
-        enabledKeyboardInput = true;
-#endif
+
+        // Assign Input Actions
+        moveAction = InputSystem.actions.FindAction("Move");
+        interactAction = InputSystem.actions.FindAction("Interact");
+        attackAction = InputSystem.actions.FindAction("Attack");
+        rollAction = InputSystem.actions.FindAction("Crouch");
+        shieldAction = InputSystem.actions.FindAction("Shield");
+        jumpAction = InputSystem.actions.FindAction("Jump");
+
+
+
+        enabledKeyboardInput = false;
+
     }
 
     private void FixedUpdate()
@@ -201,8 +215,43 @@ public class PlayerControllerVersion2 : MonoBehaviour
         UpdateCooldownTimers();
 
         // === Player Inputs on KeyBoard ==== //
-        UpdateKeyboardInputs();
-        
+        //UpdateKeyboardInputs(); (REPLACED BY INPUT ACTIONS)
+
+        // Assign Move Action from Input System
+        Vector2 moveValue = moveAction.ReadValue<Vector2>();
+        // your code would then use moveValue to apply movement
+        // to your GameObject
+
+        inputX = moveValue.x; // Update inputX based on Move Action
+
+        if (shieldAction.IsPressed())
+        {
+            // shield is active for every frame that the shield action is pressed
+            OnHoldShield();
+        }
+        else if (shieldAction.WasReleasedThisFrame())
+        {
+            OnNeutral();
+        }
+
+        if (jumpAction.WasPressedThisFrame()) { 
+            OnJump();
+        }
+
+        if (attackAction.WasPressedThisFrame())
+        {
+            OnHoldAttack();
+        }
+
+        if(rollAction.WasPressedThisFrame())
+        {
+            OnRoll();
+        } 
+
+        if (interactAction.WasPressedThisFrame())
+        {
+            // Handle interact action, e.g. picking up items, opening doors, etc.
+        }
     }
 
     private void DisplayLog(string messageLog)
