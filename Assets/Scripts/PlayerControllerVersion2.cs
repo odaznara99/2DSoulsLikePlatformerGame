@@ -217,6 +217,13 @@ public class PlayerControllerVersion2 : MonoBehaviour
         // === Player Inputs on KeyBoard ==== //
         //UpdateKeyboardInputs(); (REPLACED BY INPUT ACTIONS)
 
+        if (GameManager.Instance != null
+            && (GameManager.Instance.IsGamePaused() || GameManager.Instance.IsGameOver()))
+        {
+            Debug.Log("Player cannot be control at the current Game State.");
+            return;
+        }
+
         // Assign Move Action from Input System
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
         // your code would then use moveValue to apply movement
@@ -307,6 +314,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         //    return;
         //}
         
+
 
         // Set Cooldown for Shielding when switching from Shielding state to new state
         if (currentState == PlayerState.Shielding 
@@ -608,11 +616,12 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
    
     void DoDying() {
+        inputX = 0; // Stop player movement immediately
         Debug.Log("Player died!");
         playerAnimator.SetBool("noBlood", m_noBlood);
         playerAnimator.SetTrigger("Death");
         playerAnimator.SetBool("IsDead", true);
-
+        
         AudioManager.Instance.PlaySFX(deathSoundNames[Random.Range(0, deathSoundNames.Count)]);
 
         this.enabled = false;

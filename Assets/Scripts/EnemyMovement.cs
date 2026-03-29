@@ -43,6 +43,7 @@ public class EnemyMovement : MonoBehaviour
     private EnemyJumpDetection obstacle_Detector; // Reference to Jump Detection Trigger
 
 
+
     private void Start()
     {
         // Start patrolling towards point A
@@ -81,6 +82,12 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
+        if(GameManager.Instance.IsGameOver() || GameManager.Instance.IsGamePaused() || GameManager.Instance.IsGameLoading())
+        {
+            // Stop all enemy actions if the game is over,paused, or loading
+            return;
+        }
+
         if (enemyHealth.isDead)
         {
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);

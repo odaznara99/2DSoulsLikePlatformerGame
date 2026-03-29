@@ -129,6 +129,8 @@ public class SceneLoader : MonoBehaviour
             yield break;
         }
 
+        GameManager.Instance?.SetGameLoading(true);
+
         // Find current player instance in the Scene
 
         PlayerControllerVersion2 playerScript = FindAnyObjectByType<PlayerControllerVersion2>();
@@ -196,6 +198,7 @@ public class SceneLoader : MonoBehaviour
         string displayName = GetDisplayLevelName(sceneName);
         MessageManager.Instance.ShowMessage(displayName, false, 100);
 
+        GameManager.Instance?.SetGameLoading(false);
         // Show In Game UI
         if (sceneName != "StartMenu")
             FindAnyObjectByType<UIScreensManager>().ShowScreenHideOthers("In-Game Screen");

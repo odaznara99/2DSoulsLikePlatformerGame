@@ -6,6 +6,10 @@ public class ShowOnMobile : MonoBehaviour
     void Start()
     {
         gameObject.SetActive(Application.isMobilePlatform); // Works for WEBGL too!!
+
+#if UNITY_EDITOR
+        gameObject.SetActive(true); // Show in editor for testing purposes
+#endif
     }
 
     

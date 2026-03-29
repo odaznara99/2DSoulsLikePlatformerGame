@@ -10,13 +10,20 @@ public class GameManager : MonoBehaviour
 
     public PlayerData playerData = new();
 
+    [Header("Game State")]
+    [SerializeField] private bool isGamePaused;
+    [SerializeField] private bool isGameOver;
+    [SerializeField] private bool isGameLoading;
+
+    [Header("Player Score")]
+    [SerializeField] private int playerScore;
+
     [Header("Souls Drop")]
     [Tooltip("Prefab for the dropped-souls pickup spawned at the player's death position. Assign in Inspector.")]
     public GameObject droppedSoulsPrefab;
 
-    private bool isGamePaused;
-    private bool isGameOver;
-    private int playerScore;
+    
+
 
     // Reference to the currently active DroppedSoulsPickup in the scene.
     private GameObject activeDroppedSoulsPickup;
@@ -82,7 +89,10 @@ public class GameManager : MonoBehaviour
             SceneLoader.Instance.ReloadCurrentScene();
         }
 
-        if (isGameOver && (keyboard.enterKey.wasPressedThisFrame || Mouse.current?.leftButton.wasPressedThisFrame == true))
+        if (isGameOver &&
+            (keyboard.enterKey.wasPressedThisFrame
+            || Mouse.current?.leftButton.wasPressedThisFrame == true
+            || Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true))
         {
             RestartGame();
         }
@@ -92,6 +102,7 @@ public class GameManager : MonoBehaviour
     {
         // "Try again" on death — return to last checkpoint, dropping souls/coins.
         ReturnToLastCheckpoint();
+        isGamePaused = false;
     }
 
     public void PauseGame()
@@ -136,6 +147,24 @@ public class GameManager : MonoBehaviour
 
     public bool IsGamePaused() => isGamePaused;
     public bool IsGameOver() => isGameOver;
+
+    public bool IsGameLoading() => isGameLoading;
+    public void SetGameLoading(bool loading) => isGameLoading = loading;
+
+    /// <summary>
+    /// Resets pause/game-over state and hides all UI overlays.
+    /// Called before any scene transition that should start fresh.
+    /// </summary>
+    public void ResetGameState()
+    {
+        isGameOver = false;
+        isGamePaused = false;
+        Time.timeScale = 1f;
+
+        var uiManager = FindAnyObjectByType<UIScreensManager>();
+        if (uiManager != null)
+            uiManager.HideAllScreens();
+    }
 
     // ── Checkpoint Snapshot ──────────────────────────────────────────────────
 
@@ -186,6 +215,8 @@ public class GameManager : MonoBehaviour
         if (checkpointSnapshot == null)
         {
             Debug.LogWarning("No checkpoint snapshot found. Cannot return to checkpoint.");
+            // Simple error message
+            MessageManager.Instance.ShowMessage("No checkpoint snapshot found. Cannot return to checkpoint.", false, 24);
             return;
         }
 
@@ -205,8 +236,7 @@ public class GameManager : MonoBehaviour
         //  collected after the checkpoint.)
         playerData.RestoreFrom(checkpointSnapshot);
 
-        isGameOver = false;
-        playerScore = 0;
+        ResetGameState();
 
         // Destroy any active dropped-souls pickup since progress is reverted
         if (activeDroppedSoulsPickup != null)

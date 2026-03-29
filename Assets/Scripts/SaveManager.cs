@@ -108,7 +108,8 @@ public class SaveManager : MonoBehaviour
         string scene = saved.checkpointSceneName;
         if (string.IsNullOrEmpty(scene)) return false;
 
-        Time.timeScale = 1f;
+        // Reset game state so pause/game-over flags don't carry over
+        GameManager.Instance.ResetGameState();
         SceneLoader.Instance.LoadSceneWithRespawn(scene);
         return true;
     }
