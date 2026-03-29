@@ -339,7 +339,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6ed26555511c844802c1644a5ef28b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitEffectPrefabs: []
+  hitEffectPrefabs:
+  - {fileID: 3110871906386900370, guid: 03d15c36e2ee5b54bab4bc4f1f77f882, type: 3}
+  - {fileID: 4667120136508190629, guid: d2095f62975be444ab4bbca39ca602c3, type: 3}
+  - {fileID: 7315070289985910556, guid: b902f7be3b779274ca318d449b8210f7, type: 3}
+  - {fileID: 4491813178121395643, guid: 9c84a4cf3efcf9c4e8ebcb96de94b140, type: 3}
+  - {fileID: 7711369475918572527, guid: bbd5fde97a32b5e498ed1e42aa4530bb, type: 3}
   attackDamage: 20
 --- !u!1 &5792831317918104098
 GameObject:
