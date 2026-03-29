@@ -229,7 +229,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         // your code would then use moveValue to apply movement
         // to your GameObject
 
-        inputX = moveValue.x; // Update inputX based on Move Action
+        SetFloatInputX(moveValue.x); // Update inputX based on Move Action
 
         if (shieldAction.IsPressed())
         {
@@ -275,6 +275,21 @@ public class PlayerControllerVersion2 : MonoBehaviour
         {
             inputX = newInputX;
         }
+
+        else if (currentState == PlayerState.Hurting)
+        {
+            DisplayLog("Cannot move during Hurting state!");
+        }
+        else if (currentState == PlayerState.Dead)
+        {
+            inputX = 0; // stop player movement immediately when dead
+            DisplayLog("Cannot move when Dead!");
+        }
+    }
+
+    public float GetFloatInputX()
+    {
+        return inputX;
     }
 
     public void SetFloatMovementSpeed(float newMoveSpeed)
@@ -616,7 +631,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
    
     void DoDying() {
-        inputX = 0; // Stop player movement immediately
+        //inputX = 0; // Stop player movement immediately
         Debug.Log("Player died!");
         playerAnimator.SetBool("noBlood", m_noBlood);
         playerAnimator.SetTrigger("Death");
@@ -668,9 +683,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // ==== UI Button Controls/Triggers ==== 
     // ==== Add New Component - Event Trigger for your UI Buttons (Compatible for mobile devices)
     // ==== Add New Event Type ==== Check Comments what Event Type for each method.
-    public void OnMoveRight() => SetFloatInputX(1);              // PointerDown, PointerEnter
-    public void OnMoveLeft() => SetFloatInputX(-1);              // PointerDown, PointerEnter
-    public void OnStop() => SetFloatInputX(0);
     public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral, gameObject);   // PointerExit, PointerUp of Any Control Buttons
     public void OnJump()
     {
@@ -747,7 +759,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         //bool isDead = GetComponent<PlayerHealth>().IsDead();
         //playerAnimator.SetBool("IsDead", isDead);
 
-        if (Mathf.Abs(inputX) > Mathf.Epsilon)
+        if (Mathf.Abs(GetFloatInputX()) > Mathf.Epsilon)
         {
             m_delayToIdle = 0.05f;
             playerAnimator.SetInteger("AnimState", 1);
@@ -788,11 +800,11 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 && currentState != PlayerState.Dead
                 && currentState != PlayerState.WallJumping)
             {
-                if (inputX == 1 && facingDirection == 1)
+                if (GetFloatInputX() > 0 && facingDirection == 1)
                 {
                     SwitchPlayerState(PlayerState.WallSliding, gameObject);
                 }
-                else if (inputX == -1 && facingDirection == -1)
+                else if (GetFloatInputX() < 0 && facingDirection == -1)
                 {
                     SwitchPlayerState(PlayerState.WallSliding, gameObject);
                 } 
@@ -827,8 +839,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
         else
         {
-            if (inputX > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
-            else if (inputX < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
+            if (GetFloatInputX() > 0) { GetComponent<SpriteRenderer>().flipX = false; facingDirection = 1; }
+            else if (GetFloatInputX() < 0) { GetComponent<SpriteRenderer>().flipX = true; facingDirection = -1; }
         }
     }
 
@@ -856,68 +868,6 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     }
 
-    void UpdateKeyboardInputs()
-    {
-#if UNITY_EDITOR
-        if (!enabledKeyboardInput)
-        {
-            return;
-        }
-
-        var keyboard = Keyboard.current;
-        var mouse = Mouse.current;
-
-        if (keyboard == null)
-        {
-            return;
-        }
-
-        // Continuous horizontal input (replacement for Input.GetAxis("Horizontal"))
-        float horizontal = 0f;
-        if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) horizontal -= 1f;
-        if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) horizontal += 1f;
-        inputX = Mathf.Clamp(horizontal, -1f, 1f);
-
-        // Optional edge-trigger movement callbacks (kept from your original logic)
-        if (keyboard.aKey.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame)
-        {
-            OnMoveLeft();
-        }
-        else if (keyboard.dKey.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame)
-        {
-            OnMoveRight();
-        }
-
-        if (keyboard.spaceKey.wasPressedThisFrame)
-        {
-            OnJump();
-        }
-
-        // Inputs that cannot happen at the same time (kept same priority/order)
-        bool attackPressed = (mouse != null && mouse.leftButton.wasPressedThisFrame) || keyboard.jKey.wasPressedThisFrame;
-        bool shieldHeld = (mouse != null && mouse.rightButton.isPressed) || keyboard.kKey.isPressed;
-        bool shieldReleased = (mouse != null && mouse.rightButton.wasReleasedThisFrame) || keyboard.kKey.wasReleasedThisFrame;
-        bool rollPressed = keyboard.leftShiftKey.wasPressedThisFrame || keyboard.lKey.wasPressedThisFrame;
-
-        if (attackPressed)
-        {
-            OnHoldAttack();
-        }
-        else if (shieldHeld)
-        {
-            OnHoldShield();
-        }
-        else if (shieldReleased)
-        {
-            OnNeutral();
-        }
-        else if (rollPressed)
-        {
-            OnRoll();
-        }
-#endif
-    }
-
     public bool IsFacingRight()
     {
         return facingDirection == 1;
@@ -932,7 +882,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         float controlFactor = isGrounded ? groundControlFactor : airControlFactor;
 
         // Calculate the target velocity based on input
-        float targetVelocityX = inputX * movementSpeed;
+        float targetVelocityX = GetFloatInputX() * movementSpeed;
 
         // Gradually adjust the player's velocity to the target velocity
         float newVelocityX = Mathf.Lerp(rb.linearVelocity.x, targetVelocityX, directionChangeSpeed * controlFactor * Time.deltaTime);
