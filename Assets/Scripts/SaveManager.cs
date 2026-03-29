@@ -23,7 +23,7 @@ public class SaveManager : MonoBehaviour
 
     private string SaveFilePath => Path.Combine(Application.persistentDataPath, SaveFileName);
 
-    private GameSaveData currentSave = new GameSaveData();
+    [SerializeField]private GameSaveData currentSave = new GameSaveData();
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -163,7 +163,7 @@ public class SaveManager : MonoBehaviour
             string json = File.ReadAllText(SaveFilePath);
             GameSaveData loaded = JsonUtility.FromJson<GameSaveData>(json);
             if (loaded != null) currentSave = loaded;
-            Debug.Log("[SaveManager] Save loaded from " + SaveFilePath);
+            Debug.Log("[SaveManager] Found Save File from: " + SaveFilePath);
         }
         catch (System.Exception e)
         {

@@ -17,7 +17,7 @@ public class ButtonHoverAnimate : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         if (!buttonText)
         {
-            Debug.LogWarning("[ButtonHoverAnimate] (Optional) buttonText is not assigned in the inspector.");
+            //Debug.Log("[ButtonHoverAnimate] (Optional) buttonText is not assigned in the inspector.");
             //return;
         }
         else 
