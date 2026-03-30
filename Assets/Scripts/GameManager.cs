@@ -148,6 +148,17 @@ public class GameManager : MonoBehaviour
     public bool IsGamePaused() => isGamePaused;
     public bool IsGameOver() => isGameOver;
 
+    /// <summary>
+    /// Pauses or resumes the game without opening the Pause Screen overlay.
+    /// Useful for dialogue, cutscenes, or any system that needs to freeze
+    /// gameplay while keeping its own UI visible.
+    /// </summary>
+    public void PauseSilent(bool pause)
+    {
+        isGamePaused = pause;
+        Time.timeScale = pause ? 0f : 1f;
+    }
+
     public bool IsGameLoading() => isGameLoading;
     public void SetGameLoading(bool loading) => isGameLoading = loading;
 
