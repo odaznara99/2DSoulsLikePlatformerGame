@@ -229,7 +229,10 @@ public class PlayerControllerVersion2 : MonoBehaviour
         // your code would then use moveValue to apply movement
         // to your GameObject
 
-        SetFloatInputX(moveValue.x); // Update inputX based on Move Action
+        //if (!Application.isMobilePlatform)
+        //{
+            SetFloatInputX(moveValue.x); // Update inputX based on Move Action
+        //}
 
         if (shieldAction.IsPressed())
         {
@@ -500,7 +503,17 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 )
            )
         {
-            playerAnimator.SetTrigger("Jump");
+            if (currentDoubleJumpCount == 0)
+            {
+                DisplayLog("Performing Jump from Ground");
+                playerAnimator.SetTrigger("Jump");
+            }
+            else
+            {
+                DisplayLog("Performing Double Jump");
+                playerAnimator.SetTrigger("Roll");
+            }
+            
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             yield return new WaitForSeconds(0.2f);
         }

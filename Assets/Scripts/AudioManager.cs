@@ -41,17 +41,25 @@ public class AudioManager : MonoBehaviour
 
     public void PlayMusic(string clipName, bool loop = true)
     {
-        musicSource.Stop();
+        try
+        {
+            musicSource.Stop();
 
-        if (musicDict.TryGetValue(clipName, out AudioClip clip))
-        {
-            musicSource.clip = clip;
-            musicSource.loop = loop;
-            musicSource.Play();
+            if (musicDict.TryGetValue(clipName, out AudioClip clip))
+            {
+                musicSource.clip = clip;
+                musicSource.loop = loop;
+                musicSource.Play();
+            }
+            else
+            {
+                Debug.LogWarning($"Music '{clipName}' not found.");
+            }
         }
-        else
+        catch
+        (System.Exception ex)
         {
-            Debug.LogWarning($"Music '{clipName}' not found.");
+            Debug.LogWarning($"[Audio Manager]Error playing music '{clipName}': {ex.Message}");
         }
     }
 

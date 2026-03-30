@@ -32,4 +32,19 @@ public class OnScreenCustomButton : MonoBehaviour
     public void OnPlayerInteract() { 
         //playerController.OnInteract();
     }
+
+    public void OnPlayerMoveLeft() { 
+        playerController.SetFloatInputX(-1f);
+    }
+
+    public void OnPlayerMoveRight()
+    {
+        playerController.SetFloatInputX(1f);
+    }
+
+    public void OnPlayerMoveStop()
+    {
+        //playerController.OnNeutral();
+        playerController.SetFloatInputX(0f);
+    }
 }

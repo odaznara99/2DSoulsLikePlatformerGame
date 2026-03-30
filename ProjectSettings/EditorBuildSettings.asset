@@ -29,6 +29,12 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/Scenes/Stage1_Awakening at the Vale\u2019s Threshold.unity"
     guid: 73c133cc6baaccd4db1a7c9fcd640901
+  - enabled: 1
+    path: Assets/Samples/Input System/1.19.0/On-Screen Controls/Feat4_OnScreenControlsSample.unity
+    guid: 011b162d4daa13c4ab03e94ad47b8258
+  - enabled: 1
+    path: Assets/Scenes/Feat3_PickUps.unity
+    guid: 92c06beedf0e889428a7e8eb69b5fe51
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: dbccceb71a8d79a4bafda4d3ffc8366a, type: 2}
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 9310c9d033626fa4085305a175bd2ee4, type: 2}
