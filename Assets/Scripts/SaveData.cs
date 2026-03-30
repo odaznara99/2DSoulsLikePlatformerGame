@@ -26,6 +26,8 @@ public class PlayerSaveData
     public int    bonusJumpCount;
     public float  bonusMovementSpeed;
     public int    staminaRelicLevel;
+    public float  bonusAttackDamage;
+    public List<string> purchasedItemIds = new List<string>();
 }
 
 /// <summary>
