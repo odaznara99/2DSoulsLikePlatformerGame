@@ -113,6 +113,7 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
 - Dropped souls pickup: `Assets/Scripts/DroppedSoulsPickup.cs` — spawned at death position; configure `GameManager.droppedSoulsPrefab` in the Inspector.
 - Currency data & death reset logic: `Assets/Scripts/PlayerData.cs` (`souls`, `coins`, `droppedSouls`), `Assets/Scripts/GameManager.cs` (`NotifyPlayerDeath`, `SpawnDroppedSoulsIfAny`, `ClearDroppedSoulsPickup`).
 - Shop system: `Assets/Scripts/ShopItem.cs` (ScriptableObject item definition), `Assets/Scripts/ShopInventory.cs` (ScriptableObject shop stock list), `Assets/Scripts/ShopNPC.cs` (trigger + interaction), `Assets/Scripts/ShopUI.cs` (panel logic), `Assets/Scripts/ShopItemSlotUI.cs` (slot prefab logic). See **Shop System** section below.
+- **Leveling system**: `Assets/Scripts/LevelUpManager.cs` (soul-cost formula + stat logic), `Assets/Scripts/LevelUpUI.cs` (panel), `Assets/Scripts/LevelUpStatRowUI.cs` (per-stat row prefab component), `Assets/Scripts/LevelUpNPC.cs` (NPC trigger). See `Docs/PlayerLevelingSystem.md` for the full design.
 
 When tuning gameplay, adjust values in `PlayerStamina.cs` (capacity, regen rate, cooldown/delay), `PlayerHealth.cs` (max health, invulnerability windows), and the controller scripts for stamina costs per action.
 
@@ -126,6 +127,7 @@ When tuning gameplay, adjust values in `PlayerStamina.cs` (capacity, regen rate,
 - Design story / narrative context: `Docs/GameStory.md`
 - Mechanics implementation: open `Assets/Scripts/PlayerStamina.cs`, `Assets/Scripts/PlayerHealth.cs`, `Assets/Scripts/PlayerControllerVersion2.cs`, `Assets/Scripts/StaminaUI.cs`.
 - Currency pickups: `Assets/Scripts/SoulsPickup.cs`, `Assets/Scripts/CoinsPickup.cs`, `Assets/Scripts/DroppedSoulsPickup.cs`.
+- Leveling system design: `Docs/PlayerLevelingSystem.md`.
 
 ## Shop System
 
