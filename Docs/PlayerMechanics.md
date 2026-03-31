@@ -26,6 +26,15 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
   - Light and (optionally) heavy attacks consume stamina.
   - Attack animations and hit detection are handled in the player controller / combat scripts.
 
+- Plunge Attack *(Unlockable Air Ability)*
+  - Activated while **airborne** by pressing **Attack + Down** direction.
+  - Slams the player sharply downward, dealing area-of-effect damage and knockback to all enemies within the landing radius.
+  - Consumes a large amount of stamina (default 40) as a drawback.
+  - Has a dedicated cooldown (default 5 seconds) before it can be used again.
+  - Unlocked as a **Passive Ability** (`PlungeAttack`) via a Memory Shard pickup.
+  - Tunable parameters in `PlayerControllerVersion2.cs`: `plungeAttackDamage`, `plungeDownForce`, `plungeAttackRadius`, `plungeKnockbackForce`, `plungeStaminaCost`, `plungeCooldown`.
+  - Requires a `"PlungeAttack"` trigger wired in the Player Animator for visual feedback.
+
 - Dash / Sprint / Special Mobility
   - Mobility abilities consume a chunk of stamina and have short recovery windows.
   - These are used for traversal and defensive maneuvers; their tuning lives in the controller and stamina scripts.
