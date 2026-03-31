@@ -216,7 +216,9 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("No checkpoint snapshot found. Cannot return to checkpoint.");
             // Simple error message
-            MessageManager.Instance.ShowMessage("No checkpoint snapshot found. Cannot return to checkpoint.", false, 24);
+            //MessageManager.Instance.ShowMessage("No checkpoint snapshot found. Cannot return to checkpoint.", false, 10);
+            SceneLoader.Instance.ReloadCurrentScene(); // Fallback: just reload the current scene
+            ResetGameState();
             return;
         }
 
