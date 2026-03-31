@@ -54,6 +54,12 @@ public class PlayerData
     // Permanent stamina-relic upgrades (applied via PlayerStamina.LevelUp on init)
     public int staminaRelicLevel = 0;
 
+    // Permanent attack-damage bonus accumulated from shop purchases
+    public float bonusAttackDamage = 0f;        // added to PlayerControllerVersion2.attackDamage
+
+    // IDs of one-time-purchase shop items already bought (persists across runs)
+    public List<string> purchasedItemIds = new List<string>();
+
     /// <summary>
     /// Creates a deep copy of this PlayerData so mutations to the copy
     /// do not affect the original (and vice-versa).
@@ -78,7 +84,9 @@ public class PlayerData
             bonusDamageReduction   = bonusDamageReduction,
             bonusJumpCount         = bonusJumpCount,
             bonusMovementSpeed     = bonusMovementSpeed,
-            staminaRelicLevel      = staminaRelicLevel
+            staminaRelicLevel      = staminaRelicLevel,
+            bonusAttackDamage      = bonusAttackDamage,
+            purchasedItemIds       = new List<string>(purchasedItemIds),
         };
     }
 
@@ -104,6 +112,8 @@ public class PlayerData
         bonusJumpCount         = snapshot.bonusJumpCount;
         bonusMovementSpeed     = snapshot.bonusMovementSpeed;
         staminaRelicLevel      = snapshot.staminaRelicLevel;
+        bonusAttackDamage      = snapshot.bonusAttackDamage;
+        purchasedItemIds       = new List<string>(snapshot.purchasedItemIds);
     }
 }
 

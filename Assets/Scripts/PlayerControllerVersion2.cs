@@ -192,6 +192,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 movementSpeed += pd.bonusMovementSpeed;
                 originalMovementSpeed = movementSpeed;
             }
+            if (pd.bonusAttackDamage > 0f)
+                attackDamage += pd.bonusAttackDamage;
             if (pd.unlockedPassives.Contains(PassiveAbility.PlungeAttack))
                 hasPlungeAttack = true;
         }
