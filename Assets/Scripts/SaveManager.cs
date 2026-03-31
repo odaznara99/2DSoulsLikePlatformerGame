@@ -209,8 +209,10 @@ public class SaveManager : MonoBehaviour
             bonusJumpCount       = data.bonusJumpCount,
             bonusMovementSpeed   = data.bonusMovementSpeed,
             staminaRelicLevel    = data.staminaRelicLevel,
+            bonusAttackDamage    = data.bonusAttackDamage,
         };
         s.unlockedPassives = data.unlockedPassives.ConvertAll(p => (int)p);
+        s.purchasedItemIds = new List<string>(data.purchasedItemIds);
         return s;
     }
 
@@ -234,8 +236,10 @@ public class SaveManager : MonoBehaviour
             bonusJumpCount       = s.bonusJumpCount,
             bonusMovementSpeed   = s.bonusMovementSpeed,
             staminaRelicLevel    = s.staminaRelicLevel,
+            bonusAttackDamage    = s.bonusAttackDamage,
         };
         data.unlockedPassives = s.unlockedPassives.ConvertAll(i => (PassiveAbility)i);
+        data.purchasedItemIds = new List<string>(s.purchasedItemIds);
         return data;
     }
 

@@ -26,6 +26,15 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
   - Light and (optionally) heavy attacks consume stamina.
   - Attack animations and hit detection are handled in the player controller / combat scripts.
 
+- Plunge Attack *(Unlockable Air Ability)*
+  - Activated while **airborne** by pressing **Attack + Down** direction.
+  - Slams the player sharply downward, dealing area-of-effect damage and knockback to all enemies within the landing radius.
+  - Consumes a large amount of stamina (default 40) as a drawback.
+  - Has a dedicated cooldown (default 5 seconds) before it can be used again.
+  - Unlocked as a **Passive Ability** (`PlungeAttack`) via a Memory Shard pickup.
+  - Tunable parameters in `PlayerControllerVersion2.cs`: `plungeAttackDamage`, `plungeDownForce`, `plungeAttackRadius`, `plungeKnockbackForce`, `plungeStaminaCost`, `plungeCooldown`.
+  - Requires a `"PlungeAttack"` trigger wired in the Player Animator for visual feedback.
+
 - Dash / Sprint / Special Mobility
   - Mobility abilities consume a chunk of stamina and have short recovery windows.
   - These are used for traversal and defensive maneuvers; their tuning lives in the controller and stamina scripts.
@@ -103,6 +112,7 @@ The player (the Wanderer) is driven by two core resources: Health and Stamina. H
 - Coins pickup: `Assets/Scripts/CoinsPickup.cs` — collectible coins in the world.
 - Dropped souls pickup: `Assets/Scripts/DroppedSoulsPickup.cs` — spawned at death position; configure `GameManager.droppedSoulsPrefab` in the Inspector.
 - Currency data & death reset logic: `Assets/Scripts/PlayerData.cs` (`souls`, `coins`, `droppedSouls`), `Assets/Scripts/GameManager.cs` (`NotifyPlayerDeath`, `SpawnDroppedSoulsIfAny`, `ClearDroppedSoulsPickup`).
+- Shop system: `Assets/Scripts/ShopItem.cs` (ScriptableObject item definition), `Assets/Scripts/ShopInventory.cs` (ScriptableObject shop stock list), `Assets/Scripts/ShopNPC.cs` (trigger + interaction), `Assets/Scripts/ShopUI.cs` (panel logic), `Assets/Scripts/ShopItemSlotUI.cs` (slot prefab logic). See **Shop System** section below.
 
 When tuning gameplay, adjust values in `PlayerStamina.cs` (capacity, regen rate, cooldown/delay), `PlayerHealth.cs` (max health, invulnerability windows), and the controller scripts for stamina costs per action.
 
@@ -116,3 +126,62 @@ When tuning gameplay, adjust values in `PlayerStamina.cs` (capacity, regen rate,
 - Design story / narrative context: `Docs/GameStory.md`
 - Mechanics implementation: open `Assets/Scripts/PlayerStamina.cs`, `Assets/Scripts/PlayerHealth.cs`, `Assets/Scripts/PlayerControllerVersion2.cs`, `Assets/Scripts/StaminaUI.cs`.
 - Currency pickups: `Assets/Scripts/SoulsPickup.cs`, `Assets/Scripts/CoinsPickup.cs`, `Assets/Scripts/DroppedSoulsPickup.cs`.
+
+## Shop System
+
+Shops (and shop NPCs) are fully data-driven.  Each shop is defined by a **ShopInventory** ScriptableObject, which holds a list of **ShopItem** ScriptableObjects.
+
+### How to set up a shop
+
+1. **Create items** — `Assets → Create → Shop → Shop Item`.
+   - Set `itemId` (must be unique across all items), `itemName`, `description`, `icon`, `itemType`.
+   - Set `currencyType` (Souls or Coins) and `price`.
+   - Choose an `effect` (see table below) and set `effectValue`.
+   - Check `isOneTimePurchase` for permanent upgrades.
+
+2. **Create an inventory** — `Assets → Create → Shop → Shop Inventory`.
+   - Give it a `shopName` and `shopkeeperDialogue`.
+   - Drag your ShopItem assets into the `items` list.
+
+3. **Place a ShopNPC** in the scene.
+   - Add `ShopNPC.cs` to any GameObject (e.g. an NPC sprite or a sign).
+   - Add a trigger `Collider2D` to define the interaction zone.
+   - Assign your `ShopInventory` to the `inventory` field.
+   - Optionally assign an `interactPrompt` GameObject (shown when the player is in range).
+
+4. **Add ShopUI** to your screen canvas.
+   - Create a shop panel hierarchy under your Canvas with the following elements (all optional but recommended):
+     - `shopPanel` (root panel)
+     - `shopNameText`, `shopkeeperDialogueText`, `playerSoulsText`, `playerCoinsText` (TextMeshPro labels)
+     - `itemGrid` (Layout Group parent for item slots)
+     - `itemSlotPrefab` (prefab containing `ShopItemSlotUI.cs`)
+     - Detail panel: `itemDetailPanel`, `itemDetailIcon`, `itemDetailName`, `itemDetailDescription`, `itemDetailPrice`
+     - `buyButton`, `buyButtonText`, `closeButton`
+   - Assign all references on the `ShopUI` component in the Inspector.
+   - Add `ShopItemSlotUI.cs` to the item-slot prefab and wire its references.
+
+### Available item effects
+
+| `ShopItemEffect`           | Description                                                             |
+|----------------------------|-------------------------------------------------------------------------|
+| `None`                     | No gameplay effect (lore / quest items).                                |
+| `RestoreHealth`            | Heals `effectValue` HP (default 30). Good for consumable shops.         |
+| `IncreaseMaxHealth`        | Permanently adds `effectValue` to max HP (default +20). One-time only.  |
+| `IncreaseDamage`           | Permanently adds `effectValue` to attack damage (default +5).           |
+| `IncreaseDamageReduction`  | Permanently adds `effectValue` to shield reduction (default +0.05).     |
+| `IncreaseMovementSpeed`    | Permanently adds `effectValue` to movement speed (default +0.5).        |
+| `ExtraJump`                | Grants `Mathf.RoundToInt(effectValue)` extra mid-air jumps (default 1). |
+| `FasterStaminaRegen`       | Increases stamina level by 1 (effectValue ignored).                     |
+
+### Shop types (recommended inventories)
+
+| Shop | `ShopItemType` values | Suggested currency |
+|------|-----------------------|--------------------|
+| Weapon shop  | `Weapon`             | Souls  |
+| Armor shop   | `Armor`              | Souls  |
+| Consumable shop | `Consumable`      | Coins  |
+| Spell/Ability shop | `Spell`, `Ability` | Souls |
+
+### Persistence
+- `bonusAttackDamage` and `purchasedItemIds` are stored in `PlayerData` and serialised by `SaveManager` alongside the existing upgrade fields.  Purchased one-time items remain purchased across sessions.
+
