@@ -28,6 +28,15 @@ public class PlayerSaveData
     public int    staminaRelicLevel;
     public float  bonusAttackDamage;
     public List<string> purchasedItemIds = new List<string>();
+    // ── Stat Levels ──────────────────────────────────────────────────────────
+    public int vitality;
+    public int attunement;
+    public int endurance;
+    public int strength;
+    public int dexterity;
+    public int resistance;
+    public int intelligence;
+    public int faith;
 }
 
 /// <summary>

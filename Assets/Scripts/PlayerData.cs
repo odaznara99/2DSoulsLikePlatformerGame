@@ -60,6 +60,28 @@ public class PlayerData
     // IDs of one-time-purchase shop items already bought (persists across runs)
     public List<string> purchasedItemIds = new List<string>();
 
+    // ── Stat Levels (leveled up at a Level-Up NPC using souls) ───────────────
+    // Each stat level costs souls and counts as +1 to the overall Player Level.
+    // Effects are applied immediately to live player components when leveled.
+    public int vitality    = 0;  // +15 max HP per level
+    public int attunement  = 0;  // +10 mana per level (future: spell slots)
+    public int endurance   = 0;  // +1 stamina level per level
+    public int strength    = 0;  // +5 attack damage per level
+    public int dexterity   = 0;  // +3 attack damage + 0.1 movement speed per level
+    public int resistance  = 0;  // +0.03 shield damage reduction per level
+    public int intelligence = 0; // +10 mana per level (future: scales magic)
+    public int faith       = 0;  // reserved for faith/miracle scaling
+
+    /// <summary>
+    /// Total Player Level: starts at 1, each individual stat level-up adds +1.
+    /// Mirrors the Dark Souls design where every stat investment raises the
+    /// overall character level by exactly one.
+    /// </summary>
+    public int PlayerLevel =>
+        1 + vitality + attunement + endurance
+          + strength + dexterity + resistance
+          + intelligence + faith;
+
     /// <summary>
     /// Creates a deep copy of this PlayerData so mutations to the copy
     /// do not affect the original (and vice-versa).
@@ -87,6 +109,14 @@ public class PlayerData
             staminaRelicLevel      = staminaRelicLevel,
             bonusAttackDamage      = bonusAttackDamage,
             purchasedItemIds       = new List<string>(purchasedItemIds),
+            vitality               = vitality,
+            attunement             = attunement,
+            endurance              = endurance,
+            strength               = strength,
+            dexterity              = dexterity,
+            resistance             = resistance,
+            intelligence           = intelligence,
+            faith                  = faith,
         };
     }
 
@@ -114,6 +144,14 @@ public class PlayerData
         staminaRelicLevel      = snapshot.staminaRelicLevel;
         bonusAttackDamage      = snapshot.bonusAttackDamage;
         purchasedItemIds       = new List<string>(snapshot.purchasedItemIds);
+        vitality               = snapshot.vitality;
+        attunement             = snapshot.attunement;
+        endurance              = snapshot.endurance;
+        strength               = snapshot.strength;
+        dexterity              = snapshot.dexterity;
+        resistance             = snapshot.resistance;
+        intelligence           = snapshot.intelligence;
+        faith                  = snapshot.faith;
     }
 }
 
