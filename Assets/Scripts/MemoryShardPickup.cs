@@ -111,6 +111,14 @@ public class MemoryShardPickup : MonoBehaviour
                 GameManager.Instance.playerData.bonusMovementSpeed += amount;
                 break;
             }
+
+            case PassiveAbility.PlungeAttack:
+            {
+                var pc = player.GetComponent<PlayerControllerVersion2>();
+                if (pc != null)
+                    pc.hasPlungeAttack = true;
+                break;
+            }
         }
     }
 

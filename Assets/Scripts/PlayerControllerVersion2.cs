@@ -14,6 +14,7 @@ public enum PlayerState
     WallSliding,
     WallJumping,
     Attacking,
+    PlungingAttack, // Air ability: slam downward dealing damage and knockback on landing
     Shielding,
     Hurting,
     LedgeGrabbing,
@@ -134,6 +135,24 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float rollStaminaCost = 25f;        // stamina cost for rolling
     public AudioClip outOfStaminaSfx;          // optional SFX when not enough stamina
 
+    // === Plunge Attack (Unlockable Ability) === //
+    [Header("Plunge Attack Settings")]
+    [Tooltip("Whether the player has unlocked the Plunge Attack ability.")]
+    public bool hasPlungeAttack = false;
+    [Tooltip("Damage dealt to enemies caught in the landing impact radius.")]
+    public float plungeAttackDamage = 35f;
+    [Tooltip("Downward velocity applied when the plunge is triggered.")]
+    public float plungeDownForce = 20f;
+    [Tooltip("Radius of the landing impact area that damages and knocks back enemies.")]
+    public float plungeAttackRadius = 2.5f;
+    [Tooltip("Knockback force applied to enemies on landing.")]
+    public float plungeKnockbackForce = 20f;
+    [Tooltip("Stamina consumed when activating the Plunge Attack.")]
+    public float plungeStaminaCost = 40f;
+    [Tooltip("Cooldown in seconds before the Plunge Attack can be used again.")]
+    public float plungeCooldown = 5f;
+    [SerializeField] private float lastPlungeTimestamp = 0f; // remaining cooldown time
+
     // Input Actions
     InputAction moveAction,interactAction,attackAction,rollAction,shieldAction,jumpAction;
 
@@ -173,6 +192,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
                 movementSpeed += pd.bonusMovementSpeed;
                 originalMovementSpeed = movementSpeed;
             }
+            if (pd.unlockedPassives.Contains(PassiveAbility.PlungeAttack))
+                hasPlungeAttack = true;
         }
 
 
@@ -250,7 +271,15 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         if (attackAction.WasPressedThisFrame())
         {
-            OnHoldAttack();
+            // Plunge Attack: attack while airborne and pressing downward
+            if (!isGrounded && hasPlungeAttack && moveValue.y < -0.5f)
+            {
+                OnPlungeAttack();
+            }
+            else
+            {
+                OnHoldAttack();
+            }
         }
 
         if(rollAction.WasPressedThisFrame())
@@ -375,6 +404,21 @@ public class PlayerControllerVersion2 : MonoBehaviour
             return;
         }
 
+        // Prevent entering PlungingAttack if on cooldown (checked first for clearer feedback)
+        else if (newState == PlayerState.PlungingAttack && lastPlungeTimestamp > 0)
+        {
+            DisplayLog("Plunge Attack is on cooldown!");
+            return;
+        }
+
+        // Prevent entering PlungingAttack if no stamina available
+        else if (newState == PlayerState.PlungingAttack
+            && stamina != null && !stamina.TryConsume(plungeStaminaCost))
+        {
+            PlayOutOfStaminaFeedback();
+            return;
+        }
+
         // Prevent entering Attacking if no stamina available
         else if (newState == PlayerState.Attacking
             && stamina != null && !stamina.TryConsume(attackStaminaCost))
@@ -408,6 +452,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
                     break;
                 case PlayerState.Attacking:
                     currentStateCoroutine = StartCoroutine(DoContinuousAttack());
+                    break;
+                case PlayerState.PlungingAttack:
+                    currentStateCoroutine = StartCoroutine(DoPlungeAttack());
                     break;
                 case PlayerState.Shielding:
                     currentStateCoroutine = StartCoroutine(DoShielding());
@@ -607,6 +654,59 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     }
 
+    IEnumerator DoPlungeAttack()
+    {
+        // PlayerState.PlungingAttack
+        // Slam downward in the air, dealing damage and knockback on landing.
+
+        // Lock horizontal movement and drive the player sharply downward
+        SwitchXVelocityState(XVelocityState.Overriden);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x * 0.2f, -plungeDownForce);
+
+        // Trigger plunge animation (wire up "PlungeAttack" trigger in the Animator)
+        playerAnimator.SetTrigger("PlungeAttack");
+        AudioManager.Instance.PlaySFX("Attack2"); // descent whoosh
+
+        // Wait until the player lands
+        while (!isGrounded)
+        {
+            yield return null;
+        }
+
+        // === Landing Impact ===
+        CameraShake.Instance.Shake();
+        AudioManager.Instance.PlaySFX("Attack2"); // impact thud (replace with a dedicated landing SFX when available)
+
+        // Damage and knock back all enemies inside the landing radius
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, plungeAttackRadius);
+        foreach (var col in hitColliders)
+        {
+            if (col.CompareTag("Enemy"))
+            {
+                var eh = col.GetComponent<EnemyHealth>();
+                if (eh != null && !eh.isDead)
+                {
+                    eh.TakeDamage(plungeAttackDamage);
+                    Vector2 dir = (col.transform.position - transform.position).normalized;
+                    eh.ApplyKnockback(dir, plungeKnockbackForce);
+                }
+            }
+            else if (col.CompareTag("Boss"))
+            {
+                var boss = col.GetComponent<BossAI>();
+                if (boss != null && !boss.IsDead())
+                {
+                    boss.TakeDamage(plungeAttackDamage);
+                }
+            }
+        }
+
+        // Apply cooldown and return to normal
+        lastPlungeTimestamp = plungeCooldown;
+        SwitchXVelocityState(XVelocityState.Normal);
+        SwitchPlayerState(PlayerState.Neutral, gameObject);
+    }
+
     void PerformAttack() // will be called in Animation Event
     {
         // Enable attack box temporarily
@@ -697,6 +797,25 @@ public class PlayerControllerVersion2 : MonoBehaviour
     // ==== Add New Component - Event Trigger for your UI Buttons (Compatible for mobile devices)
     // ==== Add New Event Type ==== Check Comments what Event Type for each method.
     public void OnNeutral() => SwitchPlayerState(PlayerState.Neutral, gameObject);   // PointerExit, PointerUp of Any Control Buttons
+    public void OnPlungeAttack()
+    {
+        if (!hasPlungeAttack)
+        {
+            DisplayLog("Plunge Attack is not unlocked!");
+            return;
+        }
+        if (isGrounded)
+        {
+            DisplayLog("Plunge Attack can only be used while airborne!");
+            return;
+        }
+        if (currentState == PlayerState.PlungingAttack)
+        {
+            DisplayLog("Already performing Plunge Attack!");
+            return;
+        }
+        SwitchPlayerState(PlayerState.PlungingAttack, gameObject);
+    }
     public void OnJump()
     {
 
@@ -757,6 +876,17 @@ public class PlayerControllerVersion2 : MonoBehaviour
             {
                 lastShieldingTimestamp = 0;
                 DisplayLog("Shielding Cooldown is over!");
+            }
+        }
+
+        // Handle Plunge Attack Cooldown
+        if (lastPlungeTimestamp > 0)
+        {
+            lastPlungeTimestamp -= Time.deltaTime;
+            if (lastPlungeTimestamp <= 0)
+            {
+                lastPlungeTimestamp = 0;
+                DisplayLog("Plunge Attack Cooldown is over!");
             }
         }
 

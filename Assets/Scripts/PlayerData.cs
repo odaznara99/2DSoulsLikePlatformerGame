@@ -10,6 +10,7 @@ public enum PassiveAbility
     ExtraJump,               // Grants one additional mid-air jump
     DamageReduction,         // Increases shield / block damage-reduction
     IncreasedMovementSpeed,  // Permanently increases movement speed
+    PlungeAttack,            // Unlocks the Plunge Attack air ability
 }
 
 public class PlayerData
