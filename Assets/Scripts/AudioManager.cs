@@ -68,7 +68,9 @@ public class AudioManager : MonoBehaviour
     }
 
     public void StopFightMusic() {
-        fightMusicSource.Stop();
+        try {  fightMusicSource.Stop(); } catch {
+            Debug.LogWarning($"[Audio Manager]Error stopping fight music.");
+        }
     }
 
     public void StopMusic()

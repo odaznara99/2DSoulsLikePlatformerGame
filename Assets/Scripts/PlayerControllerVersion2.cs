@@ -666,7 +666,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x * 0.2f, -plungeDownForce);
 
         // Trigger plunge animation (wire up "PlungeAttack" trigger in the Animator)
-        playerAnimator.SetTrigger("PlungeAttack");
+        playerAnimator.SetTrigger("Attack3");
         AudioManager.Instance.PlaySFX("Attack2"); // descent whoosh
 
         // Wait until the player lands
@@ -677,13 +677,14 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         // === Landing Impact ===
         CameraShake.Instance.Shake();
-        AudioManager.Instance.PlaySFX("Attack2"); // impact thud (replace with a dedicated landing SFX when available)
+        //playerAnimator.SetTrigger("Attack3");
+        AudioManager.Instance.PlaySFX("Explosion"); // impact thud (replace with a dedicated landing SFX when available)
 
         // Damage and knock back all enemies inside the landing radius
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, plungeAttackRadius);
         foreach (var col in hitColliders)
         {
-            if (col.CompareTag("Enemy"))
+            if (col.CompareTag("Enemy") || col.CompareTag("Skeleton"))
             {
                 var eh = col.GetComponent<EnemyHealth>();
                 if (eh != null && !eh.isDead)
@@ -748,6 +749,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     void DoDying() {
         //inputX = 0; // Stop player movement immediately
         Debug.Log("Player died!");
+        SetFloatInputX(0);
         playerAnimator.SetBool("noBlood", m_noBlood);
         playerAnimator.SetTrigger("Death");
         playerAnimator.SetBool("IsDead", true);

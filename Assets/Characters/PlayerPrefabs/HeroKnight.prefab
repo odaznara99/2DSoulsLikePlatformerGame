@@ -714,6 +714,7 @@ GameObject:
   - component: {fileID: 430750399797686370}
   - component: {fileID: 100267485337794080}
   - component: {fileID: 20273531643742300}
+  - component: {fileID: 7567301960085615274}
   m_Layer: 3
   m_Name: HeroKnight
   m_TagString: Player
@@ -782,7 +783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enabledDebugLog: 0
-  enabledKeyboardInput: 1
+  enabledKeyboardInput: 0
   m_noBlood: 0
   m_slideDust: {fileID: 1038168246061390451, guid: 8b8c8cc6774fb074cb9139cc631b108e, type: 3}
   upperBodyCollider: {fileID: 8000442065729155241}
@@ -833,7 +834,14 @@ MonoBehaviour:
   attackStaminaCost: 15
   rollStaminaCost: 25
   outOfStaminaSfx: {fileID: 8300000, guid: 6006813d4a21d6643b39087cf8fb782f, type: 3}
-  uiButtons: {fileID: 0}
+  hasPlungeAttack: 1
+  plungeAttackDamage: 35
+  plungeDownForce: 20
+  plungeAttackRadius: 2.5
+  plungeKnockbackForce: 10
+  plungeStaminaCost: 40
+  plungeCooldown: 5
+  lastPlungeTimestamp: 0
 --- !u!95 &7408353236059228160
 Animator:
   serializedVersion: 7
@@ -1015,6 +1023,28 @@ MonoBehaviour:
   onStaminaChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7567301960085615274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8226440734884926468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01076ace24162fe488d0b513c6bac481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelUpManager
+  vitalityHpPerLevel: 15
+  attunementManaPerLevel: 10
+  enduranceStaminaLevelsPerLevel: 1
+  strengthDamagePerLevel: 5
+  dexterityDamagePerLevel: 3
+  dexteritySpeedPerLevel: 0.1
+  resistanceDamageReductionPerLevel: 0.03
+  intelligenceManaPerLevel: 10
+  softCap: 40
+  hardCap: 99
 --- !u!1 &8790643855068984861
 GameObject:
   m_ObjectHideFlags: 0

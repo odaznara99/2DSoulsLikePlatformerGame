@@ -186,6 +186,8 @@ public class BossAI : MonoBehaviour
     {
         if (GetHurtBool()) return;
 
+        if (currentPatrolTarget == null) return;
+
         if (hasArrivedAtPatrolPoint)
         {
             patrolPauseTimer -= Time.deltaTime;
