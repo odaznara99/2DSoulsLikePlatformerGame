@@ -366,8 +366,8 @@ MonoBehaviour:
   player: {fileID: 0}
   animator: {fileID: 0}
   soulsReward: 1000
-  maxHealth: 500
-  currentHealth: 500
+  maxHealth: 300
+  currentHealth: 300
   floatingTextPrefab: {fileID: 3106159360136694730, guid: 9980495e9f417034797271a660195edc, type: 3}
   textSpawnPoint: {fileID: 3102984410289515296}
   worldCanvas: {fileID: 0}

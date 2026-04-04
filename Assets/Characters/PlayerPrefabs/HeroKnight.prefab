@@ -840,7 +840,7 @@ MonoBehaviour:
   plungeAttackRadius: 2.5
   plungeKnockbackForce: 10
   plungeStaminaCost: 40
-  plungeCooldown: 5
+  plungeCooldown: 2
   lastPlungeTimestamp: 0
 --- !u!95 &7408353236059228160
 Animator:
