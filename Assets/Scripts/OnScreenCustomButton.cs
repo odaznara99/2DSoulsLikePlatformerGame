@@ -16,7 +16,7 @@ public class OnScreenCustomButton : MonoBehaviour
         playerController.OnJump();
     }
     public void OnPlayerAttack() { 
-        playerController.OnHoldAttack();
+        playerController.AttackActions();
     }
     public void OnPlayerShieldPressed() { 
         playerController.OnHoldShield();
@@ -46,5 +46,15 @@ public class OnScreenCustomButton : MonoBehaviour
     {
         //playerController.OnNeutral();
         playerController.SetFloatInputX(0f);
+    }
+
+    public void OnPlayerMoveDown()
+    {
+        playerController.SetFloatInputY(-1f);
+    }
+
+    public void OnPlayerMoveDownStop()
+    {
+        playerController.SetFloatInputY(0f);
     }
 }

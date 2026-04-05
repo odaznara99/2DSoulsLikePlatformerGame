@@ -72,6 +72,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     [Header("Movement Parameters")]
     [SerializeField] private float inputX;
+    [SerializeField] private float inputY; // Add this field
+    [SerializeField] Vector2 moveValue;
     public float movementSpeed = 4.0f;
     public float slowMovementSpeed = 1.5f; private float originalMovementSpeed = 4.0f;
     public float rollingSpeed = 5.0f; private float originalRollingSpeed = 5.0f;
@@ -255,6 +257,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         //if (!Application.isMobilePlatform)
         //{
             SetFloatInputX(moveValue.x); // Update inputX based on Move Action
+            SetFloatInputY(moveValue.y); // Update inputY based on Move Action
         //}
 
         if (shieldAction.IsPressed())
@@ -273,15 +276,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         if (attackAction.WasPressedThisFrame())
         {
-            // Plunge Attack: attack while airborne and pressing downward
-            if (!isGrounded && hasPlungeAttack && moveValue.y < -0.5f)
-            {
-                OnPlungeAttack();
-            }
-            else
-            {
-                OnHoldAttack();
-            }
+            AttackActions();
         }
 
         if(rollAction.WasPressedThisFrame())
@@ -319,6 +314,19 @@ public class PlayerControllerVersion2 : MonoBehaviour
             inputX = 0; // stop player movement immediately when dead
             DisplayLog("Cannot move when Dead!");
         }
+    }
+
+    public void SetFloatInputY(float newInputY)
+    {
+        if (currentState != PlayerState.Dead && currentState != PlayerState.Hurting)
+        {
+            inputY = newInputY;
+        }
+    }
+
+    public float GetFloatInputY()
+    {
+        return inputY;
     }
 
     public float GetFloatInputX()
@@ -853,7 +861,19 @@ public class PlayerControllerVersion2 : MonoBehaviour
             return; // If already attacking, then do nothing
         }
         SwitchPlayerState(PlayerState.Attacking, gameObject); 
-    }    
+    }
+
+    public void AttackActions() {
+        // Plunge Attack: attack while airborne and pressing downward
+        if (!isGrounded && hasPlungeAttack && (moveValue.y < -0.5f || inputY < -0.5f))
+        {
+            OnPlungeAttack();
+        }
+        else
+        {
+            OnHoldAttack();
+        }
+    }
     public void OnRoll() => SwitchXVelocityState(XVelocityState.Rolling);  // PointerDown, PointerEnter
     public void OnHoldShield() => SwitchPlayerState(PlayerState.Shielding, gameObject);     // PointerDown, PointerEnter
     public void OnHurt() => SwitchPlayerState(PlayerState.Hurting, gameObject);
