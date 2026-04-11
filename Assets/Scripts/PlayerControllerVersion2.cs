@@ -167,6 +167,12 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float ledgeClimbForwardForce = 3f;
     [Tooltip("Maximum upward velocity the player can have and still grab a ledge (prevents grabbing while jumping up fast).")]
     public float ledgeGrabMaxRiseSpeed = 1f;
+    [Tooltip("Vertical offset from the detected ledge top to position the player's pivot.")]
+    public float ledgeSnapOffsetY = -0.5f;
+    [Tooltip("Horizontal offset from the wall face to position the player's pivot.")]
+    public float ledgeSnapOffsetX = 0.3f;
+    [Tooltip("Layer mask for wall surfaces used by ledge-grab raycasts.")]
+    public LayerMask wallLayerMask;
     private const float downInputThreshold = -0.5f; // input Y value considered "pressing down"
 
     // Input Actions
@@ -267,7 +273,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         // Assign Move Action from Input System
         moveValue = moveAction.ReadValue<Vector2>();
         // your code would then use moveValue to apply movement
-        // to your GameObject
+        //to your GameObject
 
         //if (!Application.isMobilePlatform)
         //{
@@ -816,6 +822,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
 
+        // Snap the player to the exact corner of the ledge
+        SnapToLedgeCorner();
+
         while (isLedgeDetected)
         {
             rb.linearVelocity = Vector2.zero; // resist any residual forces each frame
@@ -892,7 +901,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
             currentDoubleJumpCount = 0; // treated as a fresh jump after climbing
             playerAnimator.SetTrigger("Jump");
             SwitchPlayerState(PlayerState.Neutral, gameObject); // restores gravity, stops DoLedgeGrabbing
-            SwitchXVelocityState(XVelocityState.Overriden);     // preserve climb impulse from UpdateMovement
+            SwitchXVelocityState(XVelocityState.Normal);     // preserve climb impulse from UpdateMovement
             return;
         }
 
@@ -1128,6 +1137,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
     private void UpdateMovement()
     {
+        // Detect if there's a wall in front of the player using raycasts
+      //  isWallDetected = Physics2D.Raycast(rayOrigin.position, rayDirection, rayLength, wallLayerMask);
+
         // Determine if the player is grounded
         bool isGrounded = m_groundSensor.State();
 
@@ -1144,5 +1156,47 @@ public class PlayerControllerVersion2 : MonoBehaviour
         rb.linearVelocity = new Vector2(newVelocityX, rb.linearVelocity.y);
     }
 
+    /// <summary>
+    /// Casts rays to find the exact wall face and ledge top, then moves the
+    /// player so their pivot sits at the corner with the configured offsets.
+    /// </summary>
+    private void SnapToLedgeCorner()
+    {
+        float rayDistance = 1.5f;
 
+        // --- Find the wall face (horizontal ray from the mid-body sensor) ---
+        Transform sensorOrigin = facingDirection == 1
+            ? m_wallSensorR1.transform
+            : m_wallSensorL1.transform;
+
+        Vector2 horizontalDir = facingDirection == 1 ? Vector2.right : Vector2.left;
+        RaycastHit2D wallHit = Physics2D.Raycast(sensorOrigin.position, horizontalDir, rayDistance, wallLayerMask);
+
+        if (!wallHit)
+            return; // safety: couldn't find the wall surface
+
+        float wallFaceX = wallHit.point.x;
+
+        // --- Find the ledge top (vertical ray down from above the upper sensor) ---
+        // Start above where the upper sensor is (which is clear), cast downward to find the top edge.
+        Transform upperSensor = facingDirection == 1
+            ? m_wallSensorR2.transform
+            : m_wallSensorL2.transform;
+
+        // Offset the vertical ray horizontally so it lands on the wall platform, not in the air
+        float verticalRayX = wallFaceX + (facingDirection * 0.1f);
+        Vector2 verticalRayOrigin = new Vector2(verticalRayX, upperSensor.position.y + 0.5f);
+        RaycastHit2D topHit = Physics2D.Raycast(verticalRayOrigin, Vector2.down, rayDistance, wallLayerMask);
+
+        if (!topHit)
+            return; // safety: couldn't find the ledge top
+
+        float ledgeTopY = topHit.point.y;
+
+        // --- Snap the player to the corner ---
+        Vector3 snapPos = transform.position;
+        snapPos.x = wallFaceX - (facingDirection * ledgeSnapOffsetX);
+        snapPos.y = ledgeTopY + ledgeSnapOffsetY;
+        transform.position = snapPos;
+    }
 }

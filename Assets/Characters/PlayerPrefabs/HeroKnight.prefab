@@ -96,7 +96,7 @@ Transform:
   m_GameObject: {fileID: 3303451583587924522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.27700016, y: 1.15, z: 0}
+  m_LocalPosition: {x: -0.27700016, y: 1.421, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -531,7 +531,7 @@ Transform:
   m_GameObject: {fileID: 7311228755903689287}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.286, y: 1.15, z: 0}
+  m_LocalPosition: {x: 0.286, y: 1.421, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -815,6 +815,7 @@ MonoBehaviour:
   isParry: 0
   isWallDetected: 0
   isUpperWallDetected: 0
+  isLedgeDetected: 0
   parryingTime: 0.3
   rollDuration: 0.5
   hurtSeconds: 0.5
@@ -846,6 +847,15 @@ MonoBehaviour:
   plungeStaminaCost: 50
   plungeCooldown: 2
   lastPlungeTimestamp: 0
+  hasLedgeGrab: 1
+  ledgeClimbUpForce: 6
+  ledgeClimbForwardForce: 3
+  ledgeGrabMaxRiseSpeed: 1
+  ledgeSnapOffsetY: -1.3
+  ledgeSnapOffsetX: 0.3
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!95 &7408353236059228160
 Animator:
   serializedVersion: 7
