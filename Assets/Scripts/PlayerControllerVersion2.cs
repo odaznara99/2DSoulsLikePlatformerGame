@@ -58,6 +58,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     private int facingDirection = 1;
     private int currentAttackAnimation = 0;
     private float m_delayToIdle = 0.0f;
+    private float originalGravityScale;
 
     [Header("Player States")]
 
@@ -108,6 +109,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public bool isParry = false; // Set to true for split seconds, when player is shielding
     public bool isWallDetected = false; // Sensor to detect if there is a wall in front of the player
     public bool isUpperWallDetected = false; // Sensor to detect if there is a wall on player's head.
+    [SerializeField] private bool isLedgeDetected = false; // Sensor to detect if player is at a ledge corner
 
     [Header("Duration Variables")]
     // == Variables for Timing
@@ -155,6 +157,18 @@ public class PlayerControllerVersion2 : MonoBehaviour
     public float plungeCooldown = 5f;
     [SerializeField] private float lastPlungeTimestamp = 0f; // remaining cooldown time
 
+    // === Ledge / Corner Grab (Passive Mechanic) === //
+    [Header("Ledge Grab Settings")]
+    [Tooltip("Enable or disable the ledge/corner grab mechanic.")]
+    public bool hasLedgeGrab = true;
+    [Tooltip("Upward velocity applied when the player climbs up from a ledge grab.")]
+    public float ledgeClimbUpForce = 6f;
+    [Tooltip("Forward (horizontal) velocity applied when the player climbs up from a ledge grab.")]
+    public float ledgeClimbForwardForce = 3f;
+    [Tooltip("Maximum upward velocity the player can have and still grab a ledge (prevents grabbing while jumping up fast).")]
+    public float ledgeGrabMaxRiseSpeed = 1f;
+    private const float downInputThreshold = -0.5f; // input Y value considered "pressing down"
+
     // Input Actions
     InputAction moveAction,interactAction,attackAction,rollAction,shieldAction,jumpAction;
 
@@ -181,6 +195,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         originalMovementSpeed = movementSpeed;
         originalRollingSpeed = rollingSpeed;
+        originalGravityScale = rb.gravityScale;
         //UIButtonsManager.Instance.AssignPlayer(this);
 
         // Apply permanent bonuses from pickups stored in PlayerData
@@ -287,6 +302,12 @@ public class PlayerControllerVersion2 : MonoBehaviour
         if (interactAction.WasPressedThisFrame())
         {
             // Handle interact action, e.g. picking up items, opening doors, etc.
+        }
+
+        // Release ledge grab when the player presses down
+        if (currentState == PlayerState.LedgeGrabbing && inputY < downInputThreshold)
+        {
+            SwitchPlayerState(PlayerState.Neutral, gameObject);
         }
     }
 
@@ -439,6 +460,12 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
         else
         {
+            // Cleanup when leaving LedgeGrabbing state (restore gravity in case coroutine was stopped)
+            if (currentState == PlayerState.LedgeGrabbing && newState != PlayerState.LedgeGrabbing)
+            {
+                rb.gravityScale = originalGravityScale;
+            }
+
             // Interrupt or STOP the currentState Coroutine
             if (currentStateCoroutine != null)
                 StopCoroutine(currentStateCoroutine);
@@ -479,6 +506,9 @@ public class PlayerControllerVersion2 : MonoBehaviour
                     //playerAnimator.SetBool("WallSlide", false);
                     //SetFloatInputX(0); // Reset Input X
                     SwitchXVelocityState(XVelocityState.Normal);
+                    break;
+                case PlayerState.LedgeGrabbing:
+                    currentStateCoroutine = StartCoroutine(DoLedgeGrabbing());
                     break;
                 case PlayerState.ForceInterupt:
                     // Force Interupt, return to Neutral State
@@ -779,6 +809,30 @@ public class PlayerControllerVersion2 : MonoBehaviour
         SwitchPlayerState(PlayerState.ForceInterupt, gameObject);
     }
 
+    IEnumerator DoLedgeGrabbing()
+    {
+        // Freeze horizontal movement and disable gravity so the player hangs on the ledge
+        SwitchXVelocityState(XVelocityState.Overriden);
+        rb.gravityScale = 0f;
+        rb.linearVelocity = Vector2.zero;
+
+        while (isLedgeDetected)
+        {
+            rb.linearVelocity = Vector2.zero; // resist any residual forces each frame
+
+            // Drop off the ledge when the player presses down
+            if (inputY < downInputThreshold)
+                break;
+
+            yield return null;
+        }
+
+        // Restore physics (gravity is also restored in SwitchPlayerState for external interrupts)
+        rb.gravityScale = originalGravityScale;
+        SwitchXVelocityState(XVelocityState.Normal);
+        SwitchPlayerState(PlayerState.Neutral, gameObject);
+    }
+
     IEnumerator DoShielding()
     {
         if (lastShieldingTimestamp > 0)
@@ -830,6 +884,17 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
     public void OnJump()
     {
+        // Climb up from a ledge grab
+        if (currentState == PlayerState.LedgeGrabbing)
+        {
+            // Apply climb velocity first, then switch state so the impulse is never zeroed
+            rb.linearVelocity = new Vector2(facingDirection * ledgeClimbForwardForce, ledgeClimbUpForce);
+            currentDoubleJumpCount = 0; // treated as a fresh jump after climbing
+            playerAnimator.SetTrigger("Jump");
+            SwitchPlayerState(PlayerState.Neutral, gameObject); // restores gravity, stops DoLedgeGrabbing
+            SwitchXVelocityState(XVelocityState.Overriden);     // preserve climb impulse from UpdateMovement
+            return;
+        }
 
         if (currentDoubleJumpCount < maxDoubleJumpCount && currentXVelocityState != XVelocityState.Rolling)
         {
@@ -922,6 +987,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         playerAnimator.SetBool("WallSlide", currentState == PlayerState.WallSliding);
         playerAnimator.SetBool("IdleBlock", currentState == PlayerState.Shielding);
         playerAnimator.SetBool("stillRolling", currentXVelocityState == XVelocityState.Rolling);
+        playerAnimator.SetBool("LedgeGrab", currentState == PlayerState.LedgeGrabbing);
         
         //bool isDead = GetComponent<PlayerHealth>().IsDead();
         //playerAnimator.SetBool("IsDead", isDead);
@@ -961,11 +1027,30 @@ public class PlayerControllerVersion2 : MonoBehaviour
             // === Upper Wall Detection === //
             isUpperWallDetected = m_wallSensorL2.State() && m_wallSensorR2.State();
 
+            // === Ledge / Corner Grab Detection === //
+            // Lower wall sensor detects the wall face; upper sensor is clear (above the ledge top).
+            isLedgeDetected = !isGrounded
+                && rb.linearVelocity.y <= ledgeGrabMaxRiseSpeed
+                && ((m_wallSensorR1.State() && !m_wallSensorR2.State() && facingDirection == 1)
+                ||  (m_wallSensorL1.State() && !m_wallSensorL2.State() && facingDirection == -1));
+
+            if (hasLedgeGrab
+                && isLedgeDetected
+                && currentState != PlayerState.LedgeGrabbing
+                && currentState != PlayerState.WallJumping
+                && currentState != PlayerState.Hurting
+                && currentState != PlayerState.Dead
+                && currentState != PlayerState.PlungingAttack)
+            {
+                SwitchPlayerState(PlayerState.LedgeGrabbing, gameObject);
+            }
+
             // === States that is automatically being triggered by a sensor detection ==== //
             if (!isGrounded && isWallDetected
                 && currentState != PlayerState.Hurting
                 && currentState != PlayerState.Dead
-                && currentState != PlayerState.WallJumping)
+                && currentState != PlayerState.WallJumping
+                && currentState != PlayerState.LedgeGrabbing)
             {
                 if (GetFloatInputX() > 0 && facingDirection == 1)
                 {
@@ -989,12 +1074,13 @@ public class PlayerControllerVersion2 : MonoBehaviour
             isGrounded = false;
             isWallDetected = false;
             isUpperWallDetected = false;
+            isLedgeDetected = false;
         }
     }
 
     void FlipPlayerSprite()
     {
-        if (currentState == PlayerState.Attacking || currentState == PlayerState.Shielding || currentState == PlayerState.Hurting)
+        if (currentState == PlayerState.Attacking || currentState == PlayerState.Shielding || currentState == PlayerState.Hurting || currentState == PlayerState.LedgeGrabbing)
         {
             // Do not flip player sprite from the following conditions above
             return;
