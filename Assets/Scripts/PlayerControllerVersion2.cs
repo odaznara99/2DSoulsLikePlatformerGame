@@ -313,7 +313,8 @@ public class PlayerControllerVersion2 : MonoBehaviour
         // Release ledge grab when the player presses down
         if (currentState == PlayerState.LedgeGrabbing && inputY < downInputThreshold)
         {
-            SwitchPlayerState(PlayerState.Neutral, gameObject);
+            //SwitchPlayerState(PlayerState.Neutral, gameObject);
+            OnRoll();
         }
     }
 
@@ -1038,10 +1039,21 @@ public class PlayerControllerVersion2 : MonoBehaviour
 
             // === Ledge / Corner Grab Detection === //
             // Lower wall sensor detects the wall face; upper sensor is clear (above the ledge top).
-            isLedgeDetected = !isGrounded
+            // Step 1: Cheap sensor check
+            bool sensorLedgeDetected = !isGrounded
                 && rb.linearVelocity.y <= ledgeGrabMaxRiseSpeed
                 && ((m_wallSensorR1.State() && !m_wallSensorR2.State() && facingDirection == 1)
                 ||  (m_wallSensorL1.State() && !m_wallSensorL2.State() && facingDirection == -1));
+
+            // Step 2: Validate with raycasts before committing to the ledge grab state
+            if (sensorLedgeDetected)
+            {
+                isLedgeDetected = CanFindLedgeCorner();
+            }
+            else
+            {
+                isLedgeDetected = false;
+            }
 
             if (hasLedgeGrab
                 && isLedgeDetected
@@ -1157,46 +1169,84 @@ public class PlayerControllerVersion2 : MonoBehaviour
     }
 
     /// <summary>
+    /// Performs the same raycasts as SnapToLedgeCorner but only returns
+    /// whether both the wall face and ledge top can be found.
+    /// Called from UpdateDetectionTriggers to avoid entering LedgeGrabbing
+    /// when no valid corner exists (e.g. falling from directly above).
+    /// </summary>
+    private bool CanFindLedgeCorner()
+    {
+        Vector2 wallPoint, topPoint;
+        return TryFindLedgeCorner(out wallPoint, out topPoint);
+    }
+
+    /// <summary>
+    /// Shared raycast logic that finds both the wall face and ledge top.
+    /// Returns true when both hits succeed and outputs the exact points.
+    /// </summary>
+    private bool TryFindLedgeCorner(out Vector2 wallPoint, out Vector2 topPoint)
+    {
+        wallPoint = Vector2.zero;
+        topPoint = Vector2.zero;
+        float rayDistance = 1.5f;
+
+        // --- Find the wall face (horizontal ray from the lower sensor) ---
+        Transform lowerSensor = facingDirection == 1
+            ? m_wallSensorR1.transform
+            : m_wallSensorL1.transform;
+
+        Transform upperSensor = facingDirection == 1
+            ? m_wallSensorR2.transform
+            : m_wallSensorL2.transform;
+
+        Vector2 horizontalDir = facingDirection == 1 ? Vector2.right : Vector2.left;
+        RaycastHit2D wallHit = Physics2D.Raycast(lowerSensor.position, horizontalDir, rayDistance, wallLayerMask);
+
+        if (!wallHit)
+        {
+            // Fallback: try from the upper sensor (player may be above the wall face)
+            wallHit = Physics2D.Raycast(upperSensor.position, horizontalDir, rayDistance, wallLayerMask);
+            if (!wallHit)
+                return false;
+        }
+
+        wallPoint = wallHit.point;
+
+        // --- Find the ledge top (vertical ray down from above the upper sensor) ---
+        float verticalRayX = wallHit.point.x + (facingDirection * 0.1f);
+        Vector2 verticalRayOrigin = new Vector2(verticalRayX, upperSensor.position.y + 0.5f);
+        RaycastHit2D topHit = Physics2D.Raycast(verticalRayOrigin, Vector2.down, rayDistance, wallLayerMask);
+
+        if (!topHit)
+        {
+            // Fallback: cast from player X offset toward the wall
+            verticalRayOrigin = new Vector2(transform.position.x + (facingDirection * 0.3f), upperSensor.position.y + 0.5f);
+            topHit = Physics2D.Raycast(verticalRayOrigin, Vector2.down, rayDistance, wallLayerMask);
+            if (!topHit)
+                return false;
+        }
+
+        topPoint = topHit.point;
+        return true;
+    }
+
+    /// <summary>
     /// Casts rays to find the exact wall face and ledge top, then moves the
     /// player so their pivot sits at the corner with the configured offsets.
     /// </summary>
     private void SnapToLedgeCorner()
     {
-        float rayDistance = 1.5f;
+        Vector2 wallPoint, topPoint;
+        if (!TryFindLedgeCorner(out wallPoint, out topPoint))
+        {
+            DisplayLog("Couldn't find ledge corner for snap");
+            SwitchPlayerState(PlayerState.Neutral, gameObject);
+            return;
+        }
 
-        // --- Find the wall face (horizontal ray from the mid-body sensor) ---
-        Transform sensorOrigin = facingDirection == 1
-            ? m_wallSensorR1.transform
-            : m_wallSensorL1.transform;
-
-        Vector2 horizontalDir = facingDirection == 1 ? Vector2.right : Vector2.left;
-        RaycastHit2D wallHit = Physics2D.Raycast(sensorOrigin.position, horizontalDir, rayDistance, wallLayerMask);
-
-        if (!wallHit)
-            return; // safety: couldn't find the wall surface
-
-        float wallFaceX = wallHit.point.x;
-
-        // --- Find the ledge top (vertical ray down from above the upper sensor) ---
-        // Start above where the upper sensor is (which is clear), cast downward to find the top edge.
-        Transform upperSensor = facingDirection == 1
-            ? m_wallSensorR2.transform
-            : m_wallSensorL2.transform;
-
-        // Offset the vertical ray horizontally so it lands on the wall platform, not in the air
-        float verticalRayX = wallFaceX + (facingDirection * 0.1f);
-        Vector2 verticalRayOrigin = new Vector2(verticalRayX, upperSensor.position.y + 0.5f);
-        RaycastHit2D topHit = Physics2D.Raycast(verticalRayOrigin, Vector2.down, rayDistance, wallLayerMask);
-
-        if (!topHit)
-            return; // safety: couldn't find the ledge top
-
-        float ledgeTopY = topHit.point.y;
-
-        // --- Snap the player to the corner ---
         Vector3 snapPos = transform.position;
-        snapPos.x = wallFaceX - (facingDirection * ledgeSnapOffsetX);
-        snapPos.y = ledgeTopY + ledgeSnapOffsetY;
+        snapPos.x = wallPoint.x - (facingDirection * ledgeSnapOffsetX);
+        snapPos.y = topPoint.y + ledgeSnapOffsetY;
         transform.position = snapPos;
     }
 }
