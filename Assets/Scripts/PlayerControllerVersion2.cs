@@ -250,7 +250,7 @@ public class PlayerControllerVersion2 : MonoBehaviour
         }
 
         // Assign Move Action from Input System
-        Vector2 moveValue = moveAction.ReadValue<Vector2>();
+        moveValue = moveAction.ReadValue<Vector2>();
         // your code would then use moveValue to apply movement
         // to your GameObject
 

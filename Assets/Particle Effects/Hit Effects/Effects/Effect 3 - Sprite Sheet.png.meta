@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9c79a7cd430f91e4999fc4496d0701c3
+guid: d7e4e0209077cec4289e0948853b69d6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -67,7 +67,7 @@ TextureImporter:
   swizzle: 50462976
   cookieLightType: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -80,7 +80,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -93,7 +93,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -106,7 +106,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -119,8 +119,8 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Windows Store Apps
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -136,90 +136,95 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Effect 2 - Sprite Sheet_0
+      name: Effect 3 - Sprite Sheet_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 131
-        width: 34
+        x: 4
+        y: 132
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d2e883bee24be24e9b85fba65cab17d
+      internalID: 477907231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Effect 3 - Sprite Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 96
+        width: 26
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2a49a91d01b50c4e98634e559d8bbc8
+      internalID: -1683489640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Effect 3 - Sprite Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 56
+        width: 27
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6746f75d882d7b4b81b5ab1bb64775e
+      internalID: 514146312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Effect 3 - Sprite Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 28
+        width: 25
         height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f979e11be1376fe428e15e7b125198d6
-      internalID: 1103593870
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Effect 2 - Sprite Sheet_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 97
-        width: 34
-        height: 30
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9f6d44d6f5188b040ad6bc4f22605a69
-      internalID: 1313831752
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Effect 2 - Sprite Sheet_2
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 64
-        width: 35
-        height: 30
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2d23b710e1a534c48bc781072ed6cb96
-      internalID: 1093490702
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Effect 2 - Sprite Sheet_3
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 33
-        width: 35
-        height: 30
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f2cd1cb669f9a7c448c41a949b937de7
-      internalID: -2076050872
+      spriteID: a871922f2483bff499d9a5c6dd202432
+      internalID: -539974824
       vertices: []
       indices: 
       edges: []
       weights: []
     outline: []
+    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
@@ -229,11 +234,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
     nameFileIdTable:
-      Effect 2 - Sprite Sheet_0: 1103593870
-      Effect 2 - Sprite Sheet_1: 1313831752
-      Effect 2 - Sprite Sheet_2: 1093490702
-      Effect 2 - Sprite Sheet_3: -2076050872
+      Effect 3 - Sprite Sheet_0: 477907231
+      Effect 3 - Sprite Sheet_1: -1683489640
+      Effect 3 - Sprite Sheet_2: 514146312
+      Effect 3 - Sprite Sheet_3: -539974824
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

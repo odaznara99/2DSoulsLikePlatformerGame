@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 491446acf44fb8b4c8532db81c331b6b
+guid: d7e3e43ac669ef548a31561c79f92f4b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -67,7 +67,7 @@ TextureImporter:
   swizzle: 50462976
   cookieLightType: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -80,7 +80,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -93,7 +93,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -106,7 +106,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -119,8 +119,8 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Windows Store Apps
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -136,90 +136,95 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Effect 1 - Sprite Sheet_0
+      name: Effect 4 - Sprite Sheet_0
       rect:
         serializedVersion: 2
-        x: 17
-        y: 130
-        width: 29
-        height: 29
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 699116811f686e2428edb62c0658d9b7
-      internalID: -1704935475
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Effect 1 - Sprite Sheet_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 100
-        width: 31
+        x: 7
+        y: 129
+        width: 23
         height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3221fc6d96dabfe4698bf8220c9e1598
-      internalID: -1626589184
+      spriteID: 767427f47aedcf64cbc88de68a64317d
+      internalID: -619536584
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect 1 - Sprite Sheet_2
+      name: Effect 4 - Sprite Sheet_1
       rect:
         serializedVersion: 2
-        x: 15
-        y: 66
-        width: 34
-        height: 29
+        x: 7
+        y: 97
+        width: 23
+        height: 28
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b0493240cabf6944b8a8eb9c85bbfe55
-      internalID: -1341974908
+      spriteID: 17d2ee7f2bc20674dae7f602fee1ed64
+      internalID: 1630397305
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effect 1 - Sprite Sheet_3
+      name: Effect 4 - Sprite Sheet_2
       rect:
         serializedVersion: 2
-        x: 15
-        y: 33
-        width: 33
+        x: 6
+        y: 64
+        width: 25
         height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9823fd27900ad8e4f938ddb61f61b6d2
-      internalID: -1661813050
+      spriteID: ad46a6a730eeefd4e895d17884eb7095
+      internalID: 1627641983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Effect 4 - Sprite Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 32
+        width: 23
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 663ca7fe7eaf851418125c06a151d57d
+      internalID: 1093061310
       vertices: []
       indices: 
       edges: []
       weights: []
     outline: []
+    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
@@ -229,11 +234,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
     nameFileIdTable:
-      Effect 1 - Sprite Sheet_0: -1704935475
-      Effect 1 - Sprite Sheet_1: -1626589184
-      Effect 1 - Sprite Sheet_2: -1341974908
-      Effect 1 - Sprite Sheet_3: -1661813050
+      Effect 4 - Sprite Sheet_0: -619536584
+      Effect 4 - Sprite Sheet_1: 1630397305
+      Effect 4 - Sprite Sheet_2: 1627641983
+      Effect 4 - Sprite Sheet_3: 1093061310
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -715,6 +715,8 @@ GameObject:
   - component: {fileID: 100267485337794080}
   - component: {fileID: 20273531643742300}
   - component: {fileID: 7567301960085615274}
+  - component: {fileID: 259540570023405608}
+  - component: {fileID: 753142671306727727}
   m_Layer: 3
   m_Name: HeroKnight
   m_TagString: Player
@@ -1047,6 +1049,37 @@ MonoBehaviour:
   intelligenceManaPerLevel: 10
   softCap: 40
   hardCap: 99
+--- !u!114 &259540570023405608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8226440734884926468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2ffd832a189eb4c96f81c01a856802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WalkingDustEffect
+  walkDustPrefab: {fileID: 7711369475918572527, guid: 051725f9dbcd20b4a97630cd152ac2e6, type: 3}
+  dustSpawnPoint: {fileID: 3490205768427816182}
+  dustLifetime: 1
+--- !u!114 &753142671306727727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8226440734884926468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5aca43974be40642986b6c31d176446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JumpingDustEffect
+  jumpDustPrefab: {fileID: 7711369475918572527, guid: 02948bced151c8e488f77b889c8398e8, type: 3}
+  landDustPrefab: {fileID: 7711369475918572527, guid: 02948bced151c8e488f77b889c8398e8, type: 3}
+  dustSpawnPoint: {fileID: 3490205768427816182}
+  dustLifetime: 1
 --- !u!1 &8790643855068984861
 GameObject:
   m_ObjectHideFlags: 0
