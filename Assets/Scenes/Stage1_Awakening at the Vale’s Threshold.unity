@@ -15438,6 +15438,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 951215321712142185, guid: 70488e2b7454483418af0156e3e1e823, type: 3}
   m_PrefabInstance: {fileID: 459470557}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &461778379
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 56.23646
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10.675563
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4739410653425035403, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7711369475918572527, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
+      propertyPath: m_Name
+      value: Portal Particles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 083727d107b4c024ea5985f85fd1902f, type: 3}
 --- !u!1001 &468159663
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48171,7 +48228,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.027721167, y: 4.5914445}
+  m_Offset: {x: 0.23689866, y: 4.5914445}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -48181,7 +48238,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0555425, y: 12.557633}
+  m_Size: {x: 0.5263028, y: 12.557633}
   m_EdgeRadius: 0
 --- !u!1001 &2065337858
 PrefabInstance:
@@ -49240,6 +49297,10 @@ PrefabInstance:
       value: MainCamera
       objectReference: {fileID: 0}
     - target: {fileID: 8246708954341854765, guid: ddd793753777b0d45a75d7f620c381b9, type: 3}
+      propertyPath: maxX
+      value: 48.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8246708954341854765, guid: ddd793753777b0d45a75d7f620c381b9, type: 3}
       propertyPath: playerTarget
       value: 
       objectReference: {fileID: 1423380836}
@@ -49375,7 +49436,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 3.953371, y: 11.109924}
+  m_Offset: {x: 4.534979, y: 0.5901227}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -49385,7 +49446,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.06847, y: 25.728767}
+  m_Size: {x: 1.9052544, y: 4.689164}
   m_EdgeRadius: 0
 --- !u!114 &8210507791786840849
 MonoBehaviour:
@@ -49571,3 +49632,4 @@ SceneRoots:
   - {fileID: 468159663}
   - {fileID: 1640547828}
   - {fileID: 1394508140}
+  - {fileID: 461778379}
