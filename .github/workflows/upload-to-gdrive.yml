@@ -1,0 +1,42 @@
+name: Upload APK to Google Drive
+
+on:
+  workflow_run:
+    workflows: ["Build project"]
+    types:
+      - completed
+
+jobs:
+  upload-apk:
+    name: Upload APK to Google Drive
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Download Android artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Build-Android
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: build-android
+
+      - name: Find APK file
+        id: find-apk
+        run: |
+          APK_PATH=$(find build-android -name "*.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "No APK file found in the artifact."
+            exit 1
+          fi
+          echo "apk_path=$APK_PATH" >> "$GITHUB_OUTPUT"
+          echo "Found APK: $APK_PATH"
+
+      - name: Upload APK to Google Drive
+        uses: adityak74/google-drive-upload-git-action@v0.3
+        with:
+          credentials: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+          filename: ${{ steps.find-apk.outputs.apk_path }}
+          folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
+          overwrite: "true"
